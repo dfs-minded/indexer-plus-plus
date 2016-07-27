@@ -1,0 +1,365 @@
+﻿<!--
+    This file is the part of the Indexer++ project.
+    Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
+    Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
+-->
+    
+<Window x:Class="Indexer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:indexer="clr-namespace:Indexer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:Indexer.Views"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    Title="Indexer++"
+    Background="#F7F7F7"
+    Closing="MainWindow_OnClosing"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    FontSize="12"
+    Icon="Icons/icon_v3_2.ico"
+    SizeChanged="MainWindow_OnSizeChanged"
+    mc:Ignorable="d">
+    <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>            
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!--
+         <Window.InputBindings>
+         <KeyBinding Key="N"
+         Command="ApplicationCommands.New"
+         Modifiers="Control" />
+         <KeyBinding Key="Delete" Command="ApplicationCommands.Delete" />
+         <KeyBinding Key="F2" Command="ApplicationCommands.Replace" />
+         </Window.InputBindings>
+    -->
+
+    <Window.CommandBindings>
+        <CommandBinding CanExecute="NewSearchWindowCanExecute"
+                        Command="ApplicationCommands.New"
+                        Executed="NewSearchWindowExecuted" />
+        <CommandBinding CanExecute="ShowDebugLogWndCanExecute"
+                        Command="indexer:CustomCommands.ShowDebugLogWndCommand"
+                        Executed="ShowDebugLogWndExecuted" />
+        <CommandBinding CanExecute="SaveAsCanExecute"
+                        Command="indexer:CustomCommands.SaveAsCommand"
+                        Executed="SaveAsExecuted" />
+        <CommandBinding CanExecute="CloseSearchWindowCanExecute"
+                        Command="indexer:CustomCommands.CloseWndCommand"
+                        Executed="CloseSearchWindowExecuted" />
+        <CommandBinding CanExecute="ExitAppCanExecute"
+                        Command="indexer:CustomCommands.ExitAppCommand"
+                        Executed="ExitAppExecuted" />
+        <CommandBinding CanExecute="DeleteCanExecute"
+                        Command="ApplicationCommands.Delete"
+                        Executed="DeleteExecuted" />
+        <CommandBinding CanExecute="RenameCanExecute"
+                        Command="ApplicationCommands.Replace"
+                        Executed="RenameExecuted" />
+    </Window.CommandBindings>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="34" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+
+        <Popup x:Name="ShellHostPopupWnd"
+               IsOpen="False"
+               Placement="Mouse"
+               StaysOpen="False">
+            <StackPanel>
+                <WindowsFormsHost>
+                    <wf:Label x:Name="ShellMenuHost"
+                              Left="0"
+                              Top="0" />
+                </WindowsFormsHost>
+            </StackPanel>
+        </Popup>
+
+        <Menu Background="#E9E9E9">
+            <MenuItem Header="File">
+                <!--  <MenuItem Command="ApplicationCommands.New" Header="New Search Window" />  -->
+                <MenuItem Command="indexer:CustomCommands.ShowDebugLogWndCommand"
+                          Header="Open Debug Log Window"
+                          IsCheckable="False" Visibility="{Binding DebugLogWndCommandVisibility}" />
+                <MenuItem Command="indexer:CustomCommands.SaveAsCommand"
+                          Header="Save as"
+                          IsCheckable="False" />
+                <MenuItem Command="indexer:CustomCommands.CloseWndCommand"
+                          Header="Close Window"
+                          IsCheckable="False" />
+                <MenuItem Command="indexer:CustomCommands.ExitAppCommand"
+                          Header="Exit Application"
+                          IsCheckable="False" />
+            </MenuItem>
+            <MenuItem Header="Drives" ItemsSource="{Binding Drives}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem" d:DataContext="{d:DesignInstance d:Type=indexer:DriveInfo}">
+                        <Setter Property="Header" Value="{Binding Label}" />
+                        <Setter Property="IsCheckable" Value="True" />
+                        <Setter Property="IsChecked" Value="{Binding IsChecked}" />
+                        <EventSetter Event="Click" Handler="DrivesMenuItem_CheckToogled" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+            <MenuItem Header="Exclude">
+                <MenuItem Header="Exclude hidden and system"
+                          IsCheckable="True"
+                          IsChecked="{Binding ExcludeHiddenAndSystem}" />
+                <MenuItem Header="Exclude folders"
+                          IsCheckable="True"
+                          IsChecked="{Binding ExcludeFolders}" />
+                <MenuItem Header="Exclude files"
+                          IsCheckable="True"
+                          IsChecked="{Binding ExcludeFiles}" />
+            </MenuItem>
+            <MenuItem Click="OnFilters_Click" Header="Filters" />
+
+            <!--<MenuItem Name="ViewsMenuItem" Header="Views">
+
+                <MenuItem Click="OnMenuDetailsView_Click"
+                          Name="DetailsMenuITem"
+                          IsChecked="True"
+                          IsCheckable="True"
+                          Header="Details" />
+                <MenuItem Click="OnMenuIconsView_Click"
+                          Name="IconsMenuITem"
+                          IsCheckable="True"
+                          Header="Icons" />
+                <Separator />
+                <MenuItem Click="OnMenuSmallIconsView_Click"
+                          Name="SmallIconsMenuItem"
+                          IsChecked="True"
+                          IsCheckable="True"
+                          Header="Small Icons" />
+                <MenuItem Click="OnMenuMediumIconsView_Click"
+                          Name="MediumIconsMenuItem"
+                          IsEnabled="{Binding IsNotSmallMenuItemEnabled}"
+                          IsCheckable="True"
+                          Header="Medium Icons" />
+                <MenuItem Click="OnMenuLargeIconsView_Click"
+                          Name="LargeIconsMenuItem"
+                          IsEnabled="{Binding IsNotSmallMenuItemEnabled}"
+                          IsCheckable="True"
+                          Header="Large Icons" />
+                <MenuItem Click="OnMenuExtraLargeIconsView_Click"
+                          Name="ExtraLargeIconsMenuItem"
+                          IsEnabled="{Binding IsNotSmallMenuItemEnabled}"
+                          IsCheckable="True"
+                          Header="Extra Large Icons" />
+            </MenuItem>-->
+        </Menu>
+
+       
+
+
+        <Grid Grid.Row="1"
+              Margin="10 5 5 5"
+              Visibility="{Binding FiltersVisibility}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+
+                <CheckBox VerticalAlignment="Center"
+                          Content="Size:"
+                          IsChecked="{Binding SizeFilterEnabled}" />
+                <Label Grid.Column="1"
+                       Margin="0"
+                       VerticalAlignment="Center"
+                       Content="Min:"
+                       Padding="0"
+                       ToolTip="7 B, 50 KB, 8 MB, 14 GB. Default is KB" />
+                <TextBox Grid.Column="1"
+                         MaxHeight="20"
+                         Margin="40 0 10 0"
+                         IsEnabled="{Binding SizeFilterEnabled}"
+                         Style="{DynamicResource TextBoxStyle}"
+                         ToolTip="50 KB, 8 MB, 14 GB. Default is KB"
+                         Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                    <TextBox.Text>
+                        <Binding Path="SizeFrom" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <indexer:SizeValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Label Grid.Column="2"
+                       Margin="0"
+                       VerticalAlignment="Center"
+                       Content="Max:"
+                       Padding="5 0 0 0"
+                       ToolTip="50 KB, 8 MB, 14 GB. Default is KB" />
+                <TextBox Grid.Column="2"
+                         MaxHeight="20"
+                         Margin="40 0 10 0"
+                         IsEnabled="{Binding SizeFilterEnabled}"
+                         Style="{DynamicResource TextBoxStyle}"
+                         ToolTip="7 B, 50 KB, 8 MB, 14 GB. Default is KB"
+                         Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                    <TextBox.Text>
+                        <Binding Path="SizeTo" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <indexer:SizeValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <CheckBox Grid.Row="1"
+                          VerticalAlignment="Center"
+                          Content="Created date:"
+                          IsChecked="{Binding DateFilterEnabled}" />
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Margin="0"
+                       VerticalAlignment="Center"
+                       Content="From:"
+                       Padding="0" />
+                <DatePicker Grid.Row="1"
+                            Grid.Column="1"
+                            Height="24"
+                            Margin="40 0 10 0"
+                            IsEnabled="{Binding DateFilterEnabled}"
+                            SelectedDate="{Binding DateFrom}" />
+                <Label Grid.Row="1"
+                       Grid.Column="2"
+                       Margin="0"
+                       VerticalAlignment="Center"
+                       Content="To:"
+                       Padding="5 0 0 0" />
+                <DatePicker Grid.Row="1"
+                            Grid.Column="2"
+                            Height="24"
+                            Margin="40 0 10 0"
+                            IsEnabled="{Binding DateFilterEnabled}"
+                            SelectedDate="{Binding DateTo}" />
+
+                <CheckBox Grid.Row="2"
+                          VerticalAlignment="Center"
+                          Content="Search in folder:"
+                          IsChecked="{Binding DirFilterEnabled}" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Grid.ColumnSpan="2"
+                         MaxHeight="20"
+                         Margin="0 0 40 0"
+                         IsEnabled="{Binding DirFilterEnabled}"
+                         Style="{DynamicResource TextBoxStyle}"
+                         Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                    <TextBox.Text>
+                        <Binding Path="SearchDirPath" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <indexer:DirPathValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <Button Grid.Row="2"
+                        Grid.Column="3"
+                        Click="OnFilters_Click"
+                        Style="{StaticResource UpArrowButtonStyle}" />
+
+                <CheckBox Grid.Row="3"
+                          VerticalAlignment="Center"
+                          Content="Match case"
+                          IsChecked="{Binding MatchCase}" />
+
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="5 5 5 5"
+                     Style="{DynamicResource TextBoxStyle}"
+                     Text="{Binding SearchString,
+                     UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="5 0">
+
+            <Grid.ColumnDefinitions>
+                
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition ></ColumnDefinition>
+                
+            </Grid.ColumnDefinitions>
+
+            <!-- TODO
+                 <explorerTree:ExplorerTreeControl Visibility="Collapsed"
+                 x:Name="ExplorerTreeControl"
+                 Grid.Column="0" />-->
+
+            <GridSplitter x:Name="GridSplitter"
+                          Visibility="Collapsed"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          ShowsPreview="True"
+                          Width="5"
+                          Grid.Column="1" />
+
+            <ContentControl Grid.Column="2" Focusable="False">
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Style.Triggers>
+                           
+                            <DataTrigger Binding="{Binding ViewType}" Value="{x:Static indexer:ViewType.Details}">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <views:DetailsView />
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding ViewType}" Value="{x:Static indexer:ViewType.Icons}">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <views:ImageView />
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+
+            </ContentControl>
+
+        </Grid>
+
+        <StackPanel Grid.Row="4"
+                    Margin="3 3 0 0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Objects: " />
+            <TextBlock Text="{Binding DataModel.Count, StringFormat={}{0:#,#}}" />
+            <TextBlock Text="{Binding DataModel.Status}" />
+        </StackPanel>
+
+    </Grid>
+</Window>

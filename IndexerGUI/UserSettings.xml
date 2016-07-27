@@ -1,0 +1,10 @@
+<UserSettings xmlns="http://schemas.datacontract.org/2004/07/Indexer" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <ExcludeFiles>false</ExcludeFiles>
+  <ExcludeFolders>false</ExcludeFolders>
+  <ExcludeHiddenAndSystem>true</ExcludeHiddenAndSystem>
+  <FiltersVisibility>Collapsed</FiltersVisibility>
+  <IsFiltersExpanded>false</IsFiltersExpanded>
+  <SelectedDrives xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays"></SelectedDrives>
+  <WndHeight>700</WndHeight>
+  <WndWidth>1000</WndWidth>
+</UserSettings>
