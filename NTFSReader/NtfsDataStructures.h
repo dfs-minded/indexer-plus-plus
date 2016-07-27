@@ -1,10 +1,6 @@
-#pragma once
-
-#include "WindowsWrapper.h"
-
-#pragma pack(push, 4)
-
-// Sources:
+// This file was written using sources listed below (which are not exhaustive and are not limited to),
+// as well as the result of my own work and research.
+//
 // https://msdn.microsoft.com/en-us/library/bb470206(v=vs.85).aspx
 //
 // http://grayscale-research.org/new/pdfs/NTFS%20forensics.pdf
@@ -17,11 +13,16 @@
 // Print ISBN : n9780321268174, 0321268172
 // eText ISBN : 9780134439549
 // https://blogs.technet.microsoft.com/joscon/2011/01/06/how-hard-links-work/
-
-
+//
 // https://msdn.microsoft.com/en-us/library/bb470211(v=vs.85).aspx
 // Represents an address in the master file table (MFT). The address is tagged with a circularly reused sequence number
 // that is set at the time the MFT segment reference was valid.
+
+#pragma once
+
+#include "WindowsWrapper.h"
+
+#pragma pack(push, 4)
 
 typedef struct _MFT_SEGMENT_REFERENCE {
     // First 48 bit are MFT record sequential number.
