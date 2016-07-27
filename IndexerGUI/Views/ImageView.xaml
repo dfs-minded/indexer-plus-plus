@@ -1,0 +1,175 @@
+﻿<!--
+    The MIT License (MIT)
+    
+    Copyright (c) 2016 Anna Krykora <krykoraanna@gmail.com>
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+-->
+
+<UserControl x:Class="Indexer.Views.ImageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviors="clr-namespace:Indexer.Behaviors" 
+             xmlns:controls="clr-namespace:Indexer.Controls"
+             xmlns:indexer="clr-namespace:Indexer" 
+             xmlns:cliInterop="clr-namespace:CLIInterop;assembly=CLIInterop">
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            </Style>
+
+            <BitmapScalingMode x:Key="BitmapScalingMode">HighQuality</BitmapScalingMode>
+
+            <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}" />
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <ContentControl Content="{StaticResource ProxyElement}" Visibility="Collapsed" />
+
+        <ListView x:Name="ImgesListView" 
+            ItemsSource="{Binding DataModel}"
+            ScrollViewer.IsDeferredScrollingEnabled="True"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+            SelectionMode="Single">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:VirtualWrapPanel ItemHeight="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemHeightConvertor} }" 
+                                               ItemWidth="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemWidthConvertor} }"  
+                                               Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    
+                    <Setter Property="behaviors:MouseEvents.PreviewMouseRightButtonUpCommand" 
+                            Value="{Binding Path=DataContext.RowPreviewMouseRightButtonUp, Source={StaticResource ProxyElement}}" />
+                    <Setter Property="behaviors:MouseEvents.DoubleClickCommand" 
+                            Value="{Binding Path=DataContext.FileItemMouseDoubleClick, Source={StaticResource ProxyElement}}" />
+
+                    <Setter Property="Margin" Value="2 3" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            
+            <ListView.Style>
+                <Style TargetType="ListView">
+                    <Style.Triggers>
+
+
+                        <DataTrigger Binding="{Binding IconSize}" Value="{x:Static indexer:IconSizeEnum.SmallIcon16}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="cliInterop:FileInfoWrapper">
+                                        <Canvas Width="230" Height="18">
+                                            <controls:AutoScalingImage Canvas.Left="1" Canvas.Top="1"
+                                                                   Width="16" Height="16"
+                                                                   Source="{Binding Thumbnail, Mode=OneTime}" 
+                                                                   RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
+
+                                            <controls:FileNameTextBlock Canvas.Left="18" Canvas.Top="1"
+                                                                    Width="211" Height="16"
+                                                                    Text="{Binding Name, Mode=OneTime}" TextAlignment="Left" />
+
+                                        </Canvas>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        
+                        
+                        <DataTrigger Binding="{Binding IconSize}" Value="{x:Static indexer:IconSizeEnum.MediumIcon32}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="cliInterop:FileInfoWrapper">
+                                        <Canvas Width="68" Height="74">
+                                            <controls:AutoScalingImage Canvas.Left="10" Canvas.Top="1"
+                                                                       Width="48" Height="48"
+                                                                       Source="{Binding Thumbnail, Mode=OneTime}"
+                                                                       RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
+
+                                            <controls:FileNameTextBlock Canvas.Left="1" Canvas.Top="49"
+                                                                        Width="66" Height="19"
+                                                                        Text="{Binding Name, Mode=OneTime}" TextAlignment="Center" />
+                                        </Canvas>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IconSize}" Value="{x:Static indexer:IconSizeEnum.LargeIcon48}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="cliInterop:FileInfoWrapper">
+                                        <Canvas Width="104" Height="116">
+                                            <controls:AutoScalingImage Canvas.Left="4" Canvas.Top="1"
+                                                                       Width="96" Height="96"
+                                                                       Source="{Binding Thumbnail, Mode=OneTime}"
+                                                                       RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
+
+                                            <controls:FileNameTextBlock Canvas.Left="1" Canvas.Top="97"
+                                                                        Width="102" Height="19"
+                                                                        Text="{Binding Name, Mode=OneTime}" TextAlignment="Center"/>
+                                        </Canvas>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IconSize}" Value="{x:Static indexer:IconSizeEnum.JumboIcon256}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="cliInterop:FileInfoWrapper">
+                                        <Canvas Width="266" Height="264">
+                                            <controls:AutoScalingImage Canvas.Left="1" Canvas.Top="1"
+                                                                       Width="262" Height="244"
+                                                                       Source="{Binding Thumbnail, Mode=OneTime}" 
+                                                                       RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
+
+                                            <controls:FileNameTextBlock Canvas.Left="1" Canvas.Top="245"
+                                                                        Width="266" Height="19"
+                                                                        Text="{Binding Name, Mode=OneTime}" TextAlignment="Center" />
+                                        </Canvas>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        
+                    </Style.Triggers>
+                </Style>
+            </ListView.Style>
+
+        </ListView>
+
+    </Grid>
+</UserControl>

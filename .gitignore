@@ -18,10 +18,10 @@
 *.dll
 *.lib
 *.exe
+*.cache
 
-
-*/Debug/*
-*/Release/*
+Debug
+Release
 
 */obj/Debug/*
 */obj/x86/Debug/*
@@ -34,3 +34,4 @@
 */bin/x86/Release/*
 
 /packages/Hardcodet.NotifyIcon.Wpf.1.0.5
+
