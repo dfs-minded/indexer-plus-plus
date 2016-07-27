@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Indexer.Annotations;
 
 namespace Indexer
 {
@@ -29,7 +28,6 @@ namespace Indexer
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;

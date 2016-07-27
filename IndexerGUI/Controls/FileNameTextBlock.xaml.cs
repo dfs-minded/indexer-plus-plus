@@ -229,7 +229,15 @@ namespace Indexer.Controls
             else
             {
                 // Rename the file.
-                File.Move(oldPath, newPath);
+                try
+                {
+                    File.Move(oldPath, newPath);
+                }
+                catch(UnauthorizedAccessException e)
+                {
+                    MessageBox.Show("You are not permitted to modify this file.\nAltering or changing files used by operating system could damage your system!", "Unauthorized Access");
+                }
+                
             }
         }
 

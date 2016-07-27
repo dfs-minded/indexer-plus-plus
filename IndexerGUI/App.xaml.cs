@@ -6,13 +6,12 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using CLIInterop;
-using Indexer.Annotations;
 
 namespace Indexer
 {
     public partial class App : Application
     {
-        [UsedImplicitly] private static EventWaitHandle eventWaitHandle;
+        private static EventWaitHandle eventWaitHandle; // Used implicitly.
         private static string namePrefix;
 
         [STAThread]

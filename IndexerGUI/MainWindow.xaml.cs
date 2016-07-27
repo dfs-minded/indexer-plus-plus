@@ -11,7 +11,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CLIInterop;
-using Indexer.Annotations;
 using Indexer.Controls;
 using Microsoft.Win32;
 using Control = System.Windows.Forms.Control;
@@ -348,7 +347,7 @@ namespace Indexer
             DateFrom = DateTime.Now.AddDays(-30);
             DateTo = DateTime.Now;
 
-            excludeHiddenAndSystem = true;
+            excludeHiddenAndSystem = false;
 
             if (SystemConfigFlagsWrapper.Instance().CallWatchChanges)
             {
@@ -660,7 +659,6 @@ namespace Indexer
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
