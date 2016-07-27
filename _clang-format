@@ -1,0 +1,12 @@
+ 
+ BasedOnStyle: "Google"
+ ColumnLimit : 120
+ IndentWidth: 4
+ AlignConsecutiveAssignments  : true
+ AllowShortFunctionsOnASingleLine : false
+ AllowShortLoopsOnASingleLine : false
+ MaxEmptyLinesToKeep : 2
+ KeepEmptyLinesAtTheStartOfBlocks : true
+
+
+ 
