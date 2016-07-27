@@ -3,7 +3,7 @@ What is Indexer++ ?
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 
-Indexer++ is an open-source desktop files and folders search utility. It is a Windows search replacement which is faster, supports entire file system search, filters and more. The Core search engine is written on C++ 11, uses Win API and STL, which ensures high speed and saves memory. Indexer++ directly reads and parses the NTFS  filesystem master files table.
+Indexer++ is an open-source desktop files and folders search utility. It is a Windows search replacement which is faster, supports entire file system search, filters, command-line interface and more. The Core search engine is written on C++ 11, uses Win API and STL, which ensures high speed and saves memory. Indexer++ directly reads and parses the NTFS  filesystem master files table.
 
 ###Documentation
 Brief <i class="icon-provider-gdrive"></i>[General Design Doc](https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/edit).
