@@ -1,29 +1,36 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
+*.user
+*.autosave
+*.7pre1
+*.DotSettings
+*.suo
+*.sdf
+*.opensdf
+*.vsp
+*.psess
+*ipch
+*.log
+*.tlog
+*.pdb
+*.lastbuildstate
+*.idb
+*.filters
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
 *.lib
-
-# Executables
 *.exe
-*.out
-*.app
+
+
+*/Debug/*
+*/Release/*
+
+*/obj/Debug/*
+*/obj/x86/Debug/*
+*/obj/Release/*
+*/obj/x86/Release/*
+
+*/bin/Debug/*
+*/bin/x86/Debug/*
+*/bin/Release/*
+*/bin/x86/Release/*
+
+/packages/Hardcodet.NotifyIcon.Wpf.1.0.5
