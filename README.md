@@ -20,7 +20,7 @@ IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be
 
 ###To create an installer
 
-Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Download target="_blank">NSIS</a>. 
+Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Download" target="_blank">NSIS</a>. 
 
  - Build the solution in release configuration
  - Install NSIS software if you do not have it on your machine
@@ -30,7 +30,7 @@ Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Downlo
  
 
 ###Links
-See the [Indexer++ official site](http://indexer-plus-plus.com/) for more information.
-For bugs and feature requests relay to https://github.com/dfs-minded/indexer-plus-plus/issues.
+See the <a href="http://indexer-plus-plus.com/" target="_blank">Indexer++ official site</a> for more information.
+For bugs and feature requests relay to <a href="https://github.com/dfs-minded/indexer-plus-plus/issues" target="_blank">https://github.com/dfs-minded/indexer-plus-plus/issues</a>.
 
 
