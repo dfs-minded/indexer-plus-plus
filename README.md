@@ -6,10 +6,10 @@ What is Indexer++ ?
 Indexer++ is an open-source desktop files and folders search utility. It is a Windows search replacement which is faster, supports entire file system search, filters and more. The Core search engine is written on C++ 11, uses Win API and STL, which ensures high speed and saves memory. Indexer++ directly reads and parses the NTFS  filesystem master files table.
 
 
-You can search your files using a command-line as well. ifind (Indexer++ find) implements a subset of the options of the Linux find command, so for Linux users it is easy to start right away. For those, who are not familiar with find command [here is options description with some examples](https://raw.githubusercontent.com/dfs-minded/indexer-plus-plus/master/ifind%20commands%20doc.md).
+You can search your files using a command-line as well. **ifind** (Indexer++ find) implements a subset of the options of the Linux **find** command, so for Linux users it is easy to start right away. For those, who are not familiar with **find** command <a href="https://raw.githubusercontent.com/dfs-minded/indexer-plus-plus/master/ifind%20commands%20doc.md" target="_blank">here is options description with some examples</a>.
 
 ###Documentation
-Brief <i class="icon-provider-gdrive"></i>[General Design Doc](https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/edit).
+Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/edit target="_blank">General Design Doc</a>.
 
 
 ###To build Indexer++ from source
@@ -20,7 +20,7 @@ IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be
 
 ###To create an installer
 
-Indexer++ installer is written using [NSIS](http://nsis.sourceforge.net/Download). 
+Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Download target="_blank">NSIS</a>. 
 
  - Build the solution in release configuration
  - Install NSIS software if you do not have it on your machine
