@@ -1,11 +1,12 @@
-// This file is the part of the Indexer++ project.
+﻿// This file is the part of the Indexer++ project.
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
-﻿#include "Helper.h"
+#include "Helper.h"
 
 #include <string.h>
 #include <vector>
+
 #include "WindowsWrapper.h"
 
 #include "HelperCommon.h"

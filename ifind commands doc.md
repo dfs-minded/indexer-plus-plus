@@ -9,7 +9,7 @@ Search a folder hierarchy for filename(s) that meet a desired criteria: Name, Si
 ####SYNTAX
 ```
       ifind [path...] [expression]
-```  
+```
 ####OPTIONS
 ```
 -help, --help
@@ -126,6 +126,7 @@ List filenames ending in .mp3, searching in the current folder and all subfolder
 ```
 $ ifind . -name "*.mp3"
 ```
+
 List filenames ending in .mp3, searching in all filesystem NTFS drives, their folders and all subfolders:
 ```
 $ ifind / -name "*.mp3"
@@ -150,22 +151,27 @@ List all the directory and sub-directory names:
 ```
 $ ifind . -type d
 ```
+
 List all files in those sub-directories (but not the directory names):
 ```
 $ ifind . -type f
 ```
+
 ifind files that are over a gigabyte in size:
 ```
 $ ifind ~/Movies -size +1024M
 ```
+
 Find files that are over 1 GB but less than 20 GB in size:
 ```
 $ ifind ~/Movies -size +1024M -size -20480M -print0
 ```
+
 Find files have been modified within the last day:
 ```
 $ ifind ~/Movies -mtime -1
 ```
+
 Find files which have been modified in the last twenty-four hours:
 ```
 $ ifind ~/Movies -mtime 0
