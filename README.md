@@ -9,7 +9,7 @@ Indexer++ is an open-source desktop files and folders search utility. It is a Wi
 You can search your files using a command-line as well. **ifind** (Indexer++ find) implements a subset of the options of the Linux **find** command, so for Linux users it is easy to start right away. For those, who are not familiar with **find** command <a href="https://github.com/dfs-minded/indexer-plus-plus/blob/master/ifind%20commands%20doc.md" target="_blank">here is options description with some examples</a>.
 
 ###Documentation
-Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/edit target="_blank">General Design Doc</a>.
+Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/" target="_blank">General Design Doc</a>.
 
 
 ###To build Indexer++ from source
