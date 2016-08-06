@@ -9,7 +9,7 @@ Indexer++ is an open-source desktop files and folders search utility. It is a Wi
 You can search your files using a command-line as well. **ifind** (Indexer++ find) implements a subset of the options of the Linux **find** command, so for Linux users it is easy to start right away. For those, who are not familiar with **find** command <a href="https://github.com/dfs-minded/indexer-plus-plus/blob/master/ifind%20commands%20doc.md" target="_blank">here is options description with some examples</a>.
 
 ###Documentation
-Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/edit target="_blank">General Design Doc</a>.
+Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/" target="_blank">General Design Doc</a>.
 
 
 ###To build Indexer++ from source
@@ -20,7 +20,7 @@ IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be
 
 ###To create an installer
 
-Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Download target="_blank">NSIS</a>. 
+Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Download" target="_blank">NSIS</a>. 
 
  - Build the solution in release configuration
  - Install NSIS software if you do not have it on your machine
@@ -30,7 +30,7 @@ Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Downlo
  
 
 ###Links
-See the [Indexer++ official site](http://indexer-plus-plus.com/) for more information.
-For bugs and feature requests relay to https://github.com/dfs-minded/indexer-plus-plus/issues.
+See the <a href="http://indexer-plus-plus.com/" target="_blank">Indexer++ official site</a> for more information.
+For bugs and feature requests relay to <a href="https://github.com/dfs-minded/indexer-plus-plus/issues" target="_blank">https://github.com/dfs-minded/indexer-plus-plus/issues</a>.
 
 
