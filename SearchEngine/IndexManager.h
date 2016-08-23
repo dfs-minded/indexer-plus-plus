@@ -19,23 +19,13 @@ class NotifyNTFSChangedEventArgs;
 class MFTReader;
 class FileInfo;
 class Log;
-
-// <mutex> and <thread> are not supported when compiling with /clr or /clr:pure, so this workaround needed.
-namespace std {
-
-#ifndef SINGLE_THREAD
-class mutex;
-class thread;
-#endif
-}
+struct BoolAtomicWrapper;
 
 class IndexManager : public NTFSChangeObserver {
    public:
     IndexManager(char drive_letter, IndexChangeObserver* index_change_observer);
 
     NO_COPY(IndexManager)
-
-    ~IndexManager();
 
     // Starts IndexManager in separate thread.
     void RunAsync();
@@ -64,11 +54,9 @@ class IndexManager : public NTFSChangeObserver {
         return index_->RootID();
     }
 
-    // Considering fact that bool is not atomic.
+    bool ReadingMFTFinished() const;
 
-    /*bool*/ volatile int ReadingMFTFinished;
-
-    /*bool*/ volatile int DisableIndexRequested;
+    bool DisableIndexRequested() const;
 
    private:
     // Reads MFT, builds |index_| and watches NTFS changes.
@@ -86,12 +74,21 @@ class IndexManager : public NTFSChangeObserver {
 
     void CheckReaderResult(const MFTReadResult* raw_result) const;
 
+
     static void DisposeReaderResult(std::unique_ptr<MFTReadResult> u_read_res);
 
 
     // The index, which is uniquely hold and managed by this class instance.
 
     uIndex index_;
+
+
+    std::unique_ptr<BoolAtomicWrapper> reading_mft_finished_;
+
+
+    // User can unselect the drive.
+
+    std::unique_ptr<BoolAtomicWrapper> disable_index_requested_;
 
 
     // The reference for the class, which want to be notified, when the volume index has been changed.
@@ -109,10 +106,6 @@ class IndexManager : public NTFSChangeObserver {
     Log* logger_;
 
     uint64 start_time_;
-
-#ifndef SINGLE_THREAD
-    std::mutex* locker_;
-#endif
 };
 
-typedef std::unique_ptr<IndexManager> uIndexManager;
+using uIndexManager = std::unique_ptr<IndexManager>;
