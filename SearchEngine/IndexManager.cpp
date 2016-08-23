@@ -10,12 +10,13 @@
 #include <thread>
 
 #include "AsyncLog.h"
+#include "CLRCompilantWrappers.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
+#include "FileInfoHelper.h"
 #include "HelperCommon.h"
 #include "Macros.h"
 #include "OneThreadLog.h"
-
 
 #include "MFTReader.h"
 #include "MFTReaderFactory.h"
@@ -24,27 +25,20 @@
 #include "WinApiCommon.h"
 #include "WinApiMftReader.h"
 
-#include "FileInfoHelper.h"
 #include "IndexChangeObserver.h"
 #include "NotifyIndexChangedEventArgs.h"
 
 using namespace std;
 
 IndexManager::IndexManager(char drive_letter, IndexChangeObserver* index_change_observer)
-    : ReadingMFTFinished(false),
-      DisableIndexRequested(false),
+    : reading_mft_finished_(make_unique<BoolAtomicWrapper>(false)),
+      disable_index_requested_(make_unique<BoolAtomicWrapper>(false)),
       index_(make_unique<Index>(drive_letter)),
       index_change_observer_(index_change_observer),
       drive_letter_w_(1, drive_letter),
       start_time_(0) {
 
-    NEW_LOCKER
-
     GET_LOGGER
-}
-
-IndexManager::~IndexManager() {
-    DELETE_LOCKER
 }
 
 void IndexManager::RunAsync() {
@@ -78,18 +72,18 @@ void IndexManager::CheckUpdates() {
 
 void IndexManager::EnableIndex() {
 
-    DisableIndexRequested = false;
+    disable_index_requested_->store(false);
 
     RunAsync();
 }
 
 void IndexManager::DisableIndex() {
 
-    DisableIndexRequested = true;
+    disable_index_requested_->store(true);
 
     // If reading MFT not finished yet (and the index is not populated and filesystem watcher is not created etc.), we
     // have nothing to clear.
-    if (!ReadingMFTFinished) {
+    if (!ReadingMFTFinished()) {
         index_change_observer_->OnVolumeStatusChanged(DriveLetter());
         return;
     }
@@ -100,7 +94,7 @@ void IndexManager::DisableIndex() {
     watcher->StopWatching = true;
 
     auto* data         = index_->ReleaseData();
-    ReadingMFTFinished = false;
+    reading_mft_finished_->store(false);
 
     vector<const FileInfo *> new_items, old_items, changed_items;
     old_items.reserve(data->size());
@@ -116,9 +110,17 @@ void IndexManager::DisableIndex() {
     index_change_observer_->OnIndexChanged(p_args);
 }
 
+bool IndexManager::ReadingMFTFinished() const {
+    return reading_mft_finished_->load();
+}
+
+bool IndexManager::DisableIndexRequested() const {
+    return disable_index_requested_->load();
+}
+
 void IndexManager::Run() {
 
-    if (ReadingMFTFinished || DisableIndexRequested) return;
+    if (ReadingMFTFinished() || DisableIndexRequested()) return;
 
     auto u_reader = MFTReaderFactory::CreateReader(DriveLetter());
 
@@ -131,7 +133,7 @@ void IndexManager::Run() {
     // CheckReaderResult(u_read_res.get());
 
     // Reading records is long-time operation, meanwhile the volume could be disabled by user.
-    if (DisableIndexRequested) {
+    if (DisableIndexRequested()) {
         DisposeReaderResult(move(u_read_res));
         return;
     }
@@ -154,7 +156,7 @@ void IndexManager::Run() {
     }
 #endif
 
-    ReadingMFTFinished = true;
+    reading_mft_finished_->store(true);
 
     index_->CalculateDirsSizes();
 

@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsyncLog.h" />
+    <ClInclude Include="CLRCompilantWrappers.h" />
     <ClInclude Include="CommandlineArguments.h" />
     <ClInclude Include="FileInfoHelper.h" />
     <ClInclude Include="HelperCommon.h" />

@@ -117,10 +117,10 @@ string IndexManagersContainer::GetStatus() const {
 
     for (const auto& mgr : index_managers_) {
 
-        if (mgr->DisableIndexRequested) continue;
+        if (mgr->DisableIndexRequested()) continue;
 
         res += mgr->DriveLetter();
-        res += mgr->ReadingMFTFinished ? ": finished" : ": reading MFT";
+        res += mgr->ReadingMFTFinished() ? ": finished" : ": reading MFT";
 
         res += string(";  ");
     }
@@ -161,7 +161,7 @@ const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path)
     auto managers = GetAllIndexManagers();
 
     for (const auto* mgr : managers) {
-        if (!mgr->ReadingMFTFinished || mgr->DisableIndexRequested) continue;
+        if (!mgr->ReadingMFTFinished() || mgr->DisableIndexRequested()) continue;
 
         if (table[mgr->DriveLetterW()[0]] == table[path_components[0][0]]) {
             root = mgr->GetIndex()->Root();

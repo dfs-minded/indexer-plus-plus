@@ -222,7 +222,7 @@ void SearchEngineImpl::SearchInAllIndicesFromRoot() {
     u_tmp_search_result_ = make_unique<SearchResult>(move(deleter));
 
     for (const auto* mgr : mgrs) {
-        if (!mgr->ReadingMFTFinished || mgr->DisableIndexRequested) continue;
+        if (!mgr->ReadingMFTFinished() || mgr->DisableIndexRequested()) continue;
 
         const auto* index = mgr->GetIndex();
         SearchInTree(*index->Root(), u_tmp_search_result_->Files.get());
