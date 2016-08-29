@@ -23,6 +23,9 @@ namespace CLIInterop
 	class ModelUpdater;
 	enum SortFileInfoPropety;
 
+	// The model layer for the GUI. Wraps the access to the C++ model and provides data virtualization, so that needed
+	// managed objects created upon request from the underlying unmanaged objects.
+
 	public ref class Model: 
 		public System::Collections::IList,
 		public System::Collections::Generic::IList<FileInfoWrapper^>,

@@ -19,7 +19,7 @@ class NTFSChangeObserver;
 class FileInfo;
 
 
-// This class watches a NTFS volume changes. It uses a USN (Update Sequence Number) journal tao get information about
+// This class watches a NTFS volume changes. It uses a USN (Update Sequence Number) journal to get information about
 // files creation, modification or deletion.
 
 class NTFSChangesWatcher {
