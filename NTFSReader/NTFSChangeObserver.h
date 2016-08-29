@@ -12,6 +12,7 @@
 // (created, modified or deleted) |OnNTFSChanged| method will be called.
 
 class NTFSChangeObserver {
+
    public:
     virtual ~NTFSChangeObserver() {
     }
