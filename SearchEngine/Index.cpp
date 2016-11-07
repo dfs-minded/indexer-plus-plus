@@ -20,9 +20,13 @@ Index::Index(char drive_letter) : drive_letter_(drive_letter), root_id_(-1), sta
     NEW_RECURSIVE_LOCKER
 
     GET_LOGGER
+
+    logger_->Debug(METHOD_METADATA + L"Creating index for drive " + wstring(1, drive_letter_));
 }
 
 Index::~Index() {
+
+    logger_->Debug(METHOD_METADATA + L"Destroying index for drive " + wstring(1, drive_letter_));
 
     DELETE_LOCKER
 
@@ -81,7 +85,12 @@ vector<FileInfo*>* Index::ReleaseData() {
 }
 
 void Index::SetData(unique_ptr<vector<FileInfo*>> data) {
+
+    logger_->Debug(METHOD_METADATA + L"swapping unique ptrs for data on drive " + to_wstring(drive_letter_) +
+                   L" Elements count: " + to_wstring(data->size()));
+
     P_RECURSIVE_LOCK_GUARD
+
     data_.swap(data);
 }
 

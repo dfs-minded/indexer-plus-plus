@@ -5,13 +5,13 @@
 #include "NTFSChangesWatcher.h"
 
 #include <map>
-#include "WindowsWrapper.h"
 
 #include "CommandlineArguments.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
 #include "HelperCommon.h"
 #include "Log.h"
+#include "WindowsWrapper.h"
 #include "typedefs.h"
 
 #include "NTFSChangeObserver.h"
