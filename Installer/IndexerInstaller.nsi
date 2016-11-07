@@ -1,10 +1,12 @@
 !Include 'MUI.nsh'
 
-!define APPNAME "Indexer++"
+!define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 1
-!define VERSIONMINOR 0 
+!define VERSIONMINOR 0
 
-outfile '${APPNAME}Installer.exe'
+VIAddVersionKey LegalCopyright "Anna Krykora"
+
+outfile '${APPNAME} Installer.exe'
 InstallDir '$PROGRAMFILES\${APPNAME}'
 
 BrandingText " "
@@ -178,7 +180,7 @@ Section "uninstall"
 	ExecWait '"$INSTDIR\AddExplorerContextMenu.exe" /u'
 	
 	# Remove files
-	delete $INSTDIR\${APPNAME}.exe
+	delete "$INSTDIR\${APPNAME}.exe"
 	delete $INSTDIR\CLIInterop.dll
 	delete $INSTDIR\IndexerLogo.ico
 	delete $INSTDIR\UserSettings.xml

@@ -34,7 +34,9 @@ SearchEngineImpl::SearchEngineImpl(SearchEngine* interface_backlink, SearchResul
       last_sort_prop_(SortingProperty::SORT_NAME),
       last_sort_direction_(1),
       sorter_(last_sort_prop_, last_sort_direction_),
-      result_observer_(result_observer) {
+      result_observer_(result_observer),
+      mtx_(new mutex()),
+      conditional_var_(new condition_variable()) {
 
     GET_LOGGER
     logger_->Debug(METHOD_METADATA + L"SearchEngine_ctor");
@@ -49,8 +51,6 @@ SearchEngineImpl::SearchEngineImpl(SearchEngine* interface_backlink, SearchResul
 #ifndef SINGLE_THREAD
 
     logger_->Debug(METHOD_METADATA + L"SearchEngine. Constructor called, starting new worker thread.");
-    mtx_             = new mutex();
-    conditional_var_ = new condition_variable();
 
     worker_thread_ = new thread(&SearchEngineImpl::SearchWorker, this);
     HelperCommon::SetThreadName(worker_thread_, "SearchWorker ");
