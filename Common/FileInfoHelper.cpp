@@ -197,7 +197,7 @@ wstring SerializeFileInfo(const FileInfo& fi) {
     res += to_wstring(fi.ParentID) + g_delim;    // 2
     res += to_wstring(fi.NameLength) + g_delim;  // 3
 
-    res += wstring(reinterpret_cast<const wchar_t*>(fi.GetName())) + g_delim;  // 4
+	res += HelperCommon::Char16ToWstring(fi.GetName()) + g_delim;  // 4
 
     res += to_wstring(fi.FileAttributes) + g_delim;  // 5
 
@@ -216,7 +216,7 @@ wstring SerializeFileInfoHumanReadable(const FileInfo& fi) {
 
     res += L"; ID = " + to_wstring(fi.ID);
     res += L"; ParentID = " + to_wstring(fi.ParentID);
-    res += L"; FileInfo: Name = " + wstring(reinterpret_cast<const wchar_t*>(fi.GetName()));
+    res += L"; FileInfo: Name = " + HelperCommon::Char16ToWstring(fi.GetName());
     res += L"; NameLength = " + to_wstring(fi.NameLength);
     res += L"; FileAttributes = " + to_wstring(fi.FileAttributes);
 

@@ -41,6 +41,15 @@ TEST(HelperCommonTest, StringToWstring) {
     }
 }
 
+TEST(HelperCommonTest, Char16ToWstring) {
+	const char16_t* s = reinterpret_cast<char16_t*>(L"file_name3");
+
+	wstring expected = L"file_name3";
+	wstring result = HelperCommon::Char16ToWstring(s);
+
+	ASSERT_EQ(expected, result);
+}
+
 TEST(HelperCommonTest, SplitOnlyNonEmpty) {
 
     const wstring input_strings[] = {L"_=_+", L"no_splitters", L"no_splitters", L"one_type__splitters_",

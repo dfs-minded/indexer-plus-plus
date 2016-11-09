@@ -60,6 +60,12 @@ void Index::BuildTree() const {
 
         FileInfo* parent = GetNode(fi->ParentID);
 
+		if (parent == nullptr) {
+			logger_->Warning(METHOD_METADATA + L"Cannot find patent for file" +
+				HelperCommon::Char16ToWstring(fi->GetName()) + L" with ParentID = " + to_wstring(fi->ParentID));
+			continue;
+		}
+
         fi->Parent = parent;
 
         if (parent->FirstChild == nullptr) {
@@ -86,7 +92,7 @@ vector<FileInfo*>* Index::ReleaseData() {
 
 void Index::SetData(unique_ptr<vector<FileInfo*>> data) {
 
-    logger_->Debug(METHOD_METADATA + L"swapping unique ptrs for data on drive " + to_wstring(drive_letter_) +
+    logger_->Debug(METHOD_METADATA + L"Swapping unique ptrs for data on drive " + to_wstring(drive_letter_) +
                    L" Elements count: " + to_wstring(data->size()));
 
     P_RECURSIVE_LOCK_GUARD
@@ -105,7 +111,7 @@ void Index::InsertNode(FileInfo* node) const {
 
     if (!parent) {
         WriteToOutput(METHOD_METADATA + L"No parent dir found in the tree for item: ID" + to_wstring(node->ID) +
-                      L", Name:" + reinterpret_cast<const wchar_t*>(node->GetName()));
+                      L", Name:" + HelperCommon::Char16ToWstring(node->GetName()));
 
         parent = (*data_)[RootID()];
     }
@@ -177,6 +183,12 @@ void Index::UpdateParentDirsSize(const FileInfo* fi, int size_delta) const {
     FileInfo* tmp = fi->Parent;
 
     while (true) {
+
+		if (tmp == nullptr) {
+			logger_->Warning(METHOD_METADATA + L"Cannot find patent for file with ParentID = " + to_wstring(fi->ParentID));
+			return;
+		}
+
         // Just in case for size rounding error accumulation, assign zero if less than zero.
         tmp->SizeReal = max(0, tmp->SizeReal + size_delta);
 
@@ -192,7 +204,7 @@ void SerializeToOutput(const FileInfo* first_child, wstring indent /*= L"\t"*/) 
     const FileInfo* current = first_child;
 
     while (current != nullptr) {
-        wstring message = indent + reinterpret_cast<const wchar_t*>(current->GetName()) + kDelim +
+        wstring message = indent + HelperCommon::Char16ToWstring(current->GetName()) + kDelim +
                           to_wstring(current->ID) + kDelim + to_wstring(current->ParentID);
 
         WriteToOutput(message);

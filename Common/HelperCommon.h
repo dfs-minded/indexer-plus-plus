@@ -30,6 +30,8 @@ class HelperCommon {
 
     static std::u16string WstringToU16string(const std::wstring& s);
 
+	static const std::wstring Char16ToWstring(const char16_t* s);
+
     static int Str16Len(const char16_t* s);
 
     template <typename TChar>
