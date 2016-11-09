@@ -59,7 +59,7 @@ wstring HelperCommon::U16stringToWstring(const u16string& s) {
     return wstr;
 }
 
-std::u16string HelperCommon::WstringToU16string(const std::wstring& s) {
+u16string HelperCommon::WstringToU16string(const wstring& s) {
     u16string res(s.size(), L'\0');
 
     for (size_t i = 0; i < s.size(); ++i) {
@@ -67,6 +67,11 @@ std::u16string HelperCommon::WstringToU16string(const std::wstring& s) {
     }
 
     return res;
+}
+
+const wstring HelperCommon::Char16ToWstring(const char16_t* s)
+{
+	return wstring(reinterpret_cast<const wchar_t*>(s));
 }
 
 int HelperCommon::Str16Len(const char16_t* s) {
