@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Indexer.Views"
     xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
-    Title="Indexer++"
+    Title="Indexer++ Beta"
     Background="#F7F7F7"
     Closing="MainWindow_OnClosing"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"

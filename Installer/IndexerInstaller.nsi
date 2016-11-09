@@ -4,7 +4,7 @@
 !define VERSIONMAJOR 1
 !define VERSIONMINOR 0
 
-VIAddVersionKey LegalCopyright "Anna Krykora"
+VIProductVersion "${VERSIONMAJOR}.${VERSIONMINOR}.0.0"
 
 outfile '${APPNAME} Installer.exe'
 InstallDir '$PROGRAMFILES\${APPNAME}'
@@ -53,6 +53,16 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
 !insertmacro MUI_UNPAGE_FINISH
  
 !insertmacro MUI_LANGUAGE "English"
+
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Indexer++"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© Anna Krykora"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Windows Files Search Util"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.0.0.0"
+
+
+ # Sign the installer after it has been created.
+!finalize 'signInstaller.cmd'
+
  
  # Custom macro
  !include LogicLib.nsh
@@ -109,7 +119,9 @@ functionEnd
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$INSTDIR\Uninstall.exe"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayIcon" "$INSTDIR\IndexerLogo.ico"
-
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "Publisher" "Anna Krykora"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${VERSIONMAJOR}.${VERSIONMINOR}"
+	
 SectionEnd
  #----------------------------
  
