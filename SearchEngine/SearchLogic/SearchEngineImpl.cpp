@@ -254,9 +254,8 @@ void SearchEngineImpl::SearchInSpecificDir() {
     const auto* index = indices_container_->GetIndexManager(search_start_dir->DriveLetter)->GetIndex();
     index->LockData();
 
-    TIK
-
-        SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
+	TIK
+    SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
 
     Sort(u_tmp_search_result_->Files.get());
 
