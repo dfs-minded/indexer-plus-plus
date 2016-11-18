@@ -16,17 +16,18 @@
 
 using namespace std;
 
-Index::Index(char drive_letter) : drive_letter_(drive_letter), root_id_(-1), start_time_(-1) {
-    NEW_RECURSIVE_LOCKER
+Index::Index(char drive_letter)
+    : drive_letter_(drive_letter), drive_letter_w_(1, drive_letter), root_id_(-1), start_time_(-1) {
+    NEW_LOCKER
 
     GET_LOGGER
 
-    logger_->Debug(METHOD_METADATA + L"Creating index for drive " + wstring(1, drive_letter_));
+    logger_->Debug(METHOD_METADATA + L"Creating index for drive " + DriveLetterW());
 }
 
 Index::~Index() {
 
-    logger_->Debug(METHOD_METADATA + L"Destroying index for drive " + wstring(1, drive_letter_));
+    logger_->Debug(METHOD_METADATA + L"Destroying index for drive " + DriveLetterW());
 
     DELETE_LOCKER
 
@@ -49,8 +50,6 @@ void Index::UnlockData() const {
 }
 
 void Index::BuildTree() const {
-
-    P_RECURSIVE_LOCK_GUARD
 
     for (auto* fi : *data_) {
 
@@ -85,26 +84,23 @@ const FileInfo* Index::Root() const {
 }
 
 vector<FileInfo*>* Index::ReleaseData() {
-    P_RECURSIVE_LOCK_GUARD
+    logger_->Debug(METHOD_METADATA + L" called for drive " + DriveLetterW() + L" The index becomes empty.");
 
     return data_.release();
 }
 
 void Index::SetData(unique_ptr<vector<FileInfo*>> data) {
 
-    logger_->Debug(METHOD_METADATA + L"Swapping unique ptrs for data on drive " + to_wstring(drive_letter_) +
+    logger_->Debug(METHOD_METADATA + L"Swapping unique ptrs for data on drive " + DriveLetterW() +
                    L" Elements count: " + to_wstring(data->size()));
-
-    P_RECURSIVE_LOCK_GUARD
 
     data_.swap(data);
 }
 
 void Index::InsertNode(FileInfo* node) const {
-    P_RECURSIVE_LOCK_GUARD
 
-        // Add to the map.
-        (*data_)[node->ID] = node;
+    // Add to the map.
+    (*data_)[node->ID] = node;
 
     // Insert in the tree.
     FileInfo* parent = GetNode(node->ParentID);
@@ -129,8 +125,6 @@ void Index::InsertNode(FileInfo* node) const {
 }
 
 void Index::RemoveNode(const FileInfo* node) const {
-
-    P_RECURSIVE_LOCK_GUARD
 
     FileInfo* parent = node->Parent;
 
@@ -160,13 +154,10 @@ void Index::RemoveNode(const FileInfo* node) const {
 
 FileInfo* Index::GetNode(uint ID) const {
 
-    P_RECURSIVE_LOCK_GUARD
     return (*data_)[ID];
 }
 
 void Index::CalculateDirsSizes() const {
-
-    P_RECURSIVE_LOCK_GUARD
 
     for (const auto* fi : *data_) {
         if (!fi) continue;
@@ -175,8 +166,6 @@ void Index::CalculateDirsSizes() const {
 }
 
 void Index::UpdateParentDirsSize(const FileInfo* fi, int size_delta) const {
-
-    P_RECURSIVE_LOCK_GUARD
 
     if (fi->IsDirectory() || size_delta == 0) return;
 
@@ -209,9 +198,8 @@ void SerializeToOutput(const FileInfo* first_child, wstring indent /*= L"\t"*/) 
 
         WriteToOutput(message);
 
-        if (current->FirstChild != nullptr) {
-            SerializeToOutput(current->FirstChild, indent + L'\t');
-        }
+        if (current->FirstChild != nullptr) SerializeToOutput(current->FirstChild, indent + L'\t');
+
         current = current->NextSibling;
     }
 }

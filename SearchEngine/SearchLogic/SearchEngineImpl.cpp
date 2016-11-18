@@ -133,6 +133,8 @@ void SearchEngineImpl::SearchWorker() {
         // indices changes.
         if (query_search_res_outdated_) {
 
+			logger_->Debug(L"Started processing 'query search result outdated'.");
+
             UNIQUE_LOCK
             sorter_.ResetSortingProperties(last_sort_prop_, last_sort_direction_);
             UNLOCK
@@ -140,6 +142,8 @@ void SearchEngineImpl::SearchWorker() {
             ProcessNewSearchQuery();
 
         } else if (sort_outdated_) {
+
+			logger_->Debug(L"Started processing 'sort outdated.'");
 
             UNIQUE_LOCK
             sorter_.ResetSortingProperties(last_sort_prop_, last_sort_direction_);
@@ -150,8 +154,10 @@ void SearchEngineImpl::SearchWorker() {
                 mgr->GetIndex()->LockData();
 
             // Do not need to lock |index_outdated_|. It can be changed only by invoking OnIndexChanged, but it could
-            //  not be invoked because indices are locked now and no index changes can be handled by IndexManager.
+            // not be invoked because indices are locked now and no index changes can be handled by IndexManager.
             if (index_outdated_) {
+
+				logger_->Debug(L"Started processing 'index outdated.'");
 
                 ProcessIndexChanged();  // |u_tmp_search_result_| will be created by ProcessIndexChanged.
 
@@ -193,6 +199,8 @@ void SearchEngineImpl::SearchWorker() {
 }
 
 void SearchEngineImpl::ProcessNewSearchQuery() {
+
+	logger_->Debug(METHOD_METADATA + L"Called.");
 
     query_search_res_outdated_ = false;
     index_outdated_            = false;
@@ -341,7 +349,6 @@ void SearchEngineImpl::ProcessIndexChanged() {
     logger_->Debug(METHOD_METADATA + L"Finished");
 }
 
-
 // Called from other then SearchWorker thread (UI thread).
 void SearchEngineImpl::Sort(const string& property_name, int direction) {
 
@@ -358,6 +365,9 @@ void SearchEngineImpl::Sort(const string& property_name, int direction) {
 }
 
 void SearchEngineImpl::Sort(vector<const FileInfo*>* file_infos) {
+
+	logger_->Debug(L"Sorting search result.");
+
     sort_outdated_ = false;
     sorter_.Sort(file_infos);
 }

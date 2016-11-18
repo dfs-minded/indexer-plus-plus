@@ -13,10 +13,8 @@
 #ifdef SINGLE_THREAD
 
 #define NEW_LOCKER
-#define NEW_RECURSIVE_LOCKER
 #define DELETE_LOCKER
 #define PLOCK_GUARD
-#define P_RECURSIVE_LOCK_GUARD
 #define PLOCK
 #define UNIQUE_LOCK
 #define UNLOCK
@@ -27,13 +25,11 @@
 #else
 
 #define NEW_LOCKER locker_ = new mutex();
-#define NEW_RECURSIVE_LOCKER locker_ = new recursive_mutex();
 #define DELETE_LOCKER delete locker_;
 
 #define LOCK locker_.lock();
 #define PLOCK locker_->lock();
 #define PLOCK_GUARD lock_guard<mutex> lock(*locker_);
-#define P_RECURSIVE_LOCK_GUARD lock_guard<recursive_mutex> lock(*locker_);
 
 #define UNIQUE_LOCK unique_lock<mutex> locker_(*mtx_);
 

@@ -21,6 +21,8 @@ class FileInfo;
 class Log;
 struct BoolAtomicWrapper;
 
+// Manages access to the index of a volume, maintains index structure on filesystem changes.
+
 class IndexManager : public NTFSChangeObserver {
    public:
     IndexManager(char drive_letter, IndexChangeObserver* index_change_observer);
@@ -39,7 +41,7 @@ class IndexManager : public NTFSChangeObserver {
     };
 
     std::wstring DriveLetterW() const {
-        return drive_letter_w_;
+        return index_->DriveLetterW();
     };
 
     const Index* GetIndex() const {
@@ -100,8 +102,6 @@ class IndexManager : public NTFSChangeObserver {
     // or uses CheckUpdates method in single thread mode.
 
     std::unique_ptr<NTFSChangesWatcher> ntfs_changes_watcher_;
-
-    std::wstring drive_letter_w_;
 
     Log* logger_;
 

@@ -16,7 +16,7 @@ class Log;
 // This is needed for compatibility with C++/CLI classes.
 // <mutex> is not supported when compiling with /clr or /clr:pure. (for Model.cpp class).
 namespace std {
-class recursive_mutex;
+class mutex;
 }
 
 // Main data structure that represents file system. One Index corresponds to one volume.
@@ -53,67 +53,83 @@ class Index {
     const FileInfo* Root() const;
 
 
-    // Yields all stored data ownership and returns the pointer to it.
-
-    std::vector<FileInfo*>* ReleaseData();
-
-
-    // Sets the volume data (all volume files).
-
-    void SetData(std::unique_ptr<std::vector<FileInfo*>> data);
-
-
     // Returns the drive letter for which this index was build.
 
     char DriveLetter() const {
         return drive_letter_;
     }
 
-    // wstring DriveLetterW(wstring(1, drive_letter)),
+    std::wstring DriveLetterW() const {
+        return drive_letter_w_;
+    }
 
-    // Returns all files of indexed volume.
+
+    // Yields all stored data ownership and returns the pointer to it.
+    // Assumed that the index data is locked before calling this method.
+
+    std::vector<FileInfo*>* ReleaseData();
+
+
+    // Sets the volume data (all volume files).
+    // Assumed that the index data is locked before calling this method.
+
+    void SetData(std::unique_ptr<std::vector<FileInfo*>> data);
+
+
+    // Returns all files of the indexed volume. The data is locked until UnlockData() is called.
 
     const std::vector<FileInfo*>* LockData() const;
 
 
-    // Unlocks data after it was locked during AcquireData method call.
+    // Unlocks the data after it was locked during LockData() call.
+    // Assumed that the index data is locked before calling this method.
 
     void UnlockData() const;
 
 
-    // Inserts node into the index.
+    // Inserts a new node into the index.
+    // Assumed that the index data is locked before calling this method.
 
     void InsertNode(FileInfo* fi) const;
 
 
-    // Retrieves node from the index.
+    // Retrieves the node from the index.
+    // Assumed that the index data is locked before calling this method.
 
     FileInfo* GetNode(uint ID) const;
 
 
-    // Removes node from the index (but not deletes it).
-    // The node itself will be deleted as soon as no other objects need this FileInfo.
+    // Removes a node from the index (but not deletes it).
+    // The node itself will be deleted as soon as no other objects need or reference this FileInfo.
+    // Assumed that the index data is locked before calling this method.
 
     void RemoveNode(const FileInfo* node) const;
 
 
-    // Calculates directories sizes.
+    // Calculates all directories sizes.
+    // Assumed that the index data is locked before calling this method.
 
     void CalculateDirsSizes() const;
 
 
     // For the given file |fi| recursively updates its parent directories sizes till the root.
     // |size_delta| - signed size in KB on which to update.
+    // Assumed that the index data is locked before calling this method.
 
     void UpdateParentDirsSize(const FileInfo* fi, int size_delta) const;
 
 
-    // Builds the tree that reflects the real file system files and directories structure.
+    // Builds the tree that reflects the real file system files and directories structure. The tree is build using the
+    // |data_| member: all FileInfo objects will be assigned corresponding connections to its parent, siblings, first
+    // child nodes (if they exist).
+    // Assumed that the index data is locked before calling this method.
 
     void BuildTree() const;
 
    private:
     char drive_letter_;
+
+    std::wstring drive_letter_w_;
 
     uint root_id_;
 
@@ -123,7 +139,7 @@ class Index {
 
     uint64 start_time_;
 
-    std::recursive_mutex* locker_;
+    std::mutex* locker_;
 };
 
 typedef std::unique_ptr<Index> uIndex;
