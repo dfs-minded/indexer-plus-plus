@@ -35,7 +35,6 @@ IndexManager::IndexManager(char drive_letter, IndexChangeObserver* index_change_
       disable_index_requested_(make_unique<BoolAtomicWrapper>(false)),
       index_(make_unique<Index>(drive_letter)),
       index_change_observer_(index_change_observer),
-      drive_letter_w_(1, drive_letter),
       start_time_(0) {
 
     GET_LOGGER
@@ -93,7 +92,12 @@ void IndexManager::DisableIndex() {
     auto* watcher         = ntfs_changes_watcher_.release();
     watcher->StopWatching = true;
 
-    auto* data         = index_->ReleaseData();
+    index_->LockData();
+
+    auto* data = index_->ReleaseData();
+
+	index_->UnlockData();
+
     reading_mft_finished_->store(false);
 
     vector<const FileInfo *> new_items, old_items, changed_items;
@@ -129,7 +133,8 @@ void IndexManager::Run() {
 
     auto u_read_res = u_reader->ReadAllRecords();
 
-    // It's here only for debug and testing.
+    // It's here for debug and testing: compares results which were retrieved from win API and
+    // from direct parsing of the filesystem.
     // CheckReaderResult(u_read_res.get());
 
     // Reading records is long-time operation, meanwhile the volume could be disabled by user.
@@ -137,6 +142,8 @@ void IndexManager::Run() {
         DisposeReaderResult(move(u_read_res));
         return;
     }
+
+    index_->LockData();
 
     index_->SetData(move(u_read_res->Data));
     index_->RootID(u_read_res->Root->ID);
@@ -146,10 +153,13 @@ void IndexManager::Run() {
     TOK(L"Reading MFT finished for drive " + DriveLetterW())
 
     index_->BuildTree();
-    TOK(L"Build tree for drive " + DriveLetterW())
+
+	index_->UnlockData();
+
+    TOK(L"Build tree finished for drive " + DriveLetterW())
 
 #ifdef WIN_API_MFT_READ
-    // Need to read sizes and timestamps separately. In Raw MFT read this data retrieved directly from MFT.
+    // Need to read sizes and timestamps separately. In Raw MFT read this data retrieved directly from the MFT.
     for (auto* fi : data) {
         if (!fi) continue;
         WinApiCommon::GetSizeAndTimestamps(TODO, fi);
@@ -158,12 +168,15 @@ void IndexManager::Run() {
 
     reading_mft_finished_->store(true);
 
-    index_->CalculateDirsSizes();
-
     index_change_observer_->OnVolumeStatusChanged(DriveLetter());
 
-    // Form new index change event args and populate them with index files.
     auto* data = index_->LockData();
+
+    index_->CalculateDirsSizes();
+
+	index_->UnlockData();
+
+    // Form new index change event args and populate them with index files (all added to the new_items collection).
 
     vector<const FileInfo *> new_items, old_items, changed_items;
     new_items.reserve(data->size());
@@ -172,8 +185,6 @@ void IndexManager::Run() {
         if (!fi) continue;
         new_items.push_back(fi);
     }
-
-    index_->UnlockData();
 
     auto p_args = make_shared<NotifyIndexChangedEventArgs>(move(new_items), move(old_items), move(changed_items));
     logger_->Debug(METHOD_METADATA + p_args->ToWString());
@@ -190,7 +201,7 @@ void IndexManager::Run() {
 
 void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) {
 
-    logger_->Debug(METHOD_METADATA + u_args->ToWString());
+    logger_->Debug(METHOD_METADATA + L" drive " + DriveLetterW() + u_args->ToWString());
 
     // Files for merging with search result.
     vector<const FileInfo*> new_items;
@@ -294,7 +305,7 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         // Update all other attributes.
         /*if (fi_with_changes->SizeAllocated)
         {
-                fi_to_update->SizeAllocated = fi_with_changes->SizeAllocated;
+            fi_to_update->SizeAllocated = fi_with_changes->SizeAllocated;
         }*/
 
         fi_to_update->FileAttributes = fi_with_changes->FileAttributes;
@@ -306,6 +317,8 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         changed_items.push_back(fi_to_update);
     }
 
+	index_->UnlockData();
+
     if (!old_items.empty() || !new_items.empty() || !changed_items.empty()) {
         auto p_args = make_shared<NotifyIndexChangedEventArgs>(move(new_items), move(old_items), move(changed_items));
         logger_->Debug(METHOD_METADATA + p_args->ToWString());
@@ -313,7 +326,7 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         index_change_observer_->OnIndexChanged(p_args);
     }
 
-    index_->UnlockData();
+  
 }
 
 void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
@@ -322,11 +335,13 @@ void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
     WinApiMFTReader win_api_reader(DriveLetter());
     auto win_api_reader_result = win_api_reader.ReadAllRecords();
     auto win_api_index         = make_unique<Index>(DriveLetter());
+
+    auto win_api_data = win_api_index->LockData();
+
     win_api_index->SetData(move(win_api_reader_result->Data));
     win_api_index->RootID(win_api_reader_result->Root->ID);
     win_api_index->BuildTree();
     win_api_reader_result.reset();
-    auto win_api_data = win_api_index->LockData();
 
     for (auto* fi : *win_api_data) {
         if (!fi) continue;
@@ -335,11 +350,11 @@ void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
         WinApiCommon::GetSizeAndTimestamps(*u_full_name.get(), fi);
     }
 
+	win_api_index->UnlockData();
+
     ReaderDataComparator comparator;
     comparator.Compare(*raw_result->Data, *raw_result->Root, L"RawReader", *win_api_data, *win_api_index->Root(),
-                       L"WinAPIReader");
-
-    win_api_index->UnlockData();
+                       L"WinAPIReader");  
 }
 
 void IndexManager::DisposeReaderResult(unique_ptr<MFTReadResult> u_read_res) {
