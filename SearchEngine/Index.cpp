@@ -97,31 +97,36 @@ void Index::SetData(unique_ptr<vector<FileInfo*>> data) {
     data_.swap(data);
 }
 
-void Index::InsertNode(FileInfo* node) const {
+bool Index::InsertNode(FileInfo* fi) const {
 
-    // Add to the map.
-    (*data_)[node->ID] = node;
+    // Insert in the tree if the parent node found.
 
-    // Insert in the tree.
-    FileInfo* parent = GetNode(node->ParentID);
+    FileInfo* parent = GetNode(fi->ParentID);
 
     if (!parent) {
-        WriteToOutput(METHOD_METADATA + L"No parent dir found in the tree for item: ID" + to_wstring(node->ID) +
-                      L", Name:" + HelperCommon::Char16ToWstring(node->GetName()));
-
-        parent = (*data_)[RootID()];
+        logger_->Warning(METHOD_METADATA + L"No parent dir found in the tree for item with ID:" + to_wstring(fi->ID) +
+                         L" ParentID:" + to_wstring(fi->ParentID) + L", Name:" +
+                         HelperCommon::Char16ToWstring(fi->GetName()));
+        return false;
     }
 
-    node->Parent = parent;
+    fi->Parent = parent;
 
     if (parent->FirstChild == nullptr) {
-        parent->FirstChild = node;
-        return;
+        parent->FirstChild = fi;
+    } else {
+        parent->FirstChild->PrevSibling = fi;
+        fi->NextSibling = parent->FirstChild;
+        parent->FirstChild = fi;
     }
 
-    parent->FirstChild->PrevSibling = node;
-    node->NextSibling               = parent->FirstChild;
-    parent->FirstChild              = node;
+    // Insert into the map.
+    (*data_)[fi->ID] = fi;
+
+    logger_->Debug(METHOD_METADATA + L"Inserted node with ID:" + to_wstring(fi->ID) + L" Name:" +
+                   HelperCommon::Char16ToWstring(fi->GetName()));
+
+    return true;
 }
 
 void Index::RemoveNode(const FileInfo* node) const {

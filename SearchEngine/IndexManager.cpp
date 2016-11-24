@@ -260,13 +260,13 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
             continue;
         }
 
-        index_->InsertNode(new_fi);
+        if (index_->InsertNode(new_fi)) {
+            auto u_full_name = FileInfoHelper::GetPath(*new_fi, true);
+            WinApiCommon::GetSizeAndTimestamps(*u_full_name.get(), new_fi);  // TODO Use from USN record serializer
 
-        auto u_full_name = FileInfoHelper::GetPath(*new_fi, true);
-        WinApiCommon::GetSizeAndTimestamps(*u_full_name.get(), new_fi);  // TODO Use from USN record serializer
-
-        index_->UpdateParentDirsSize(new_fi, new_fi->SizeReal);
-        new_items.push_back(new_fi);
+            index_->UpdateParentDirsSize(new_fi, new_fi->SizeReal);
+            new_items.push_back(new_fi);
+        }
     }
 
     // Handle modified files.
@@ -281,9 +281,14 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
             continue;
         }
 
+        // Update parent, if changed (file moved).
+
         int size_delta = -1 * fi_to_update->SizeReal;
 
-        // Update parent, if changed.
+        // Assume that the file we want to update is in the Index. It could change if the file location has been
+        // changed and the InsertNode operation was unsuccessful.
+        bool fi_to_update_is_in_index = true;
+
         if (fi_to_update->ParentID != fi_with_changes->ParentID) {
 
             index_->RemoveNode(fi_to_update);
@@ -292,29 +297,39 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
             fi_to_update->ParentID = fi_with_changes->ParentID;
 
-            index_->InsertNode(fi_to_update);
+            fi_to_update_is_in_index = index_->InsertNode(fi_to_update);
         }
 
-        auto u_path = FileInfoHelper::GetPath(*fi_to_update, true);
-        WinApiCommon::GetSizeAndTimestamps(*u_path.get(), fi_to_update);
+        if (fi_to_update_is_in_index) {
 
-        size_delta += fi_to_update->SizeReal;
+            auto u_path = FileInfoHelper::GetPath(*fi_to_update, true);
+            WinApiCommon::GetSizeAndTimestamps(*u_path.get(), fi_to_update);
 
-        index_->UpdateParentDirsSize(fi_to_update, size_delta);
+            size_delta += fi_to_update->SizeReal;
 
-        // Update all other attributes.
-        /*if (fi_with_changes->SizeAllocated)
-        {
-            fi_to_update->SizeAllocated = fi_with_changes->SizeAllocated;
-        }*/
+            index_->UpdateParentDirsSize(fi_to_update, size_delta);
 
-        fi_to_update->FileAttributes = fi_with_changes->FileAttributes;
+            // Currently SizeAllocated is not supported
+            // if (fi_with_changes->SizeAllocated)
+            //	fi_to_update->SizeAllocated = fi_with_changes->SizeAllocated;
 
-        fi_to_update->CopyAndSetName(fi_with_changes->GetName(), fi_with_changes->NameLength);
+            fi_to_update->FileAttributes = fi_with_changes->FileAttributes;
+
+            fi_to_update->CopyAndSetName(fi_with_changes->GetName(), fi_with_changes->NameLength);
+
+            changed_items.push_back(fi_to_update);
+
+            // If the file was moved, and there is no parent node for the new location in the Index - delete this file.
+        } else {
+            logger_->Warning(METHOD_METADATA +
+                             L"Cannot process file change. No parent index entry for new file location." +
+                             L" Changed file ID:" + to_wstring(fi_with_changes->ID) + L" Searched ParentID:" +
+                             to_wstring(fi_with_changes->ParentID));
+
+            old_items.push_back(fi_to_update);
+        }
 
         delete fi_with_changes;
-
-        changed_items.push_back(fi_to_update);
     }
 
 	index_->UnlockData();
@@ -325,8 +340,6 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
         index_change_observer_->OnIndexChanged(p_args);
     }
-
-  
 }
 
 void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {

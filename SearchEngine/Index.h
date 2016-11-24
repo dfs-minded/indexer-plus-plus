@@ -88,9 +88,10 @@ class Index {
 
 
     // Inserts a new node into the index.
+    // Returns true if the node was inserted successfully, false otherwise.
     // Assumed that the index data is locked before calling this method.
 
-    void InsertNode(FileInfo* fi) const;
+    bool InsertNode(FileInfo* fi) const;
 
 
     // Retrieves the node from the index.
