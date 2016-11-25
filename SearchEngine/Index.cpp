@@ -104,8 +104,8 @@ bool Index::InsertNode(FileInfo* fi) const {
     FileInfo* parent = GetNode(fi->ParentID);
 
     if (!parent) {
-        logger_->Warning(METHOD_METADATA + L"No parent dir found in the tree for item with ID:" + to_wstring(fi->ID) +
-                         L" ParentID:" + to_wstring(fi->ParentID) + L", Name:" +
+        logger_->Warning(METHOD_METADATA + L"No parent dir found in the tree for item with ID: " + to_wstring(fi->ID) +
+                         L" ParentID: " + to_wstring(fi->ParentID) + L", Name: " +
                          HelperCommon::Char16ToWstring(fi->GetName()));
         return false;
     }
@@ -123,7 +123,7 @@ bool Index::InsertNode(FileInfo* fi) const {
     // Insert into the map.
     (*data_)[fi->ID] = fi;
 
-    logger_->Debug(METHOD_METADATA + L"Inserted node with ID:" + to_wstring(fi->ID) + L" Name:" +
+    logger_->Debug(METHOD_METADATA + L"Inserted node with ID: " + to_wstring(fi->ID) + L" Name: " +
                    HelperCommon::Char16ToWstring(fi->GetName()));
 
     return true;
