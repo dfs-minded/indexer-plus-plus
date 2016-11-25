@@ -41,14 +41,16 @@ class IndexManagerTest : public testing::Test {
 
 
 // Test create
-TEST_F(IndexManagerTest, DISABLED_CreateFile)
-{
-	CommandlineArguments::Instance().RawMFTPath = L"SerializedRawMFT/Disk_Z_RawMFT_11_24_16.txt";
-	CommandlineArguments::Instance().ReplayUSNRecPath = L"SerializedUSNRecordsFiles/OneAction/Create.txt";
+TEST_F(IndexManagerTest, CreateFile) {
+    CommandlineArguments::Instance().RawMFTPath = L"SerializedRawMFT/Disk_Z_RawMFT_11_25_16.txt";
+    CommandlineArguments::Instance().ReplayUSNRecPath = L"SerializedUSNRecordsFiles/OneAction/Create.txt";
 
-	IndexManagersContainer::Instance().AddDrive(drive_letter_);
+    IndexManagersContainer::Instance().AddDrive(drive_letter_);
 
-	EXPECT_EQ(1, mock_index_change_observer.IndexChangedArgs->NewItems.size()); // New file must be marked as added.
-	EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->OldItems.size());
-	EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->ChangedItems.size());
+    IndexManagersContainer::Instance().GetIndexManager(drive_letter_)->CheckUpdates();
+    // IndexManagersContainer::Instance().GetIndexManager(drive_letter_)->CheckUpdates();
+
+    EXPECT_EQ(1, mock_index_change_observer.IndexChangedArgs->NewItems.size());  // New file must be marked as added.
+    EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->OldItems.size());
+    EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->ChangedItems.size());
 }

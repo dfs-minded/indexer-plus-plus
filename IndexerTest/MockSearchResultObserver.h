@@ -10,11 +10,8 @@ class MockSearchResultObserver : public SearchResultObserver {
 
 public:
 	void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) {
-		int usc = search_result.use_count();
 		LastResult = search_result;
-		int usc2 = search_result.use_count();
-		int usc3 = LastResult.use_count();
 	}
-	
-	pSearchResult LastResult;
+
+        pSearchResult LastResult;
 };
