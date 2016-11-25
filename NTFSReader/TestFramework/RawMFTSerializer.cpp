@@ -5,7 +5,6 @@
 #include "RawMFTSerializer.h"
 
 #include <string.h>
-//#include <iostream>
 #include <fstream>
 
 #include "CommandlineArguments.h"

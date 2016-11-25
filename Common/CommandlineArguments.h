@@ -9,6 +9,7 @@
 
 #include "Macros.h"
 
+// Parses and stores commandline arguments. All of them are used for testing purposes.
 class CommandlineArguments {
    public:
     NO_COPY(CommandlineArguments)
@@ -26,7 +27,8 @@ class CommandlineArguments {
     // If set to true, the test framework serializes created FileInfo objects from MFT records to file.
     bool SaveFileInfos;
 
-    // If set to true, the test framework serializes raw MFT to file.
+    // If set to true, the test framework serializes raw MFT to a file.
+    // The file path is specified in RawMFTSerializer ctor.
     bool SaveRawMFT;
 
     // Serialized USN Journal records file path for the test framework.

@@ -10,22 +10,26 @@
 #include "CommandlineArguments.h"
 
 #include "InteropHelper.h"
+// clang-format off
 
 namespace CLIInterop
 {
-	void CmdArgumentsParser::Init(System::Windows::StartupEventArgs^ e)
+	// Parses arguments in format similar to:
+	// rawMFTPath="e:\+++\RawMFT.txt"  replayUSNRecPath="e:\+++\USNRecordsDB.txt"
+	// For the correct keywords see their declaration in CommandlineArguments class.
+	void CmdArgumentsParser::Init(System::Windows::StartupEventArgs ^ e) 
 	{
-            std::vector<std::wstring> args;
+		std::vector<std::wstring> args;
 
-            for (int i = 0; i < e->Args->Length; ++i) {
-                System::String ^ arg = e->Args[i]->ToString();
+		for (int i = 0; i < e->Args->Length; ++i) {
+			System::String ^ arg = e->Args[i]->ToString();
 
-                if (arg->Contains(FilterDirPathArgName))
-                    FilterDirPath = arg->Split('=')[1];
-                else
-                    args.push_back(InteropHelper::ToWstring(arg));
-            }
+			if (arg->Contains(FilterDirPathArgName))
+				FilterDirPath = arg->Split('=')[1];
+			else
+				args.push_back(InteropHelper::ToWstring(arg));
+		}
 
-            CommandlineArguments::Instance().Parse(args);
-        }
+		CommandlineArguments::Instance().Parse(args);
+	}
 }
