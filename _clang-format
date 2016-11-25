@@ -2,7 +2,7 @@
  BasedOnStyle: "Google"
  ColumnLimit : 120
  IndentWidth: 4
- AlignConsecutiveAssignments  : true
+ AlignConsecutiveAssignments  : false
  AllowShortFunctionsOnASingleLine : false
  AllowShortLoopsOnASingleLine : false
  MaxEmptyLinesToKeep : 2
