@@ -89,8 +89,10 @@ void IndexManager::DisableIndex() {
 
     // IndexManager will be no more responsible for |ntfs_changes_watcher_| deletion.
     // It must be deleted itself in its worker thread.
-    auto* watcher         = ntfs_changes_watcher_.release();
-    watcher->StopWatching = true;
+    if (ntfs_changes_watcher_) {
+        auto* watcher = ntfs_changes_watcher_.release();
+        watcher->StopWatching = true;
+    }
 
     index_->LockData();
 
@@ -262,7 +264,7 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
         if (index_->InsertNode(new_fi)) {
             auto u_full_name = FileInfoHelper::GetPath(*new_fi, true);
-            WinApiCommon::GetSizeAndTimestamps(*u_full_name.get(), new_fi);  // TODO Use from USN record serializer
+            WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), new_fi);  // TODO Use from USN record serializer
 
             index_->UpdateParentDirsSize(new_fi, new_fi->SizeReal);
             new_items.push_back(new_fi);
@@ -303,7 +305,7 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         if (fi_to_update_is_in_index) {
 
             auto u_path = FileInfoHelper::GetPath(*fi_to_update, true);
-            WinApiCommon::GetSizeAndTimestamps(*u_path.get(), fi_to_update);
+            WinApiCommon::GetSizeAndTimestamps(u_path.get(), fi_to_update);
 
             size_delta += fi_to_update->SizeReal;
 
@@ -347,7 +349,7 @@ void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
     // Get data from WinAPI MFT reader.
     WinApiMFTReader win_api_reader(DriveLetter());
     auto win_api_reader_result = win_api_reader.ReadAllRecords();
-    auto win_api_index         = make_unique<Index>(DriveLetter());
+    auto win_api_index = make_unique<Index>(DriveLetter());
 
     auto win_api_data = win_api_index->LockData();
 
@@ -360,7 +362,7 @@ void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
         if (!fi) continue;
 
         auto u_full_name = FileInfoHelper::GetPath(*fi, true);
-        WinApiCommon::GetSizeAndTimestamps(*u_full_name.get(), fi);
+        WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), fi);
     }
 
 	win_api_index->UnlockData();

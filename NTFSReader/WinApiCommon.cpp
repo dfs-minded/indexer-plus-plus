@@ -175,8 +175,10 @@ bool WinApiCommon::GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info
 #ifdef WIN32
     WIN32_FILE_ATTRIBUTE_DATA file_attr_data;
     bool ok = GetFileAttributesEx(&path, GetFileExInfoStandard, &file_attr_data);
-    if (!ok) return false;
-
+    if (!ok) {
+        WriteToOutput(METHOD_METADATA + L"Probably incorrect parameter type");
+        return false;
+    }
     if (!file_info->IsDirectory())  // Using sizes only for files.
     {
         file_info->SizeReal = HelperCommon::SizeFromBytesToKiloBytes(
@@ -188,4 +190,8 @@ bool WinApiCommon::GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info
     file_info->LastWriteTime  = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftLastWriteTime);
 #endif
     return true;
+}
+
+bool WinApiCommon::GetSizeAndTimestamps(const u16string& path, FileInfo* file_info) {
+    return GetSizeAndTimestamps(HelperCommon::U16stringToWstring(path)[0], file_info);
 }

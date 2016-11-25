@@ -56,6 +56,8 @@ class WinApiCommon {
 
     static bool GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info);
 
+    static bool GetSizeAndTimestamps(const std::u16string& path, FileInfo* file_info);
+
    private:
     // Creates an update sequence number (USN) change journal stream on a target volume, or modifies
     // an existing change journal stream.
