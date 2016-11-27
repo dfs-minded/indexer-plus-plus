@@ -19,7 +19,7 @@ GTEST_API_ int main(int argc, char **argv) {
 
     testing::InitGoogleTest(&argc, argv);
 
-	testing::GTEST_FLAG(filter) = "*.SimpleFileCreate";
+	//testing::GTEST_FLAG(filter) = "*.SimpleFileCreate";
 
     auto res = RUN_ALL_TESTS();
     std::cin.get();
