@@ -35,16 +35,6 @@ NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, NTFSChangeObserver* ob
       read_volume_changes_from_file_(false),
       usn_records_serializer_(nullptr),
       usn_records_provider_(nullptr) {
-
-    volume_ = WinApiCommon::OpenVolume(drive_letter_);
-
-    journal_ = make_unique<USN_JOURNAL_DATA>();
-
-    WinApiCommon::LoadJournal(volume_, journal_.get());
-
-    journal_id_ = journal_->UsnJournalID;
-    last_usn_   = journal_->NextUsn;
-
     usn_records_serializer_ = &USNJournalRecordsSerializer::Instance();
 
     auto records_filename          = CommandlineArguments::Instance().ReplayUSNRecPath;
@@ -54,7 +44,16 @@ NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, NTFSChangeObserver* ob
         usn_records_serializer_->DeserializeAllRecords(records_filename);
 
         usn_records_provider_ = usn_records_serializer_->GetRecordsProvider(drive_letter_);
-    }
+	} else {
+		volume_ = WinApiCommon::OpenVolume(drive_letter_);
+
+		journal_ = make_unique<USN_JOURNAL_DATA>();
+
+		WinApiCommon::LoadJournal(volume_, journal_.get());
+
+		journal_id_ = journal_->UsnJournalID;
+		last_usn_ = journal_->NextUsn;
+	}
 }
 
 void NTFSChangesWatcher::WatchChanges() {
