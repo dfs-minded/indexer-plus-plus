@@ -7,8 +7,8 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "WindowsWrapper.h"
 
+#include "WindowsWrapper.h"
 #include "MFTReadResult.h"
 #include "Macros.h"
 #include "typedefs.h"

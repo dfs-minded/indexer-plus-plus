@@ -97,6 +97,7 @@
     <ClCompile Include="TestsHelperFunctions.cpp" />
     <ClCompile Include="TextComparisonTest.cpp" />
     <ClCompile Include="USNRecordSerializationTest.cpp" />
+    <ClCompile Include="IndexManagerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -114,6 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="MockIndexChangeObserver.h" />
+    <ClInclude Include="MockSearchResultObserver.h" />
     <ClInclude Include="TestsHelperFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

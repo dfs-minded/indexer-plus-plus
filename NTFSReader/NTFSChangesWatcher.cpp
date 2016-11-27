@@ -82,7 +82,7 @@ void NTFSChangesWatcher::WatchChanges() {
             return;
         }
 
-        last_usn_                    = ReadChanges(read_journal_query->StartUsn, u_buffer.get());
+        last_usn_ = ReadChanges(read_journal_query->StartUsn, u_buffer.get());
         read_journal_query->StartUsn = last_usn_;
     }
 }

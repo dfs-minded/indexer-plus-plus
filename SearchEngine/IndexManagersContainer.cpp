@@ -46,7 +46,7 @@ void IndexManagersContainer::AddDrive(char drive_letter) {
 
     auto newIndexMgr = make_unique<IndexManager>(drive_letter, this);
 
-    logger_->Debug(METHOD_METADATA + L"Starting IndexManager fro drive: " + drive_letter_w);
+    logger_->Debug(METHOD_METADATA + L"Starting IndexManager for drive: " + drive_letter_w);
     newIndexMgr->RunAsync();
 
     index_managers_.push_back(move(newIndexMgr));

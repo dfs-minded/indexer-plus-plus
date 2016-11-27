@@ -18,7 +18,6 @@
 #include "Macros.h"
 #include "OneThreadLog.h"
 
-#include "MFTReader.h"
 #include "MFTReaderFactory.h"
 #include "NTFSChangesWatcher.h"
 #include "TestFramework/ReaderDataComparator.h"
@@ -59,10 +58,12 @@ void IndexManager::RunAsync() {
 
 #ifdef SINGLE_THREAD
 
-void IndexManager::CheckUpdates() {
-    if (!ReadingMFTFinished) return;
+void IndexManager::CheckUpdates() const {
+    if (!ReadingMFTFinished()) return;
 
     logger_->Debug(METHOD_METADATA + L"Called for drive " + DriveLetterW());
+
+    if (!ntfs_changes_watcher_) ntfs_changes_watcher_ = make_unique<NTFSChangesWatcher>(DriveLetter(), this);
 
     ntfs_changes_watcher_->CheckUpdates();
 }

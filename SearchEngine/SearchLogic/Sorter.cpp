@@ -58,9 +58,9 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
     logger_->Debug(METHOD_METADATA + L" called");
     auto input_size = file_infos->size();
 
-    auto cores_num                    = HelperCommon::GetNumberOfProcessors();
+    auto cores_num = HelperCommon::GetNumberOfProcessors();
     auto num_files_to_sort_per_thread = input_size / cores_num + 1;
-    const auto& begin_iter            = file_infos->begin();
+    const auto& begin_iter = file_infos->begin();
     vector<vector<const FileInfo*>> sub_vectors_to_sort;
 
     for (uint from = 0, to = min(input_size, num_files_to_sort_per_thread); from < input_size;) {

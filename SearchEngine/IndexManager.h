@@ -16,7 +16,6 @@
 class IndexChangeObserver;
 class NTFSChangesWatcher;
 class NotifyNTFSChangedEventArgs;
-class MFTReader;
 class FileInfo;
 class Log;
 struct BoolAtomicWrapper;
@@ -33,7 +32,7 @@ class IndexManager : public NTFSChangeObserver {
     void RunAsync();
 
 #ifdef SINGLE_THREAD
-    void CheckUpdates();
+    void CheckUpdates() const;
 #endif
 
     char DriveLetter() const {
@@ -72,7 +71,7 @@ class IndexManager : public NTFSChangeObserver {
     virtual void OnNTFSChanged(std::unique_ptr<NotifyNTFSChangedEventArgs> u_args) override;
 
 
-    // This method is only for testing and debug purposes!
+    // This method is for testing and debugging purposes.
 
     void CheckReaderResult(const MFTReadResult* raw_result) const;
 

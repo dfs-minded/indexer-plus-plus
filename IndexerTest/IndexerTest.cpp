@@ -5,6 +5,8 @@
 #include "gtest/gtest.h"
 
 #define SINGLE_THREAD
+// Test framework works only for single thread mode.
+// Do not forget to uncomment this preprocessor definition in Common project in CompilerSymb.h.
 
 #include <locale.h>
 #include <iostream>

@@ -37,7 +37,7 @@ RawMFTReader::RawMFTReader(char drive_letter)
 
     NTFS_VOLUME_DATA_BUFFER volume_data_buff;
     if (GetNtfsVolumeData(&volume_data_buff)) {
-        volume_data_      = VolumeData(drive_letter, volume_data_buff);
+        volume_data_ = VolumeData(drive_letter, volume_data_buff);
         u_records_parser_ = make_unique<RawMFTRecordsParser>(volume_data_);
     }
 }
