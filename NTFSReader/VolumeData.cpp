@@ -4,6 +4,10 @@
 
 #include "VolumeData.h"
 
+#include <string>
+
+#include "HelperCommon.h"
+
 VolumeData::VolumeData()
     : DriveLetter(' '),
       BytesPerCluster(0),
@@ -22,4 +26,6 @@ VolumeData::VolumeData(char drive_letter, const NTFS_VOLUME_DATA_BUFFER& volume_
     MFTRecordSize   = volume_data.BytesPerFileRecordSegment;
     MFTSize         = volume_data.MftValidDataLength.QuadPart;
     MFTRecordsNum   = static_cast<uint64>(volume_data.MftValidDataLength.QuadPart / MFTRecordSize);
+
+    WriteToOutput(L"MFTSize: " + std::to_wstring(MFTSize) + L" MFTRecordsNum: " + std::to_wstring(MFTRecordsNum));
 }

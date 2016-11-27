@@ -159,6 +159,13 @@ void Index::RemoveNode(const FileInfo* node) const {
 
 FileInfo* Index::GetNode(uint ID) const {
 
+    // MFT can increase its size, so the allocated number of records must be increased accordingly.
+    if (data_->size() < ID) {
+        logger_->Info(L"MFT size has increased. Current last record ID = " + to_wstring(data_->size()) +
+                      L" Requested record ID = " + to_wstring(ID));
+        data_->resize(ID + 1);
+    }
+
     return (*data_)[ID];
 }
 
