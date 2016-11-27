@@ -41,7 +41,7 @@ void Sorter::Sort(vector<const FileInfo*>* file_infos) const {
     else {
         auto cmp = FileInfoComparatorFactory::CreatePropertyComparator(prop_, direction_, false);
 
-        if (prop_ == SortingProperty::SORT_NAME && input_size > kMinNumberOfFileInfosToSortParallel)
+        if (input_size > kMinNumberOfFileInfosToSortParallel)
             SortParallel(file_infos, cmp);
         else
             sort(file_infos->begin(), file_infos->end(), cmp);
@@ -58,11 +58,12 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
     logger_->Debug(METHOD_METADATA + L" called");
     auto input_size = file_infos->size();
 
-    auto cores_num = HelperCommon::GetNumberOfProcessors();
+	auto cores_num = HelperCommon::GetNumberOfProcessors();
     auto num_files_to_sort_per_thread = input_size / cores_num + 1;
     const auto& begin_iter = file_infos->begin();
     vector<vector<const FileInfo*>> sub_vectors_to_sort;
 
+	TIK
     for (uint from = 0, to = min(input_size, num_files_to_sort_per_thread); from < input_size;) {
 
         sub_vectors_to_sort.push_back(vector<const FileInfo*>(begin_iter + from, begin_iter + to));
@@ -70,6 +71,7 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
         from = to;
         to   = min(input_size, to + num_files_to_sort_per_thread);
     }
+	TOK(L"Sorting: file copying " + to_wstring(input_size) + L" " + to_wstring(num_files_to_sort_per_thread));
 
     int sub_vectors_count = sub_vectors_to_sort.size();
 
@@ -77,6 +79,7 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
     for (auto i = 0; i < sub_vectors_count; ++i) {
         sort(sub_vectors_to_sort[i].begin(), sub_vectors_to_sort[i].end(), cmp);
     }
+	TOK(L"Sorting: parallel sort");
 
     unordered_set<const FileInfo*> empty_do_not_include;
 
@@ -87,12 +90,14 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
 
             auto u_merge_res = Merger::MergeWithMainCollection(sub_vectors_to_sort[j], empty_do_not_include,
                                                                sub_vectors_to_sort[j + step], cmp);
-            sub_vectors_to_sort[j] = move(*u_merge_res);
+            sub_vectors_to_sort[j] = move(*u_merge_res);			
         }
+		TOK(L"Sorting: merge  " + to_wstring(step));
     }
 
     file_infos->swap(sub_vectors_to_sort[0]);
     sub_vectors_to_sort.clear();
+	TOK(L"Sorting: finished");
 }
 
 PropertyComparatorFunc Sorter::GetCurrentPropertyComparator() const {
