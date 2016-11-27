@@ -16,7 +16,6 @@
 class IndexChangeObserver;
 class NTFSChangesWatcher;
 class NotifyNTFSChangedEventArgs;
-class MFTReader;
 class FileInfo;
 class Log;
 struct BoolAtomicWrapper;

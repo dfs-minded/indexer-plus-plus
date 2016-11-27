@@ -18,7 +18,7 @@ using namespace std;
 RawMFTRecordsParser::RawMFTRecordsParser(VolumeData volume_data)
     : volume_data_(volume_data),
       accum_file_infos_(
-          make_unique<vector<AccumulatedFileInfo*>>(static_cast<size_t>(volume_data_.MFTRecordsNum + 1), nullptr)) {
+          make_unique<vector<AccumulatedFileInfo*>>(static_cast<size_t>(volume_data_.MFTRecordsNum), nullptr)) {
 }
 
 unique_ptr<vector<pair<int64, int64>>> RawMFTRecordsParser::GetMFTRetrievalPointers(char* buff) const {

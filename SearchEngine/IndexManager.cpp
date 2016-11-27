@@ -18,7 +18,6 @@
 #include "Macros.h"
 #include "OneThreadLog.h"
 
-#include "MFTReader.h"
 #include "MFTReaderFactory.h"
 #include "NTFSChangesWatcher.h"
 #include "TestFramework/ReaderDataComparator.h"
