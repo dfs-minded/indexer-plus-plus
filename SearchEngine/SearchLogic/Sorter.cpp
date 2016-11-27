@@ -35,7 +35,7 @@ void Sorter::Sort(vector<const FileInfo*>* file_infos) const {
 
     TIK
 
-        if (prop_ == SortingProperty::SORT_EXTENSION || prop_ == SortingProperty::SORT_TYPE) {
+    if (prop_ == SortingProperty::SORT_EXTENSION || prop_ == SortingProperty::SORT_TYPE) {
         SortByExtensionOrType(file_infos);
     }
     else {

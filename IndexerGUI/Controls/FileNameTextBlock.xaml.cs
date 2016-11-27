@@ -106,7 +106,7 @@ namespace Indexer.Controls
 
         private void RenameTimerOnTick(object sender, EventArgs eventArgs)
         {
-            Debug.WriteLine("RenameTimerOnTick");
+            // Debug.WriteLine("RenameTimerOnTick");
 
             renameTimer.Stop();
 

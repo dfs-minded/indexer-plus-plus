@@ -185,7 +185,7 @@ namespace Indexer.Views
 
         private void OnNewSearchResult(bool isNewQuery)
         {
-            Debug.WriteLine("***OnNewSearchResult " + isNewQuery + " " + DateTime.Now);
+            // Debug.WriteLine("***OnNewSearchResult " + isNewQuery + " " + DateTime.Now);
             count = DataModel.Count;
             realizedFrom = realizedTo = -1;
             isNewResultBecauseOfNewQuery = isNewQuery;
@@ -294,7 +294,7 @@ namespace Indexer.Views
 
             if (viewportScrollRequired || firstVisible != GetFirstVisible())
             {
-                Debug.WriteLine("+++++++++++ " + firstVisible);
+                // Debug.WriteLine("+++++++++++ " + firstVisible);
                 scrollViewer.ScrollToVerticalOffset(firstVisible - realizedFrom);
             }
         }
@@ -324,9 +324,9 @@ namespace Indexer.Views
             RealizedItems.Clear();
             for (var i = realizedFrom; i < realizedTo; ++i)
                 RealizedItems.Add(DataModel[i]);
-            Debug.WriteLine("***RealizeItems1 " + (DateTime.Now - startTime));
+            // Debug.WriteLine("***RealizeItems1 " + (DateTime.Now - startTime));
             RealizedItems.FireCollectionChange();
-            Debug.WriteLine("***RealizeItems2 " + (DateTime.Now - startTime));
+            // Debug.WriteLine("***RealizeItems2 " + (DateTime.Now - startTime));
         }
 
         private void AddItemsAtBegin(int elementsNum)
