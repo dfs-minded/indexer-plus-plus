@@ -91,7 +91,7 @@
     <ClCompile Include="FIleInfoSerializationTest.cpp" />
     <ClCompile Include="FileInfosFilterTest.cpp" />
     <ClCompile Include="HelperCommonTest.cpp" />
-    <ClCompile Include="IndexerTest.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="SearchComparisonTest.cpp" />
     <ClCompile Include="SearchQuerySerializationTest.cpp" />
     <ClCompile Include="TestsHelperFunctions.cpp" />

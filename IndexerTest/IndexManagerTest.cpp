@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // This file is the part of the Indexer++ project.
+=======
+﻿// This file is the part of the Indexer++ project.
+>>>>>>> reviving-test-framework
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
@@ -39,18 +43,24 @@ class IndexManagerTest : public testing::Test {
 	MockSearchResultObserver mock_search_res_observer;
 };
 
-
 // Test create
-TEST_F(IndexManagerTest, CreateFile) {
+TEST_F(IndexManagerTest, SimpleFileCreate) {
+
     CommandlineArguments::Instance().RawMFTPath = L"SerializedRawMFT/Disk_Z_RawMFT_11_25_16.txt";
     CommandlineArguments::Instance().ReplayUSNRecPath = L"SerializedUSNRecordsFiles/OneAction/Create.txt";
 
     IndexManagersContainer::Instance().AddDrive(drive_letter_);
 
-    IndexManagersContainer::Instance().GetIndexManager(drive_letter_)->CheckUpdates();
-    // IndexManagersContainer::Instance().GetIndexManager(drive_letter_)->CheckUpdates();
+	// The first call of CheckUpdates() loads MFT.
+	const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
+	EXPECT_EQ(107, mock_index_change_observer.IndexChangedArgs->NewItems.size());
 
+	// The second call loads USN journal messages from Create.txt.
+	const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
     EXPECT_EQ(1, mock_index_change_observer.IndexChangedArgs->NewItems.size());  // New file must be marked as added.
     EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->OldItems.size());
     EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->ChangedItems.size());
+
+	auto actual = HelperCommon::Char16ToWstring(mock_index_change_observer.IndexChangedArgs->NewItems[0]->GetName());
+	EXPECT_EQ(L"Новый Text Document.txt", actual);
 }

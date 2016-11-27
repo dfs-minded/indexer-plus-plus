@@ -32,7 +32,7 @@ class IndexManager : public NTFSChangeObserver {
     void RunAsync();
 
 #ifdef SINGLE_THREAD
-    void CheckUpdates() const;
+    void CheckUpdates();
 #endif
 
     char DriveLetter() const {
