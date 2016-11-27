@@ -59,11 +59,12 @@ void IndexManager::RunAsync() {
 
 #ifdef SINGLE_THREAD
 
-void IndexManager::CheckUpdates() const {
+void IndexManager::CheckUpdates() {
     if (!ReadingMFTFinished()) return;
 
     logger_->Debug(METHOD_METADATA + L"Called for drive " + DriveLetterW());
 
+//	auto x = make_unique<NTFSChangesWatcher>(DriveLetter(), this);
     if (!ntfs_changes_watcher_) ntfs_changes_watcher_ = make_unique<NTFSChangesWatcher>(DriveLetter(), this);
 
     ntfs_changes_watcher_->CheckUpdates();
