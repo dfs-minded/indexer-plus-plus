@@ -270,6 +270,8 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
             index_->UpdateParentDirsSize(new_fi, new_fi->SizeReal);
             new_items.push_back(new_fi);
+        } else {
+            delete new_fi;
         }
     }
 
@@ -282,6 +284,8 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         if (!fi_to_update) {
             logger_->Warning(METHOD_METADATA + L"Cannot process file change. No index entry with ID = " +
                              to_wstring(fi_with_changes->ID));
+
+            delete fi_with_changes;
             continue;
         }
 

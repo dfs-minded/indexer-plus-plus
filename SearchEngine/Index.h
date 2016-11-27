@@ -78,20 +78,20 @@ class Index {
 
     // Returns all files of the indexed volume. The data is locked until UnlockData() is called.
 
-    const std::vector<FileInfo*>* LockData() const;
+    const std::vector<FileInfo*>* LockData();
 
 
     // Unlocks the data after it was locked during LockData() call.
     // Assumed that the index data is locked before calling this method.
 
-    void UnlockData() const;
+    void UnlockData();
 
 
     // Inserts a new node into the index.
     // Returns true if the node was inserted successfully, false otherwise.
     // Assumed that the index data is locked before calling this method.
 
-    bool InsertNode(FileInfo* fi) const;
+    bool InsertNode(FileInfo* fi);
 
 
     // Retrieves the node from the index.
@@ -104,20 +104,20 @@ class Index {
     // The node itself will be deleted as soon as no other objects need or reference this FileInfo.
     // Assumed that the index data is locked before calling this method.
 
-    void RemoveNode(const FileInfo* node) const;
+    void RemoveNode(FileInfo* node);
 
 
-    // Calculates all directories sizes.
+    // Calculates and updates all directories sizes.
     // Assumed that the index data is locked before calling this method.
 
-    void CalculateDirsSizes() const;
+    void CalculateDirsSizes();
 
 
     // For the given file |fi| recursively updates its parent directories sizes till the root.
     // |size_delta| - signed size in KB on which to update.
     // Assumed that the index data is locked before calling this method.
 
-    void UpdateParentDirsSize(const FileInfo* fi, int size_delta) const;
+    void UpdateParentDirsSize(const FileInfo* fi, int size_delta);
 
 
     // Builds the tree that reflects the real file system files and directories structure. The tree is build using the
@@ -125,7 +125,7 @@ class Index {
     // child nodes (if they exist).
     // Assumed that the index data is locked before calling this method.
 
-    void BuildTree() const;
+    void BuildTree();
 
    private:
     char drive_letter_;

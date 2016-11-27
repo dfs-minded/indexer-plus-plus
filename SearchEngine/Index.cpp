@@ -40,16 +40,16 @@ Index::~Index() {
     data_ = nullptr;
 }
 
-const vector<FileInfo*>* Index::LockData() const {
+const vector<FileInfo*>* Index::LockData() {
     PLOCK
     return data_.get();
 }
 
-void Index::UnlockData() const {
+void Index::UnlockData() {
     PUNLOCK
 }
 
-void Index::BuildTree() const {
+void Index::BuildTree() {
 
     for (auto* fi : *data_) {
 
@@ -97,7 +97,7 @@ void Index::SetData(unique_ptr<vector<FileInfo*>> data) {
     data_.swap(data);
 }
 
-bool Index::InsertNode(FileInfo* fi) const {
+bool Index::InsertNode(FileInfo* fi) {
 
     // Insert in the tree if the parent node found.
 
@@ -129,7 +129,7 @@ bool Index::InsertNode(FileInfo* fi) const {
     return true;
 }
 
-void Index::RemoveNode(const FileInfo* node) const {
+void Index::RemoveNode(FileInfo* node) {
 
     FileInfo* parent = node->Parent;
 
@@ -140,7 +140,7 @@ void Index::RemoveNode(const FileInfo* node) const {
 
         } else {  // If has siblings.
 
-            parent->FirstChild             = node->NextSibling;
+            parent->FirstChild = node->NextSibling;
             node->NextSibling->PrevSibling = nullptr;
         }
 
@@ -148,11 +148,14 @@ void Index::RemoveNode(const FileInfo* node) const {
 
         node->PrevSibling->NextSibling = nullptr;
 
-    } else if (node->PrevSibling != nullptr && node->NextSibling != nullptr) {  // Element in the middle of linked list.
+    } else {  // Element is in the middle of the linked list.
 
         node->PrevSibling->NextSibling = node->NextSibling;
         node->NextSibling->PrevSibling = node->PrevSibling;
     }
+
+    // Cleanup all pointers on the tree.
+    node->Parent = node->FirstChild = node->PrevSibling = node->NextSibling = nullptr;
 
     (*data_)[node->ID] = nullptr;
 }
@@ -169,7 +172,7 @@ FileInfo* Index::GetNode(uint ID) const {
     return (*data_)[ID];
 }
 
-void Index::CalculateDirsSizes() const {
+void Index::CalculateDirsSizes() {
 
     for (const auto* fi : *data_) {
         if (!fi) continue;
@@ -177,7 +180,7 @@ void Index::CalculateDirsSizes() const {
     }
 }
 
-void Index::UpdateParentDirsSize(const FileInfo* fi, int size_delta) const {
+void Index::UpdateParentDirsSize(const FileInfo* fi, int size_delta) {
 
     if (fi->IsDirectory() || size_delta == 0) return;
 

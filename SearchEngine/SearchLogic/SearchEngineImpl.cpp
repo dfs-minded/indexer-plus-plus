@@ -251,7 +251,7 @@ void SearchEngineImpl::SearchInSpecificDir() {
     u_tmp_search_result_  = make_unique<SearchResult>(move(deleter));
     if (!search_start_dir) return;
 
-    const auto* index = indices_container_->GetIndexManager(search_start_dir->DriveLetter)->GetIndex();
+    auto* index = indices_container_->GetIndexManager(search_start_dir->DriveLetter)->GetIndex();
     index->LockData();
 
 	TIK

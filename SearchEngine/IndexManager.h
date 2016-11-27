@@ -43,7 +43,7 @@ class IndexManager : public NTFSChangeObserver {
         return index_->DriveLetterW();
     };
 
-    const Index* GetIndex() const {
+    Index* GetIndex() const {
         return index_.get();
     }
 
