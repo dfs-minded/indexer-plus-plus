@@ -42,16 +42,25 @@ namespace Indexer
                     using (var server = new NamedPipeServerStream(pipeName))
                     {
                         server.WaitForConnection();
-                        string searchDirPath;
+
+                        string message;
                         using (var reader = new StreamReader(server))
                         {
-                            searchDirPath = reader.ReadLine();
+                            message = reader.ReadLine();
                         }
+
+                        if (message == "Exit")
+                        {
+                            dispatcher.BeginInvoke(new Action(Helper.ExitApplication), DispatcherPriority.Normal);
+                            continue;
+                        }
+
+                        // Process context menu command with search in directory filter in massage.
                         dispatcher.BeginInvoke(
                             new Action(() =>
                             {
                                 Helper.MakeIndexerMainWndVisible();
-                                Helper.SetMainWndDirPathFilter(searchDirPath);
+                                Helper.SetMainWndDirPathFilter(message);
                             }),
                             DispatcherPriority.Normal);
                     }

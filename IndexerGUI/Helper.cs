@@ -67,9 +67,11 @@ namespace Indexer
         public static bool MakeIndexerMainWndVisible()
         {
             var mainWindow = Application.Current.MainWindow;
-            if (mainWindow == null || mainWindow.Visibility != Visibility.Collapsed)
+            if (mainWindow == null)
+            {
+                Log.Instance.Error("MakeIndexerMainWndVisible: Main window is null.");
                 return false;
-
+            }
             mainWindow.Visibility = Visibility.Visible;
             return true;
         }

@@ -72,7 +72,7 @@ namespace Indexer
 
             Log.Instance.Debug("Checking if app already running.");
 
-            if (AppAlreadyRuns()) // TODO: implement and test this logic.
+            if (AppAlreadyRuns())
             {
                 var initialDir = CmdArgumentsParser.FilterDirPath;
                 Log.Instance.Debug("App already running, starting client. Filter dir path = " + initialDir);
