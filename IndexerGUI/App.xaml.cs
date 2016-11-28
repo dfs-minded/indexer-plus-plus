@@ -65,12 +65,12 @@ namespace Indexer
 
         private static void CreateAndStartPipeManager(StartupEventArgs e)
         {
-            Log.Instance.Debug("Creating NamedPipeManager");
+            Log.Instance.Debug("Creating NamedPipeManager.");
 
             namePrefix = Helper.GetNamePrefix();
             var pipeManager = new NamedPipeManager(Current.Dispatcher);
 
-            Log.Instance.Debug("Checking if app already running.");
+            Log.Instance.Debug("Checking if app already runs.");
 
             if (AppAlreadyRuns())
             {

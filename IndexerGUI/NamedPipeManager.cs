@@ -47,6 +47,7 @@ namespace Indexer
                         using (var reader = new StreamReader(server))
                         {
                             message = reader.ReadLine();
+                            Log.Instance.Debug("Received new message via named pipe: " + message);
                         }
 
                         if (message == "Exit")
