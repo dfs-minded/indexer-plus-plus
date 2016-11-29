@@ -116,7 +116,7 @@ void SearchEngineImpl::SearchWorker() {
     while (true)
 #endif  // SINGLE_THREAD
     {
-        logger_->Info(METHOD_METADATA + L"Entered section before thread will wait.");
+        logger_->Debug(METHOD_METADATA + L"Entered section before thread will wait.");
 
         UNIQUE_LOCK
 
@@ -404,7 +404,7 @@ void SearchEngineImpl::SearchInTree(const FileInfo& start_dir, vector<const File
 // Called from other then SearchWorker thread (UI thread).
 void SearchEngineImpl::OnIndexChanged(pNotifyIndexChangedEventArgs p_args) {
 
-    logger_->Info(METHOD_METADATA + L"Called.");
+    logger_->Debug(METHOD_METADATA + L"Called.");
 
     UNIQUE_LOCK
 

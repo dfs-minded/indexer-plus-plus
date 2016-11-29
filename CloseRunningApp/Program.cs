@@ -38,7 +38,7 @@ namespace CloseRunningApp
             }
         }
 
-        // The same method as in IndexerGUI.Helper.
+        // The same method and the same hard-coded pipe name as in IndexerGUI.Helper.
         static string GetNamePrefix()
         {
             var userName = WindowsIdentity.GetCurrent().Name.Replace("\\", "-");
