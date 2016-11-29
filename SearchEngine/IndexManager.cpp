@@ -41,7 +41,7 @@ IndexManager::IndexManager(char drive_letter, IndexChangeObserver* index_change_
 
 void IndexManager::RunAsync() {
 
-    logger_->Info(METHOD_METADATA + L"Called for drive " + DriveLetterW());
+    logger_->Debug(METHOD_METADATA + L"Called for drive " + DriveLetterW());
 
 #ifndef SINGLE_THREAD
 
@@ -232,11 +232,13 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
             continue;
         }
 
+        index_->UpdateParentDirsSize(old_fi, -1 * old_fi->SizeReal);
+
         index_->RemoveNode(old_fi);
 
         logger_->Debug(METHOD_METADATA + L"Removed from the Index node ID = " + to_wstring(ID));
 
-        index_->UpdateParentDirsSize(old_fi, -1 * old_fi->SizeReal);
+
         old_items.push_back(old_fi);
     }
 
@@ -267,9 +269,10 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         if (index_->InsertNode(new_fi)) {
             auto u_full_name = FileInfoHelper::GetPath(*new_fi, true);
             WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), new_fi);  // TODO Use from USN record serializer
-
             index_->UpdateParentDirsSize(new_fi, new_fi->SizeReal);
+
             new_items.push_back(new_fi);
+
         } else {
             delete new_fi;
         }
@@ -299,9 +302,10 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
         if (fi_to_update->ParentID != fi_with_changes->ParentID) {
 
-            index_->RemoveNode(fi_to_update);
             index_->UpdateParentDirsSize(fi_to_update, size_delta);
             size_delta = 0;
+
+            index_->RemoveNode(fi_to_update);
 
             fi_to_update->ParentID = fi_with_changes->ParentID;
 

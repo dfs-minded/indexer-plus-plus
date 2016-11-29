@@ -24,6 +24,11 @@ class mutex;
 // and a map from unique file identifier to its FileInfo object.
 // Tree is useful for Search logic. Map used for getting a FileInfo by its ID in a constant time.
 
+// Child-Parent relations rules:
+// There must be no nodes in the tree without a parent. During a tree construction, all files
+// without parents will be deleted. During filesystem updates, files with no parents in an index
+// will not be inserted and will be deleted as well.
+
 class Index {
 
    public:
@@ -100,7 +105,7 @@ class Index {
     FileInfo* GetNode(uint ID) const;
 
 
-    // Removes a node from the index (but not deletes it).
+    // Removes a node from the index (but not deletes it) and assigns nullptr to all its pointers to the tree.
     // The node itself will be deleted as soon as no other objects need or reference this FileInfo.
     // Assumed that the index data is locked before calling this method.
 

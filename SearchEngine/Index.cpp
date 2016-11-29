@@ -52,24 +52,28 @@ void Index::UnlockData() {
 void Index::BuildTree() {
 
     for (auto* fi : *data_) {
+		if (!fi) continue;
 
-        if (!fi) continue;
+		if (fi->ID == RootID()) continue;
 
-        if (fi->ID == RootID()) continue;
-
-        FileInfo* parent = GetNode(fi->ParentID);
+		FileInfo* parent = GetNode(fi->ParentID);
 
 		if (parent == nullptr) {
 			logger_->Warning(METHOD_METADATA + L"Cannot find patent for file" +
-				HelperCommon::Char16ToWstring(fi->GetName()) + L" with ParentID = " + to_wstring(fi->ParentID));
+				HelperCommon::Char16ToWstring(fi->GetName()) + L" with ParentID = " +
+				to_wstring(fi->ParentID) + L" Deleting this FileInfo and assigning nullptr to it in the Index.");
+
+			(*data_)[fi->ID] = nullptr;
+			delete fi;
+
 			continue;
 		}
 
-        fi->Parent = parent;
+		fi->Parent = parent;
 
-        if (parent->FirstChild == nullptr) {
-            parent->FirstChild = fi;
-            continue;
+		if (parent->FirstChild == nullptr) {
+			parent->FirstChild = fi;
+			continue;
         }
 
         parent->FirstChild->PrevSibling = fi;
@@ -184,20 +188,20 @@ void Index::UpdateParentDirsSize(const FileInfo* fi, int size_delta) {
 
     if (fi->IsDirectory() || size_delta == 0) return;
 
-    FileInfo* tmp = fi->Parent;
+    FileInfo* tmp = GetNode(fi->ParentID);
 
     while (true) {
-
-		if (tmp == nullptr) {
-			logger_->Warning(METHOD_METADATA + L"Cannot find patent for file with ParentID = " + to_wstring(fi->ParentID));
-			return;
-		}
+        if (tmp == nullptr) {
+            logger_->Warning(METHOD_METADATA + L"Cannot find patent for file with ID = " + to_wstring(fi->ID) +
+                             L" with ParentID = " + to_wstring(fi->ParentID));
+            return;
+        }
 
         // Just in case for size rounding error accumulation, assign zero if less than zero.
         tmp->SizeReal = max(0, tmp->SizeReal + size_delta);
 
         if (tmp->ID == RootID()) break;
-        tmp = tmp->Parent;
+        tmp = GetNode(tmp->ParentID);
     }
 }
 
