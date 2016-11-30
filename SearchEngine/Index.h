@@ -105,7 +105,8 @@ class Index {
     FileInfo* GetNode(uint ID) const;
 
 
-    // Removes a node from the index (but not deletes it) and assigns nullptr to all its pointers to the tree.
+    // Removes a node from the index (but not deletes it). Assigns nullptr to all its pointers to the tree
+    // except Parent pointer, because we need it to build file paths, which could be requested from UI.
     // The node itself will be deleted as soon as no other objects need or reference this FileInfo.
     // Assumed that the index data is locked before calling this method.
 

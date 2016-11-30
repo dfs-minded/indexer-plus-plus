@@ -302,6 +302,9 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
         if (fi_to_update->ParentID != fi_with_changes->ParentID) {
 
+            logger_->Debug(METHOD_METADATA + L"File was moved, new ParentID = " +
+                           to_wstring(fi_with_changes->ParentID));
+
             index_->UpdateParentDirsSize(fi_to_update, size_delta);
             size_delta = 0;
 

@@ -109,7 +109,7 @@ USN NTFSChangesWatcher::ReadChanges(USN low_usn, char* buffer) {
         }
 
         auto reason = record->Reason;
-        auto ID     = static_cast<uint>(record->FileReferenceNumber & 0x00000000FFFFFFFF);
+        auto ID = static_cast<uint>(record->FileReferenceNumber & 0x00000000FFFFFFFF);
 
         // WriteToOutput(wstring(L" ID = ") + to_wstring(ID) + L" " + Helper::GetReasonString(reason));
 
@@ -128,7 +128,7 @@ USN NTFSChangesWatcher::ReadChanges(USN low_usn, char* buffer) {
                 u_args->CreatedItems.erase(created);
             }
 
-            auto new_fi                      = new FileInfo(*record, drive_letter_);
+            auto new_fi = new FileInfo(*record, drive_letter_);
             u_args->CreatedItems[new_fi->ID] = new_fi;
 
         } else if ((reason & USN_REASON_FILE_DELETE) && (reason & USN_REASON_CLOSE)) {

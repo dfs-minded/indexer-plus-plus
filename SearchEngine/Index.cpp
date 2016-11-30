@@ -128,7 +128,7 @@ bool Index::InsertNode(FileInfo* fi) {
     (*data_)[fi->ID] = fi;
 
     logger_->Debug(METHOD_METADATA + L"Inserted node with ID: " + to_wstring(fi->ID) + L" Name: " +
-                   HelperCommon::Char16ToWstring(fi->GetName()));
+                   HelperCommon::Char16ToWstring(fi->GetName()) + L" ParentID: " + to_wstring(fi->ParentID));
 
     return true;
 }
@@ -159,7 +159,7 @@ void Index::RemoveNode(FileInfo* node) {
     }
 
     // Cleanup all pointers on the tree.
-    node->Parent = node->FirstChild = node->PrevSibling = node->NextSibling = nullptr;
+    node->FirstChild = node->PrevSibling = node->NextSibling = nullptr;
 
     (*data_)[node->ID] = nullptr;
 }
@@ -167,8 +167,8 @@ void Index::RemoveNode(FileInfo* node) {
 FileInfo* Index::GetNode(uint ID) const {
 
     // MFT can increase its size, so the allocated number of records must be increased accordingly.
-    if (data_->size() < ID) {
-        logger_->Info(L"MFT size has increased. Current last record ID = " + to_wstring(data_->size()) +
+    if (data_->size() <= ID) {
+        logger_->Info(L"MFT size has increased. Current last record ID = " + to_wstring(data_->size() - 1) +
                       L" Requested record ID = " + to_wstring(ID));
         data_->resize(ID + 1);
     }
