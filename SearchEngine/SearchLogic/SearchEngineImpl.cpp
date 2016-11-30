@@ -82,18 +82,19 @@ pSearchResult SearchEngineImpl::Search(uSearchQuery query) {
 
 // Called from other then SearchWorker thread (UI thread).
 void SearchEngineImpl::SearchAsync(uSearchQuery query) {
-    logger_->Debug(METHOD_METADATA + L"New Search Query arrived:" + move(SerializeQuery(*query)));
+    logger_->Debug(METHOD_METADATA + L"New search query arrived:" + move(SerializeQuery(*query)));
 
     UNIQUE_LOCK
 
-    last_query_                = move(query);
+    last_query_ = move(query);
     query_search_res_outdated_ = true;
 
     UNLOCK_AND_NOTIFY_ONE
 }
 
-// Do not need to lock here, this function called from already locked block.
 bool SearchEngineImpl::ReadyToProcessSearch() const {
+
+	// Do not need to lock here, this function called from already locked block.
     auto res = query_search_res_outdated_ || sort_outdated_ || index_outdated_;
 
     logger_->Debug(METHOD_METADATA + (res ? L"True" : L"False"));
@@ -124,40 +125,39 @@ void SearchEngineImpl::SearchWorker() {
         conditional_var_->wait(locker_, [this]() { return ReadyToProcessSearch(); });
 #endif
 
-        UNLOCK
-
         logger_->Debug(METHOD_METADATA + L"Worker thread awakened.");
-        bool is_new_query = query_search_res_outdated_;
 
-        // Process one change at a time, in the priority: new search query, new sorting property or direction,
+		// Make a local snapshot of the changes flags that we are going to process.
+      
+		bool query_changed = query_search_res_outdated_;
+		bool index_changed = index_outdated_;
+		bool sort_changed = sort_outdated_;
+
+		sorter_.ResetSortingProperties(last_sort_prop_, last_sort_direction_);
+
+		if (last_query_) file_infos_filter_->ResetQuery(move(last_query_));
+
+		// Reset all changes flags.
+
+		query_search_res_outdated_ = false;
+		index_outdated_ = false;
+		sort_outdated_ = false;
+
+		UNLOCK
+        
+		// Process one change at a time, in the priority: new search query, new sorting property or direction,
         // indices changes.
-        if (query_search_res_outdated_) {
-
-			logger_->Debug(L"Started processing 'query search result outdated'.");
-
-            UNIQUE_LOCK
-            sorter_.ResetSortingProperties(last_sort_prop_, last_sort_direction_);
-            UNLOCK
+		if (query_changed) {
 
             ProcessNewSearchQuery();
 
-        } else if (sort_outdated_) {
-
-			logger_->Debug(L"Started processing 'sort outdated.'");
-
-            UNIQUE_LOCK
-            sorter_.ResetSortingProperties(last_sort_prop_, last_sort_direction_);
-            UNLOCK
+		} else if (sort_changed) {
 
             auto mgrs = indices_container_->GetAllIndexManagers();
             for (const auto* mgr : mgrs)
                 mgr->GetIndex()->LockData();
 
-            // Do not need to lock |index_outdated_|. It can be changed only by invoking OnIndexChanged, but it could
-            // not be invoked because indices are locked now and no index changes can be handled by IndexManager.
-            if (index_outdated_) {
-
-				logger_->Debug(L"Started processing 'index outdated.'");
+			if (index_changed) {
 
                 ProcessIndexChanged();  // |u_tmp_search_result_| will be created by ProcessIndexChanged.
 
@@ -170,28 +170,29 @@ void SearchEngineImpl::SearchWorker() {
                                                     p_search_result_->Files->begin(), p_search_result_->Files->end());
             }
 
+			for (const auto* mgr : mgrs)
+				mgr->GetIndex()->UnlockData();
+
             Sort(u_tmp_search_result_->Files.get());
-
-            for (const auto* mgr : mgrs)
-                mgr->GetIndex()->UnlockData();
-
-        } else if (index_outdated_) {
+		}
+		else if (index_changed) {
             ProcessIndexChanged();
         }
 
-
-        // If query search still up-to-date, set tmp search result to current and notify search result observer.
+		LOCK
+		
+		// If query search result still up-to-date, set tmp search result to current and notify search result observer.
         if (!query_search_res_outdated_) {
 
             p_search_result_.reset(u_tmp_search_result_.release());
 
-            if (result_observer_) {
-                result_observer_->OnNewSearchResult(p_search_result_, is_new_query);
-            }
+            if (result_observer_)
+                result_observer_->OnNewSearchResult(p_search_result_, query_changed);
 
-        } else {
+        } else 
             u_tmp_search_result_.release();
-        }
+
+		UNLOCK
     }
 #ifdef WIN32
     CoUninitialize();
@@ -202,31 +203,22 @@ void SearchEngineImpl::ProcessNewSearchQuery() {
 
 	logger_->Debug(METHOD_METADATA + L"Called.");
 
-    query_search_res_outdated_ = false;
-    index_outdated_            = false;
-
-    UNIQUE_LOCK
-    if (last_query_) {
-        file_infos_filter_->ResetQuery(move(last_query_));
-    }
-    UNLOCK
-
     if (file_infos_filter_->SearchInDirectorySpecified())
         SearchInSpecificDir();
     else
         SearchInAllIndicesFromRoot();
 
-    logger_->Info(METHOD_METADATA + L"Search finished. Objects count (tmpSearchRes.size): " +
+    logger_->Info(METHOD_METADATA + L"finished. Tmp Search result objects count: " +
                   to_wstring(u_tmp_search_result_->Files->size()));
 }
 
 void SearchEngineImpl::SearchInAllIndicesFromRoot() {
-
-    TIK auto mgrs = indices_container_->GetAllIndexManagers();
+    TIK 
+	auto mgrs = indices_container_->GetAllIndexManagers();
     for (const auto* mgr : mgrs)
         mgr->GetIndex()->LockData();
 
-    auto deleter         = ClearIndexChangedArgs();
+    auto deleter = ClearIndexChangedArgs();
     u_tmp_search_result_ = make_unique<SearchResult>(move(deleter));
 
     for (const auto* mgr : mgrs) {
@@ -236,19 +228,21 @@ void SearchEngineImpl::SearchInAllIndicesFromRoot() {
         SearchInTree(*index->Root(), u_tmp_search_result_->Files.get());
     }
 
+	TOK(METHOD_METADATA + L"Search finished.");
+
+	for (const auto* mgr : mgrs)
+		mgr->GetIndex()->UnlockData();
+
     Sort(u_tmp_search_result_->Files.get());
 
-    for (const auto* mgr : mgrs)
-        mgr->GetIndex()->UnlockData();
-
-    TOK(METHOD_METADATA + L"Search and sort finished.");
+    TOK(METHOD_METADATA + L"Sort finished.");
 }
 
 void SearchEngineImpl::SearchInSpecificDir() {
 
     auto search_start_dir = file_infos_filter_->GetSearchDirectory();
-    auto deleter          = ClearIndexChangedArgs();
-    u_tmp_search_result_  = make_unique<SearchResult>(move(deleter));
+    auto deleter = ClearIndexChangedArgs();
+    u_tmp_search_result_ = make_unique<SearchResult>(move(deleter));
     if (!search_start_dir) return;
 
     auto* index = indices_container_->GetIndexManager(search_start_dir->DriveLetter)->GetIndex();
@@ -257,9 +251,9 @@ void SearchEngineImpl::SearchInSpecificDir() {
 	TIK
     SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
 
-    Sort(u_tmp_search_result_->Files.get());
+	index->UnlockData();
 
-    index->UnlockData();
+    Sort(u_tmp_search_result_->Files.get());
 
     TOK(L"Search and sort with directory filter finished.");
 }
@@ -282,12 +276,9 @@ void SearchEngineImpl::ProcessIndexChanged() {
 
     logger_->Debug(METHOD_METADATA + L"Called.");
 
-    UNIQUE_LOCK
-
+	// Do not need to lock |index_changed_args_| because indices are locked now and neither filesystem changes
+	// nor index changes can be done by IndexManager.
     auto changed_args = move(index_changed_args_);
-    index_outdated_   = false;
-
-    UNLOCK
 
     // Old and changed items for quick lookup by address, to skip them in merging from the main list.
     unordered_set<const FileInfo*> do_not_include;
@@ -342,7 +333,7 @@ void SearchEngineImpl::ProcessIndexChanged() {
     auto deleter = make_unique<OldFileInfosDeleter>();
     deleter->AddItemsToDelete(move(to_destroy));
 
-    u_tmp_search_result_        = make_unique<SearchResult>(move(deleter));
+    u_tmp_search_result_ = make_unique<SearchResult>(move(deleter));
     u_tmp_search_result_->Files = move(merge_res);
 
     logger_->Debug(METHOD_METADATA + L"Finished");
@@ -357,9 +348,11 @@ void SearchEngineImpl::Sort(const string& property_name, int direction) {
     assert(sort_column != SortingProperty::SORT_NOTSUPPORTED_COLUMNS);
 
     UNIQUE_LOCK
+
     last_sort_prop_      = sort_column;
     last_sort_direction_ = direction;
     sort_outdated_       = true;
+
     UNLOCK_AND_NOTIFY_ONE
 }
 
@@ -367,7 +360,6 @@ void SearchEngineImpl::Sort(vector<const FileInfo*>* file_infos) {
 
 	logger_->Debug(L"Sorting search result.");
 
-    sort_outdated_ = false;
     sorter_.Sort(file_infos);
 }
 
@@ -378,8 +370,9 @@ void SearchEngineImpl::SearchInTree(const FileInfo& start_dir, vector<const File
 
     // Check periodically whether the search result outdated and if so - stop further tree traversal.
     // Made for more responsive UI.
-    if ((counter++ & 1023) == 0 && query_search_res_outdated_) {
-        return;
+    if ((counter++ & 1023) == 0) {
+		UNIQUE_LOCK
+		if (query_search_res_outdated_) return;
     }
 
     const FileInfo* child = start_dir.FirstChild;

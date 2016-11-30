@@ -29,10 +29,11 @@ class FileInfo;
 class Log;
 
 
-// Implements search logic, listens index changes, volume status changes and produces corresponding search results.
+// Implements search logic, listens index changes, volume status changes and produces search results based on user queries.
 // When new volume added - merges from index changed arguments all it's files (marked as new) with current search res.
 // When a volume removed - merges from index changed arguments all it's files (marked as old) with current search res.
-
+//
+// All its work SE performs in one thread 
 class SearchEngineImpl {
 
    public:
@@ -95,6 +96,20 @@ class SearchEngineImpl {
     // Backlink to interface class in pImpl idiom.
     SearchEngine* interface_class_;
 
+	// There are 3 types of events that the SE needs to process: new query from the user, 
+	// index changed (due to filesystem had changed) and user asked to sort by another property. 3 corresponding 
+	// variables defined below (after comments block end).
+	// Values of these variables are shared between 2 different types of threads:
+	//	 1. SE processing thread. Namely it always sets them to "false" after performing needed actions.
+	//	 2. IndexManager thread, GUI (or other) user threads which always set them to "true".
+	// 
+	// Communication between these two thread types synchronized using condition variable |conditional_var_|.
+	// When IndexManager or one of user threads set them to "true", they also notify the waiting SE thread via 
+	// conditional variable. SE thread processes changes and goes back to waiting.
+	// 
+	// Even if the shared variable is atomic, it must be modified under the mutex in order to correctly publish 
+	// the modification to the waiting thread.
+
     std::atomic<bool> query_search_res_outdated_;
 
     std::atomic<bool> index_outdated_;
@@ -107,15 +122,16 @@ class SearchEngineImpl {
     std::unique_ptr<SearchResult> u_tmp_search_result_;
 
 
-    // Query received from Client (GUI, CMD, etc.).
+    // Query received from Client (GUI, CMD, etc). Need to synchronize access via |mtx_|.
     std::unique_ptr<SearchQuery> last_query_;
 
+	// Filter based on the value of |last_query_|.
     std::unique_ptr<FileInfosFilter> file_infos_filter_;
 
-    // Set by GUI.
+    // Set by GUI. Need to synchronize access via |mtx_|.
     SortingProperty last_sort_prop_;
 
-    // Set by GUI. 1 = ascending, -1 = descending.
+    // Set by GUI. 1 = ascending, -1 = descending. Need to synchronize access via |mtx_|.
     int last_sort_direction_;
 
     Sorter sorter_;
