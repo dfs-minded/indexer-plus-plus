@@ -3,6 +3,7 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 #pragma once
+
 #include "Model.h"
 
 #include <algorithm>
@@ -22,7 +23,6 @@
 #include "InteropHelper.h"
 #include "ModelUpdater.h"
 #include "SystemConfigFlagsWrapper.h"
-// clang-format off
 
 using namespace std;
 
@@ -129,13 +129,13 @@ namespace CLIInterop
 			
 			NewSearchResult(isNewQuery);
 			OnCollectionChanged(NotifyCollectionChangedAction::Reset);
-	}
-	else
-	{
-		dispatcher->BeginInvoke(
-			DispatcherPriority::Normal,
-			gcnew Action<bool>(this, &Model::OnNewSearchResult), isNewQuery);
-	}
+		}
+		else
+		{
+			dispatcher->BeginInvoke(
+				DispatcherPriority::Normal,
+				gcnew Action<bool>(this, &Model::OnNewSearchResult), isNewQuery);
+		}
 	}
 
 	void Model::OnNewStatus(String^ status)

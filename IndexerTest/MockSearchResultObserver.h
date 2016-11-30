@@ -13,5 +13,5 @@ public:
 		LastResult = search_result;
 	}
 
-        pSearchResult LastResult;
+    pSearchResult LastResult;
 };

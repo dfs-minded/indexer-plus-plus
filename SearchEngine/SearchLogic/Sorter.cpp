@@ -19,7 +19,6 @@
 using namespace std;
 
 Sorter::Sorter(SortingProperty prop, int direction) : prop_(prop), direction_(direction) {
-
     GET_LOGGER
 }
 
