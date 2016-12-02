@@ -32,7 +32,7 @@ namespace CloseRunningApp
                 }
                 catch
                 {
-                    Console.WriteLine("En error occurred while trying to connect to pipe.")
+                    Console.WriteLine("En error occurred while trying to connect to pipe.");
                 }
 
                 using (var writer = new StreamWriter(client))
