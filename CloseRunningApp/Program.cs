@@ -30,6 +30,10 @@ namespace CloseRunningApp
                     Console.WriteLine(connectionTimeoutMs + " ms waiting server connection timeout has passed. Exiting.");
                     return;
                 }
+                catch
+                {
+                    Console.WriteLine("En error occurred while trying to connect to pipe.")
+                }
 
                 using (var writer = new StreamWriter(client))
                 {

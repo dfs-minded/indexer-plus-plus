@@ -76,8 +76,9 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.0.0.0"
 !macro CheckAndCloseIfRunning
 	FindWindow $0 "" "${APPNAME}"
 	StrCmp $0 0 notRunning
-		ExecWait "$INSTDIR\CloseRunningApp.exe"
-		Sleep 1000 ;Let the application to close
+		ExecWait "CloseRunningApp.exe" ;close during new installation. 
+		ExecWait "$INSTDIR\CloseRunningApp.exe" ;close on uninstall.
+		Sleep 1500 ;Let the application to close
 	notRunning:
  !macroend
  
