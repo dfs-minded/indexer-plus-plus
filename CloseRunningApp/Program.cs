@@ -19,26 +19,35 @@ namespace CloseRunningApp
             var pipeName = GetNamePrefix();
             int connectionTimeoutMs = 500;
 
-            using (var client = new NamedPipeClientStream(pipeName))
+            try
             {
-                try
+                using (var client = new NamedPipeClientStream(pipeName))
                 {
-                    client.Connect(connectionTimeoutMs);
-                }
-                catch (TimeoutException e)
-                {
-                    Console.WriteLine(connectionTimeoutMs + " ms waiting server connection timeout has passed. Exiting.");
-                    return;
-                }
-                catch
-                {
-                    Console.WriteLine("En error occurred while trying to connect to pipe.");
-                }
+                    try
+                    {
+                        client.Connect(connectionTimeoutMs);
+                    }
+                    catch (TimeoutException e)
+                    {
+                        Console.WriteLine(connectionTimeoutMs + " ms waiting server connection timeout has passed. Exiting.");
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("En error occurred while trying to connect to pipe.");
+                        return;
+                    }
 
-                using (var writer = new StreamWriter(client))
-                {
-                    writer.WriteLine("Exit");
+                    using (var writer = new StreamWriter(client))
+                    {
+                        writer.WriteLine("Exit");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("En error occurred while creating a pipe.");
+                return;
             }
         }
 
