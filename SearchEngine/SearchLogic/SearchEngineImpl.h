@@ -44,14 +44,22 @@ class SearchEngineImpl {
     ~SearchEngineImpl();
 
 
-    pSearchResult Search(uSearchQuery query);
+	// Called from other then SearchWorker thread (UI, CMD thread). Synchronous version of SearchAsync function.
 
+    pSearchResult Search(uSearchQuery query);
+	
+
+	// Called from other then SearchWorker thread (UI thread).
 
     void SearchAsync(uSearchQuery query);
 
 
+	// Called from other then SearchWorker thread (UI thread).
+
     void Sort(const std::string& prop_name, int direction);
 
+
+	// Called from other then SearchWorker thread (UI thread).
 
     void OnIndexChanged(pNotifyIndexChangedEventArgs p_args);
 
@@ -60,20 +68,26 @@ class SearchEngineImpl {
     void SearchWorker();
 
 
+	// Reads all data from Indices from scratch.
+
     void ProcessNewSearchQuery();
 
 
     void SearchInAllIndicesFromRoot();
 
 
+	// Starts search (and an Index tree traversal) directly from the filter directory, specified in query.
+
     void SearchInSpecificDir();
 
 
-    // Clears all index changed arguments. Returns items which need to be destroyed.
-    // Called when we will read everything from scratch directly from indices.
+    // Clears all index changed arguments. Returns items which needed to be destroyed.
+    // Call when you will read everything from scratch directly from indices.
 
     std::unique_ptr<OldFileInfosDeleter> ClearIndexChangedArgs();
 
+
+	// Returns "true" if there are changes, which SE must process, "false" otherwise.   
 
     bool ReadyToProcessSearch() const;
 
@@ -91,6 +105,11 @@ class SearchEngineImpl {
     // Traverses files index tree and forms |tmp_search_result_| from filtered files.
 
     void SearchInTree(const FileInfo& start_dir, std::vector<const FileInfo*>* result) const;
+
+
+	// Sends newly created search result back to a User.
+
+	void SendNewSearchResult(bool query_changed);
 
 
     // Backlink to interface class in pImpl idiom.
@@ -117,8 +136,14 @@ class SearchEngineImpl {
     std::atomic<bool> sort_outdated_;
 
 
+	// Used by SearchInTree(). If the new query arrived we want to stop processing the old one.
+	std::atomic<bool> stop_processing_current_query_;
+
+
+	// Search result which was last sent to GUI.
     pSearchResult p_search_result_;
 
+	// Search result which we are forming now, than swap it with |p_search_result_| just before sending it to GUI.
     std::unique_ptr<SearchResult> u_tmp_search_result_;
 
 
@@ -131,9 +156,10 @@ class SearchEngineImpl {
     // Set by GUI. Need to synchronize access via |mtx_|.
     SortingProperty last_sort_prop_;
 
-    // Set by GUI. 1 = ascending, -1 = descending. Need to synchronize access via |mtx_|.
+    // Set by GUI. 1 == ascending, -1 == descending. Need to synchronize access via |mtx_|.
     int last_sort_direction_;
 
+	// Object, which performs FileInfos sorting.
     Sorter sorter_;
 
     SearchResultObserver* result_observer_;
