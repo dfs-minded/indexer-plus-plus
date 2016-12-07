@@ -36,7 +36,7 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
 #MUI_PAGE
 !define MUI_WELCOMEPAGE_TITLE '${WELCOME_TITLE}'
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "License.rtf"
+!insertmacro MUI_PAGE_LICENSE "EULA.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_INSTFILES
@@ -113,6 +113,9 @@ Section "Bare minimum" Section1
 	file "CloseRunningApp.exe"
 	file "icon_v3_2.ico"
 	file "vcomp120.dll"
+	file "ifind.exe"
+	file "LICENSE"
+	file "README"
  
 	${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
 	IntFmt $0 "0x%08X" $0
@@ -245,6 +248,9 @@ Section "uninstall"
 	delete $INSTDIR\AddExplorerContextMenuErrorLog.txt
 	delete $INSTDIR\IndexerDebugLog.txt
 	delete $INSTDIR\RecordsDB.txt
+	delete $INSTDIR\ifind.exe
+	delete $INSTDIR\LICENSE
+	delete $INSTDIR\README
 	
 	# Always delete uninstaller as the last action
 	delete "$INSTDIR\Uninstall ${APPNAME}.exe"
