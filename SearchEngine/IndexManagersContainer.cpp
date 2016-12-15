@@ -76,8 +76,9 @@ void IndexManagersContainer::RemoveDrive(char drive_letter) {
     }
 }
 
+// Called from SE thread.
 uint IndexManagersContainer::GetIndexRootID(char index_drive_letter) const {
-
+    PLOCK_GUARD
     for (const auto& mgr : index_managers_) {
 
         if (mgr->DriveLetter() == index_drive_letter) return mgr->IndexRootID();
@@ -146,11 +147,12 @@ string IndexManagersContainer::GetStatus() const {
     return res;
 }
 
-// Called from SE thread.
+// Called from UI and SE thread.
 vector<const IndexManager*> IndexManagersContainer::GetAllIndexManagers() const {
 
     vector<const IndexManager*> res;
 
+    PLOCK_GUARD
     for (const auto& mgr : index_managers_) {
         res.push_back(mgr.get());
     }
@@ -160,7 +162,7 @@ vector<const IndexManager*> IndexManagersContainer::GetAllIndexManagers() const 
 
 // Called from SE thread.
 const IndexManager* IndexManagersContainer::GetIndexManager(char drive_letter) const {
-
+    PLOCK_GUARD
     for (auto& mgr : index_managers_) {
         if (mgr->DriveLetter() == drive_letter) return mgr.get();
     }
@@ -168,6 +170,7 @@ const IndexManager* IndexManagersContainer::GetIndexManager(char drive_letter) c
     return nullptr;
 }
 
+// Called from UI and SE threads.
 const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path) const {
 
     u16string delim(reinterpret_cast<const char16_t*>(L"/\\"));
@@ -189,7 +192,6 @@ const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path)
 
     if (root == nullptr)  // Probably disk is not loaded.
         return nullptr;
-
 
     for (int i = 0;;) {
 
