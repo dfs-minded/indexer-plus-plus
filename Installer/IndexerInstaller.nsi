@@ -114,6 +114,7 @@ Section "Bare minimum" Section1
 	file "icon_v3_2.ico"
 	file "vcomp120.dll"
 	file "ifind.exe"
+	file "helpText.txt"
 	file "LICENSE"
 	file "README"
  
@@ -249,6 +250,7 @@ Section "uninstall"
 	delete $INSTDIR\IndexerDebugLog.txt
 	delete $INSTDIR\RecordsDB.txt
 	delete $INSTDIR\ifind.exe
+	delete $INSTDIR\helpText.txt
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
 	

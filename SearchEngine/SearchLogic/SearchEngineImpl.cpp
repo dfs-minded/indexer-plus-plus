@@ -71,7 +71,8 @@ SearchEngineImpl::~SearchEngineImpl() {
 }
 
 pSearchResult SearchEngineImpl::Search(uSearchQuery query) {
-    last_query_ = move(query);
+
+    file_infos_filter_->ResetQuery(move(query));
 
     ProcessNewSearchQuery();
     Sort(u_tmp_search_result_->Files.get());
@@ -123,7 +124,7 @@ void SearchEngineImpl::SearchWorker() {
         UNIQUE_LOCK
 
 #ifndef SINGLE_THREAD
-        conditional_var_->wait(locker_, [this]() { return ReadyToProcessSearch(); });
+        conditional_var_->wait(mtx_, [this]() { return ReadyToProcessSearch(); });
 #endif
 
         logger_->Debug(METHOD_METADATA + L"Worker thread awakened.");
@@ -235,6 +236,7 @@ void SearchEngineImpl::SearchInAllIndicesFromRoot() {
         if (!mgr->ReadingMFTFinished() || mgr->DisableIndexRequested()) continue;
 
         const auto* index = mgr->GetIndex();
+
         SearchInTree(*index->Root(), u_tmp_search_result_->Files.get());
     }
 

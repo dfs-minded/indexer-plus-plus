@@ -55,7 +55,7 @@ uSearchQuery QueryFactory::ParseInput(const vector<wstring>& args, wstring* form
     uint aTimeTo          = UINT_MAX;
     uint mTimeFrom        = 0;
     uint mTimeTo          = UINT_MAX;
-    bool excludeHidden    = true;
+    bool excludeHidden = false;
     bool excludeFolders   = false;
     bool excludeFiles     = false;
 
@@ -82,7 +82,7 @@ uSearchQuery QueryFactory::ParseInput(const vector<wstring>& args, wstring* form
             searchDirPath = path;
         }
 
-        if (pathSpecified && !HelperCommon::DirExist(searchDirPath)) {
+        if (pathSpecified && searchDirPath != L"" && !HelperCommon::DirExist(searchDirPath)) {
             wcout << L"'" << searchDirPath << L"': No such directory" << endl;
         }
 

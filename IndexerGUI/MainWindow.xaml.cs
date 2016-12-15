@@ -13,12 +13,16 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
-using CLIInterop;
-using Indexer.Controls;
-using Microsoft.Win32;
 using Control = System.Windows.Forms.Control;
 using Point = System.Drawing.Point;
+using Microsoft.Win32;
+
+using System.Windows.Threading;
+using System.Threading;
+using System.Threading.Tasks;
+
+using CLIInterop;
+using Indexer.Controls;
 
 namespace Indexer
 {
@@ -571,15 +575,18 @@ namespace Indexer
 
                 contents.AddRange(DataModel.Format(format));
 
-                try
+                Task.Factory.StartNew(() =>
                 {
-                    File.WriteAllLines(filename, contents);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Can not save file '" + filename + "'. An error occured: " + ex.Message, "",
-                        MessageBoxButton.OK);
-                }
+                    try
+                    {
+                        File.WriteAllLines(filename, contents);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Can not save file '" + filename + "'. An error occurred: " + ex.Message, "",
+                            MessageBoxButton.OK);
+                    }
+                });
             }
         }
 
@@ -687,6 +694,7 @@ namespace Indexer
             FiltersVisibility = FiltersVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        // TODO: revive this functionality
         //private void OnMenuDetailsView_Click(object sender, RoutedEventArgs e)
         //{
         //    ViewType = ViewType.Details;

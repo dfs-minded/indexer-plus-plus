@@ -4,12 +4,10 @@
 
 #include <fcntl.h>
 #include <io.h>
-#include <Shlobj.h>
-#include <tchar.h>
 #include <fstream>
 #include <iostream>
-#include <sstream>
-#include <streambuf>
+
+#include <shlobj.h>
 #include <string>
 #include <vector>
 
@@ -22,6 +20,7 @@ using namespace std;
 const int kMaxOutputLines = 50;
 
 int wmain(int argc, wchar_t* argv[]) {
+    _setmode(_fileno(stdout), _O_U16TEXT);
     wstring appName = argv[0];
 
     if (argc <= 1) {
@@ -32,23 +31,21 @@ int wmain(int argc, wchar_t* argv[]) {
     wstring firstArg = argv[1];
 
     if (firstArg == L"-help" || firstArg == L"--help") {
-        ifstream fs("../helpText.txt");
-        stringstream buffer;
-        buffer << fs.rdbuf();
-        cout << buffer.str();
+        wifstream helpfile("helpText.txt");
+        wstring line;
+        while (getline(helpfile, line))
+            wcout << line;
         return 0;
     }
 
-	if (!IsUserAnAdmin())
-	{
-		wcout << "Please run console with administrator privileges and try again." << endl;
-		return 0;
-	}
+    if (!IsUserAnAdmin()) {
+        wcout << "Please run console with administrator privileges and try again." << endl;
+        return 0;
+    }
 
     vector<wstring> args;
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i)
         args.push_back(wstring(argv[i]));
-    }
 
     QueryFactory factory;
     wstring format;
@@ -67,6 +64,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
     ConnectionManager mgr;
     vector<wstring> res;
+
     bool ok = mgr.SendQuery(SerializeQuery(*query.get()), format, outputPath.empty() ? kMaxOutputLines : -1, &res);
 
     if (!ok) {
@@ -77,7 +75,7 @@ int wmain(int argc, wchar_t* argv[]) {
     if (!outputPath.empty()) {
 
         FILE* outputFile = _wfopen(const_cast<const wchar_t*>(outputPath.c_str()), L"w");
-        _setmode(_fileno(outputFile), _O_U8TEXT);
+        _setmode(_fileno(outputFile), _O_U16TEXT);
 
         for (size_t i = 0; i < res.size(); ++i) {
             fwprintf(outputFile, L"%s\n", res[i].c_str());
@@ -88,14 +86,14 @@ int wmain(int argc, wchar_t* argv[]) {
         return 0;
     }
 
-    if (res.size() > kMaxOutputLines) {
-        cout << "Found " + to_string(res.size()) + "Objects. Listing first " + to_string(kMaxOutputLines);
-    }
+    if (res.size() == 0) wcout << L"No files found";
 
-    if (res.size() == 0) wcout << "No files found";
-    for (size_t i = 0; i < min(res.size(), kMaxOutputLines); ++i) {
+    int num_to_display = min(res.size(), kMaxOutputLines);
+
+    if (res.size() == kMaxOutputLines) wcout << L"Listing first " + to_wstring(kMaxOutputLines) + L" results:" << endl;
+
+    for (size_t i = 0; i < num_to_display; ++i)
         wcout << res[i] << endl;
-    }
 
     return 0;
 }

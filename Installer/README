@@ -9,7 +9,7 @@ Indexer++ directly reads and parses the NTFS filesystem master files table.
 Indexer++ use is governed by MIT License, which you can read in the LICENCE file.
 
 
-You can search your files using a command-line as well. 
+You can search your files using a command-line as well (need to be run as administrator). 
 "ifind" (Indexer++ find) implements a subset of the options of the Linux "find" command, so for 
 Linux users it is easy to start right away. For those, who are not familiar with "find" command, 
 here is options description with examples: 

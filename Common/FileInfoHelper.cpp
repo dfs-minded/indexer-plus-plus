@@ -112,7 +112,7 @@ WcharToIntMap FileInfoHelper::type_to_int_map_;
 
 const WcharToIntMap& FileInfoHelper::GetDistinctOrderedExtensions(const vector<const FileInfo*>& files,
                                                                   vector<const char16_t*>* extensions) {
-    Logger().Debug(METHOD_METADATA + L" Current ext cout = " + to_wstring(extension_to_int_map_.size()));
+    Logger().Debug(METHOD_METADATA + L" Current ext count = " + to_wstring(extension_to_int_map_.size()));
 
     extensions->reserve(files.size());
     bool need_reindex = false;  // Indicates whether extension ordered number needed recalculation.
@@ -139,7 +139,7 @@ const WcharToIntMap& FileInfoHelper::GetDistinctOrderedExtensions(const vector<c
 
 const WcharToIntMap& FileInfoHelper::GetDistinctOrderedTypes(const vector<const FileInfo*>& files,
                                                              vector<const char16_t*>* types) {
-    Logger().Debug(METHOD_METADATA + L" Current types cout = " + to_wstring(type_to_int_map_.size()));
+    Logger().Debug(METHOD_METADATA + L" Current types count = " + to_wstring(type_to_int_map_.size()));
 
     types->reserve(files.size());
     bool need_reindex = false;  // Indicates whether types ordered number needed recalculation.

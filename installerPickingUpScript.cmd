@@ -7,6 +7,7 @@ copy /y CLIInterop\Release\CLIInterop.dll								Installer
 copy /y "IndexerGUI\bin\Release\Indexer++.exe"			 				"Installer\Indexer++ Beta.exe"
 copy /y IndexerGUI\bin\Release\UserSettings.xml			 				Installer
 copy /y ifind\Release\ifind.exe											Installer
+copy /y ifind\Release\helpText.txt										Installer
 
 rem sign "Indexer++ Beta.exe"
 "C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /t http://timestamp.verisign.com/scripts/timstamp.dll /f "anna_dev_cert.p12" /p o{P87=bD14Unj /d "Indexer++ Beta.exe" "Installer\Indexer++ Beta.exe"

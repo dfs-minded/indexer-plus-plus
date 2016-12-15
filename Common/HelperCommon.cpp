@@ -185,7 +185,6 @@ void HelperCommon::SetThreadName(thread* thread, const char* thread_name) {
 #endif
 }
 
-
 bool HelperCommon::IsAsciiString(const wchar_t* s) {
     for (; *s != '\0'; ++s)
         if (*s > 127) return false;

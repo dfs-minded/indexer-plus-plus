@@ -176,7 +176,7 @@ bool WinApiCommon::GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info
     WIN32_FILE_ATTRIBUTE_DATA file_attr_data;
     bool ok = GetFileAttributesEx(&path, GetFileExInfoStandard, &file_attr_data);
     if (!ok) {
-        WriteToOutput(METHOD_METADATA + L"Probably incorrect parameter type");
+        WriteToOutput(METHOD_METADATA + L"Probably incorrect parameter type.");
         return false;
     }
     if (!file_info->IsDirectory())  // Using sizes only for files.

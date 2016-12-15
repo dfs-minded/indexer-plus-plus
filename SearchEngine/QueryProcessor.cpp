@@ -4,21 +4,21 @@
 
 #include "QueryProcessor.h"
 
-#include "SearchQuery.h"
-
 #include "OutputFormatter.h"
 #include "SearchEngine.h"
+#include "SearchQuery.h"
 
 using namespace std;
 
 QueryProcessor::QueryProcessor() : engine_(make_unique<SearchEngine>(nullptr, false)) {
 }
 
-std::vector<std::wstring> QueryProcessor::Process(const std::wstring& query, const std::wstring& format_string,
-                                                  int max_files) {
+vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
 
-    uSearchQuery pq = DeserializeQuery(query);
-    auto search_res = engine_->Search(pq.release());
+    uSearchQuery query = DeserializeQuery(query_string);
+
+    auto search_res = engine_->Search(query.release());
+
     OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
     return fmt.Format();
 }
