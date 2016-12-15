@@ -21,12 +21,13 @@ namespace CLIInterop
 		System::String^ Text;
 		System::String^ SearchDirPath;
 		bool MatchCase;
+		bool UseRegex;
 
-                int SizeFrom;
-                int SizeTo;
+		int SizeFrom;
+		int SizeTo;
 
-                bool ExcludeHiddenAndSystem;
-                bool ExcludeFolders;
+		bool ExcludeHiddenAndSystem;
+		bool ExcludeFolders;
 		bool ExcludeFiles;
 
 		System::DateTime^ CreatedTimeFrom;

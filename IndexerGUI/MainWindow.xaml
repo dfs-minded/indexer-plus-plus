@@ -161,9 +161,6 @@
             </MenuItem>-->
         </Menu>
 
-       
-
-
         <Grid Grid.Row="1"
               Margin="10 5 5 5"
               Visibility="{Binding FiltersVisibility}">
@@ -285,7 +282,14 @@
                 <CheckBox Grid.Row="3"
                           VerticalAlignment="Center"
                           Content="Match case"
+                          IsEnabled="{Binding UseRegex}"
                           IsChecked="{Binding MatchCase}" />
+
+                <CheckBox Grid.Row="3"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Content="Regular expression"
+                          IsChecked="{Binding UseRegex}" />
 
             </Grid>
         </Grid>

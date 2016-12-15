@@ -8,7 +8,7 @@
 
 using namespace std;
 
-SearchQuery::SearchQuery(u16string text, u16string search_dir_path, bool match_case,
+SearchQuery::SearchQuery(u16string text, u16string search_dir_path, bool match_case, bool use_regex,
 
                          int size_from, int size_to,
 
@@ -21,6 +21,7 @@ SearchQuery::SearchQuery(u16string text, u16string search_dir_path, bool match_c
       Text(text),
       SearchDirPath(search_dir_path),
       MatchCase(match_case),
+      UseRegex(use_regex),
 
       SizeFrom(size_from),
       SizeTo(size_to),

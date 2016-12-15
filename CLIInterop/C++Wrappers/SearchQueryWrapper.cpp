@@ -37,7 +37,7 @@ namespace CLIInterop
 		uint cTimeTo =
 			(CreatedTimeTo->Year < 1970) ? UINT32_MAX : InteropHelper::DateTimeToUnixTimeSeconds(CreatedTimeTo);
 
-		auto query = new SearchQuery(move(text), searchDirPath, MatchCase, sizeFrom, sizeTo,
+		auto query = new SearchQuery(move(text), searchDirPath, MatchCase, UseRegex, sizeFrom, sizeTo,
 			ExcludeHiddenAndSystem, ExcludeFolders, ExcludeFiles, cTimeFrom, cTimeTo);
 
 		return query;

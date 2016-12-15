@@ -18,7 +18,7 @@ struct SearchQuery {
 
     // Constructs immutable query.
     SearchQuery(std::u16string text = Empty16String, std::u16string search_dir_path = Empty16String,
-                bool match_case = false,
+                bool match_case = false, bool use_regex = false,
 
                 int size_from = 0, int size_to = INT_MAX,
 
@@ -31,6 +31,7 @@ struct SearchQuery {
     const std::u16string Text;
     const std::u16string SearchDirPath;
     const bool MatchCase;
+    const bool UseRegex;
 
     const int SizeFrom;
     const int SizeTo;

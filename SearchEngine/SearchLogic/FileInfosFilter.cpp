@@ -28,7 +28,6 @@ bool FileInfosFilter::PassesAllQueryFilters(const FileInfo& fi) {
     return res;
 }
 
-// TODO implement ? wildcard.
 bool FileInfosFilter::PassesFilterByFilename(const FileInfo& fi) const {
 
     if (filename_filter_->MinLength == 0) {

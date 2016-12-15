@@ -36,7 +36,6 @@ namespace Indexer
         public static RoutedCommand NewSearchWindowCommand = new RoutedCommand();
 
         private string searchString = string.Empty;
-
         public string SearchString
         {
             get { return searchString; }
@@ -48,7 +47,6 @@ namespace Indexer
         }
 
         private Visibility filtersVisibility;
-
         public Visibility FiltersVisibility
         {
             get { return filtersVisibility; }
@@ -60,31 +58,20 @@ namespace Indexer
         }
 
         private string sizeFrom;
-
         public string SizeFrom
         {
             get { return sizeFrom; }
-            set
-            {
-                sizeFrom = value;
-                Filter();
-            }
+            set { sizeFrom = value; Filter(); }
         }
 
         private string sizeTo;
-
         public string SizeTo
         {
             get { return sizeTo; }
-            set
-            {
-                sizeTo = value;
-                Filter();
-            }
+            set { sizeTo = value; Filter(); }
         }
 
         private DateTime dateFrom;
-
         public DateTime DateFrom
         {
             get { return dateFrom; }
@@ -96,7 +83,6 @@ namespace Indexer
         }
 
         private DateTime dateTo;
-
         public DateTime DateTo
         {
             get { return dateTo; }
@@ -108,7 +94,6 @@ namespace Indexer
         }
 
         private string searchDirPath = string.Empty;
-
         public string SearchDirPath
         {
             get { return searchDirPath; }
@@ -121,7 +106,6 @@ namespace Indexer
         }
 
         private bool sizeFilterEnabled;
-
         public bool SizeFilterEnabled
         {
             get { return sizeFilterEnabled; }
@@ -134,7 +118,6 @@ namespace Indexer
         }
 
         private bool dateFilterEnabled;
-
         public bool DateFilterEnabled
         {
             get { return dateFilterEnabled; }
@@ -147,7 +130,6 @@ namespace Indexer
         }
 
         private bool dirFilterEnabled;
-
         public bool DirFilterEnabled
         {
             get { return dirFilterEnabled; }
@@ -175,55 +157,42 @@ namespace Indexer
         }
 
         private bool matchCase;
-
         public bool MatchCase
         {
             get { return matchCase; }
-            set
-            {
-                matchCase = value;
-                Filter();
-            }
+            set { matchCase = value; Filter();}
+        }
+
+
+        private bool useRegex;
+        public bool UseRegex
+        {
+            get { return useRegex; }
+            set { useRegex = value; Filter(); }
         }
 
         private bool excludeHiddenAndSystem;
-
         public bool ExcludeHiddenAndSystem
         {
             get { return excludeHiddenAndSystem; }
-            set
-            {
-                excludeHiddenAndSystem = value;
-                Filter();
-            }
+            set { excludeHiddenAndSystem = value; Filter(); }
         }
 
         private bool excludeFolders;
-
         public bool ExcludeFolders
         {
             get { return excludeFolders; }
-            set
-            {
-                excludeFolders = value;
-                Filter();
-            }
+            set { excludeFolders = value; Filter(); }
         }
 
         private bool excludeFiles;
-
         public bool ExcludeFiles
         {
             get { return excludeFiles; }
-            set
-            {
-                excludeFiles = value;
-                Filter();
-            }
+            set { excludeFiles = value; Filter(); }
         }
 
         private IconSizeEnum iconSize;
-
         public IconSizeEnum IconSize
         {
             get { return iconSize; }
@@ -245,7 +214,6 @@ namespace Indexer
         }
 
         private ViewType viewType;
-
         public ViewType ViewType
         {
             get { return viewType; }
@@ -272,7 +240,6 @@ namespace Indexer
         }
 
         private bool explorerTreeVisible;
-
         public bool ExplorerTreeVisible
         {
             get { return explorerTreeVisible; }
@@ -505,6 +472,7 @@ namespace Indexer
             }
 
             q.MatchCase = MatchCase;
+            q.UseRegex = UseRegex;
 
             q.ExcludeHiddenAndSystem = ExcludeHiddenAndSystem;
             q.ExcludeFolders = ExcludeFolders;
