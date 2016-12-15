@@ -29,7 +29,7 @@ AsyncLog::AsyncLog() {
 #endif
 #if !defined(SINGLE_THREAD)
 
-    NEW_LOCKER
+    NEW_MUTEX
 
     worker_thread_ = new thread(&AsyncLog::WriteToFile, this);
 

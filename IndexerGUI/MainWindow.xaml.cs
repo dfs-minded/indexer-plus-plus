@@ -553,41 +553,39 @@ namespace Indexer
         private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             var dlg = new SaveFileDialog();
-            dlg.FileName = "Search Result"; // Default file name
-            dlg.DefaultExt = ".txt"; // Default file extension
+            dlg.FileName = "Search Result"; // Default file name.
+            dlg.DefaultExt = ".txt"; // Default file extension.
             dlg.Filter = "Text document (.txt)|*.txt|Comma Separated Values (.csv)|*.csv";
 
             var result = dlg.ShowDialog();
+            if (result != true) return;
 
-            // Process save file dialog box results
-            if (result == true)
+            var filename = dlg.FileName;
+            var format = string.Empty;
+            var contents = new List<string>();
+
+            if (dlg.FilterIndex == 2)
             {
-                // Save document
-                var filename = dlg.FileName;
-                var format = string.Empty;
-                var contents = new List<string>();
-
-                if (dlg.FilterIndex == 2)
-                {
-                    format = @"""%p"",""%h"",%c,%t,%a,%s";
-                    contents.Add("Name,Path,Date Created,Date Modified,Last access date,Size");
-                }
-
-                contents.AddRange(DataModel.Format(format));
-
-                Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        File.WriteAllLines(filename, contents);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Can not save file '" + filename + "'. An error occurred: " + ex.Message, "",
-                            MessageBoxButton.OK);
-                    }
-                });
+                format = @"""%p"",""%h"",%c,%t,%a,%s";
+                contents.Add("Name,Path,Date Created,Date Modified,Last access date,Size");
             }
+
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    // Format files and save formatted data into the document.
+                   
+                    contents.AddRange(DataModel.Format(format));
+
+                    File.WriteAllLines(filename, contents);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Can not save file '" + filename + "'. An error occurred: " + ex.Message, "",
+                        MessageBoxButton.OK);
+                }
+            });
         }
 
 

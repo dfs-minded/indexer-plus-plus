@@ -32,7 +32,7 @@ USNJournalRecordsSerializer::USNJournalRecordsSerializer() : records_db_(nullptr
     _setmode(_fileno(records_db_), _O_U8TEXT);
 #endif
 
-    NEW_LOCKER
+    NEW_MUTEX
 
 #ifndef SINGLE_THREAD_LOG
     worker_ = new thread(&USNJournalRecordsSerializer::WriteToFileAsync, this);

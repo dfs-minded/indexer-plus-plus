@@ -4,6 +4,8 @@
 
 #include "IndexManagersContainer.h"
 
+#include <mutex>
+
 #include "AsyncLog.h"
 #include "FileInfo.h"
 #include "HelperCommon.h"
@@ -18,7 +20,14 @@
 using namespace std;
 
 IndexManagersContainer::IndexManagersContainer() {
+
+    NEW_MUTEX
+
     GET_LOGGER
+}
+
+IndexManagersContainer::~IndexManagersContainer() {
+    DELETE_MUTEX
 }
 
 IndexManagersContainer& IndexManagersContainer::Instance() {
@@ -44,12 +53,14 @@ void IndexManagersContainer::AddDrive(char drive_letter) {
 
     logger_->Debug(METHOD_METADATA + L"Adding new drive: " + drive_letter_w);
 
-    auto newIndexMgr = make_unique<IndexManager>(drive_letter, this);
+    auto new_index_mgr = make_unique<IndexManager>(drive_letter, this);
 
     logger_->Debug(METHOD_METADATA + L"Starting IndexManager for drive: " + drive_letter_w);
-    newIndexMgr->RunAsync();
+    new_index_mgr->RunAsync();
 
-    index_managers_.push_back(move(newIndexMgr));
+    PLOCK
+    index_managers_.push_back(move(new_index_mgr));
+    PUNLOCK
 
     OnVolumeStatusChanged(drive_letter);
 }
@@ -75,6 +86,7 @@ uint IndexManagersContainer::GetIndexRootID(char index_drive_letter) const {
     return -1;
 }
 
+// Called form IndexManager and from UI threads.
 void IndexManagersContainer::OnIndexChanged(pNotifyIndexChangedEventArgs p_args) {
 
     for (auto& observer : index_change_observers_) {
@@ -90,17 +102,18 @@ void IndexManagersContainer::CheckUpdates() {
 }
 #endif
 
+// Called form IndexManager and from UI threads.
 void IndexManagersContainer::OnVolumeStatusChanged(char drive_letter) {
 
     logger_->Debug(METHOD_METADATA + L"Loading finished for drive " + wstring(1, drive_letter));
 
-    for (auto& observer : status_observers_) {
-        observer->StatusChanged(GetStatus());
-    }
+    auto status_text = GetStatus();
 
-    for (auto& observer : index_change_observers_) {
+    for (auto& observer : status_observers_)
+        observer->StatusChanged(status_text);
+
+    for (auto& observer : index_change_observers_)
         observer->OnVolumeStatusChanged(drive_letter);
-    }
 }
 
 void IndexManagersContainer::RegisterIndexChangeObserver(IndexChangeObserver* observer) {
@@ -111,9 +124,12 @@ void IndexManagersContainer::UnregisterIndexChangeObserver(IndexChangeObserver* 
     index_change_observers_.remove(observer);
 }
 
+// Called form IndexManager and from UI threads.
 string IndexManagersContainer::GetStatus() const {
 
     string res("   ");
+
+    PLOCK_GUARD
 
     for (const auto& mgr : index_managers_) {
 
@@ -130,6 +146,7 @@ string IndexManagersContainer::GetStatus() const {
     return res;
 }
 
+// Called from SE thread.
 vector<const IndexManager*> IndexManagersContainer::GetAllIndexManagers() const {
 
     vector<const IndexManager*> res;
@@ -141,6 +158,7 @@ vector<const IndexManager*> IndexManagersContainer::GetAllIndexManagers() const 
     return res;
 }
 
+// Called from SE thread.
 const IndexManager* IndexManagersContainer::GetIndexManager(char drive_letter) const {
 
     for (auto& mgr : index_managers_) {

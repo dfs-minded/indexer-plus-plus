@@ -17,6 +17,12 @@ class Index;
 class FileInfo;
 class StatusObserver;
 
+// This is needed for compatibility with C++/CLI classes.
+// <mutex> is not supported when compiling with /clr or /clr:pure. (for Model.cpp class).
+namespace std {
+class mutex;
+}
+
 
 // Container class for index managers. A layer between index managers (and corresponding indices) and search engine.
 
@@ -76,6 +82,8 @@ class IndexManagersContainer : public IndexChangeObserver {
    private:
     IndexManagersContainer();
 
+    ~IndexManagersContainer();
+
 
     // Creates a status string, which describes which volumes loaded and which are still in read MFT state.
 
@@ -88,6 +96,7 @@ class IndexManagersContainer : public IndexChangeObserver {
 
     std::list<StatusObserver*> status_observers_;
 
-
     Log* logger_;
+
+    std::mutex* locker_;
 };

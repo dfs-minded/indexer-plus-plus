@@ -18,7 +18,7 @@ using namespace std;
 
 Index::Index(char drive_letter)
     : drive_letter_(drive_letter), drive_letter_w_(1, drive_letter), root_id_(-1), start_time_(-1) {
-    NEW_LOCKER
+    NEW_MUTEX
 
     GET_LOGGER
 
@@ -29,7 +29,7 @@ Index::~Index() {
 
     logger_->Debug(METHOD_METADATA + L"Destroying index for drive " + DriveLetterW());
 
-    DELETE_LOCKER
+    DELETE_MUTEX
 
     if (!data_) return;
 

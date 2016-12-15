@@ -27,7 +27,7 @@ SearchEngineImpl::SearchEngineImpl(SearchEngine* interface_backlink, SearchResul
       query_search_res_outdated_(false),
       index_outdated_(false),
       sort_outdated_(false),
-	  stop_processing_current_query_(false),
+      stop_processing_current_query_(false),
       p_search_result_(make_shared<SearchResult>()),
       u_tmp_search_result_(make_unique<SearchResult>()),
       last_query_(new SearchQuery()),
@@ -36,7 +36,7 @@ SearchEngineImpl::SearchEngineImpl(SearchEngine* interface_backlink, SearchResul
       last_sort_direction_(1),
       sorter_(last_sort_prop_, last_sort_direction_),
       result_observer_(result_observer),
-      mtx_(new mutex()),
+      locker_(new mutex()),
       conditional_var_(new condition_variable()) {
 
     GET_LOGGER
@@ -64,7 +64,7 @@ SearchEngineImpl::~SearchEngineImpl() {
     indices_container_->UnregisterIndexChangeObserver(interface_class_);
 
 #ifndef SINGLE_THREAD
-    delete mtx_;
+    delete locker_;
     delete conditional_var_;
     delete worker_thread_;
 #endif
@@ -124,7 +124,7 @@ void SearchEngineImpl::SearchWorker() {
         UNIQUE_LOCK
 
 #ifndef SINGLE_THREAD
-        conditional_var_->wait(mtx_, [this]() { return ReadyToProcessSearch(); });
+        conditional_var_->wait(locker_, [this]() { return ReadyToProcessSearch(); });
 #endif
 
         logger_->Debug(METHOD_METADATA + L"Worker thread awakened.");

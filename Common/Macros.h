@@ -12,8 +12,8 @@
 
 #ifdef SINGLE_THREAD
 
-#define NEW_LOCKER
-#define DELETE_LOCKER
+#define NEW_MUTEX
+#define DELETE_MUTEX
 #define PLOCK_GUARD
 #define PLOCK
 #define UNIQUE_LOCK
@@ -24,14 +24,14 @@
 
 #else
 
-#define NEW_LOCKER locker_ = new mutex();
-#define DELETE_LOCKER delete locker_;
+#define NEW_MUTEX locker_ = new mutex();
+#define DELETE_MUTEX delete locker_;
 
 #define LOCK locker_.lock();
 #define PLOCK locker_->lock();
 #define PLOCK_GUARD lock_guard<mutex> lock(*locker_);
 
-#define UNIQUE_LOCK unique_lock<mutex> locker_(*mtx_);
+#define UNIQUE_LOCK unique_lock<mutex> locker_(*locker_);
 
 #define UNLOCK locker_.unlock();
 #define PUNLOCK locker_->unlock();

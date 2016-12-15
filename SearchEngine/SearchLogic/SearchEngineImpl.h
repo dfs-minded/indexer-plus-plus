@@ -147,16 +147,16 @@ class SearchEngineImpl {
     std::unique_ptr<SearchResult> u_tmp_search_result_;
 
 
-    // Query received from Client (GUI, CMD, etc). Need to synchronize access via |mtx_|.
+    // Query received from Client (GUI, CMD, etc). Need to synchronize access via |locker_|.
     std::unique_ptr<SearchQuery> last_query_;
 
 	// Filter based on the value of |last_query_|.
     std::unique_ptr<FileInfosFilter> file_infos_filter_;
 
-    // Set by GUI. Need to synchronize access via |mtx_|.
+    // Set by GUI. Need to synchronize access via |locker_|.
     SortingProperty last_sort_prop_;
 
-    // Set by GUI. 1 == ascending, -1 == descending. Need to synchronize access via |mtx_|.
+    // Set by GUI. 1 == ascending, -1 == descending. Need to synchronize access via |locker_|.
     int last_sort_direction_;
 
 	// Object, which performs FileInfos sorting.
@@ -172,7 +172,7 @@ class SearchEngineImpl {
 
     Log* logger_;
 
-    std::mutex* mtx_;
+    std::mutex* locker_;
 
     std::condition_variable* conditional_var_;
 
