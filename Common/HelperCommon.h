@@ -32,24 +32,26 @@ class HelperCommon {
 
 	static const std::wstring Char16ToWstring(const char16_t* s);
 
-    static int Str16Len(const char16_t* s);
+        static bool Utf16ToUtf8(const std::u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size);
 
-    template <typename TChar>
-    static std::unique_ptr<const TChar[]> CopyToNewWchar(const TChar* source) {
+        static int Str16Len(const char16_t* s);
 
-        auto str_len = 0;
-        while (*(source + str_len) != '\0') {
-            ++str_len;
-        }
+        template <typename TChar>
+        static std::unique_ptr<const TChar[]> CopyToNewWchar(const TChar* source) {
 
-        ++str_len;  // One extra for terminating character.
+            auto str_len = 0;
+            while (*(source + str_len) != '\0') {
+                ++str_len;
+            }
 
-        auto dest = new TChar[str_len];
-        memcpy(dest, source, str_len * sizeof(TChar));
+            ++str_len;  // One extra for terminating character.
 
-        std::unique_ptr<const TChar[]> res(const_cast<const TChar*>(dest));
+            auto dest = new TChar[str_len];
+            memcpy(dest, source, str_len * sizeof(TChar));
 
-        return res;
+            std::unique_ptr<const TChar[]> res(const_cast<const TChar*>(dest));
+
+            return res;
     }
 
     static uint64 PairDwordToInt64(DWORD high, DWORD low);

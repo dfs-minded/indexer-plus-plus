@@ -6,6 +6,14 @@
 
 #include <memory>
 
+// I did not figure out why, but because of "Windows.h" header and related definitions of min and max template
+// functions, RE2 fails to compile stringpiece class.
+#undef min
+#undef max
+#undef std::min
+#undef std::max
+#include "re2.h"
+
 #include "FileInfo.h"
 #include "FilenameSearchQuery.h"
 #include "Macros.h"
@@ -83,6 +91,11 @@ class FileInfosFilter {
 
     std::unique_ptr<FilenameSearchQuery> filename_filter_;
 
+    std::unique_ptr<re2::RE2> re_;
+
+    const int kBufferSize = 1000;
+
+    char* buffer_;
 
     ushort* match_case_table_;  // TODO use from MFT.
 };

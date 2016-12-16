@@ -74,6 +74,27 @@ const wstring HelperCommon::Char16ToWstring(const char16_t* s)
 	return wstring(reinterpret_cast<const wchar_t*>(s));
 }
 
+bool HelperCommon::Utf16ToUtf8(const u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size) {
+
+    int source_size = static_cast<int>(source_utf_16.size());
+    if (source_size == 0) {
+        dest_utf_8_buffer[0] = '\0';  // add a null-terminator.
+        return true;
+    }
+
+    auto source = reinterpret_cast<const wchar_t*>(source_utf_16.data());
+
+    int target_size = WideCharToMultiByte(CP_UTF8, 0, source, source_size, NULL, 0, NULL, NULL);
+    target_size = min(target_size, buffer_size);
+    int result = WideCharToMultiByte(CP_UTF8, 0, source, source_size, dest_utf_8_buffer, target_size, NULL, NULL);
+
+    if (result == 0)  // convention error
+        return false;
+
+    dest_utf_8_buffer[target_size] = '\0';  // add a null-terminator.
+    return true;
+}
+
 int HelperCommon::Str16Len(const char16_t* s) {
     auto e = s;
 

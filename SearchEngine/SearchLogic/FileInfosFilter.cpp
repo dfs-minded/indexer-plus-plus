@@ -9,8 +9,9 @@
 #include "TextComparison.h"
 
 using namespace std;
+using namespace re2;
 
-FileInfosFilter::FileInfosFilter() : match_case_table_(nullptr) {
+FileInfosFilter::FileInfosFilter() : match_case_table_(nullptr), buffer_(new char[kBufferSize]) {
 }
 
 void FileInfosFilter::ResetQuery(unique_ptr<SearchQuery> last_query) {
@@ -19,7 +20,24 @@ void FileInfosFilter::ResetQuery(unique_ptr<SearchQuery> last_query) {
 
     match_case_table_ = query_->MatchCase ? GetIdentityTable() : GetLowerMatchTable();
 
-    filename_filter_ = ParseFilenameQuery(query_->Text);
+    if (!query_->UseRegex) {
+        filename_filter_ = ParseFilenameQuery(query_->Text);
+        return;
+    }
+
+    // Create and compile re2 object.
+
+    unique_ptr<re2::RE2> empty_reg_exp = make_unique<re2::RE2>("");
+    unique_ptr<re2::RE2> reg_exp;
+
+    bool ok = HelperCommon::Utf16ToUtf8(query_->Text, buffer_, kBufferSize);
+
+    if (ok) {
+        reg_exp = make_unique<re2::RE2>(buffer_);
+        ok = reg_exp->ok();  // compiled
+    }
+
+    re_.swap(ok ? reg_exp : empty_reg_exp);
 }
 
 bool FileInfosFilter::PassesAllQueryFilters(const FileInfo& fi) {
@@ -30,6 +48,14 @@ bool FileInfosFilter::PassesAllQueryFilters(const FileInfo& fi) {
 
 bool FileInfosFilter::PassesFilterByFilename(const FileInfo& fi) const {
 
+    // Use regex engine:
+    if (query_->UseRegex) {
+        if (!HelperCommon::Utf16ToUtf8(fi.GetName(), buffer_, kBufferSize)) return false;
+
+        return re2::RE2::PartialMatch(buffer_, *re_);
+    }
+
+    // Use Indexer++ implemented search (only with * ):
     if (filename_filter_->MinLength == 0) {
         return true;
     }

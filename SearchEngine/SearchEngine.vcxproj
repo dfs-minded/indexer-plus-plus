@@ -92,7 +92,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>.;.\SearchLogic;..\ConnectionManager;..\Common;..\NTFSReader</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;.\SearchLogic;..\ConnectionManager;..\Common;..\NTFSReader;..\3dParty\re2Project\re2</AdditionalIncludeDirectories>
       <CompileAsManaged>false</CompileAsManaged>
       <MinimalRebuild>false</MinimalRebuild>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -144,7 +144,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>.;.\SearchLogic;..\ConnectionManager;..\Common;..\NTFSReader</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;.\SearchLogic;..\ConnectionManager;..\Common;..\NTFSReader;..\3dParty\re2Project\re2</AdditionalIncludeDirectories>
       <CompileAsManaged>false</CompileAsManaged>
       <PreprocessToFile>false</PreprocessToFile>
       <StructMemberAlignment>Default</StructMemberAlignment>

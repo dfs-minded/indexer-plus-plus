@@ -282,7 +282,7 @@
                 <CheckBox Grid.Row="3"
                           VerticalAlignment="Center"
                           Content="Match case"
-                          IsEnabled="{Binding UseRegex}"
+                          IsEnabled="{Binding MatchCaseEnabled}"
                           IsChecked="{Binding MatchCase}" />
 
                 <CheckBox Grid.Row="3"

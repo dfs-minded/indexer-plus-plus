@@ -163,12 +163,21 @@ namespace Indexer
             set { matchCase = value; Filter();}
         }
 
+        public bool MatchCaseEnabled 
+        {
+            get { return !UseRegex; }
+        }
 
         private bool useRegex;
         public bool UseRegex
         {
             get { return useRegex; }
-            set { useRegex = value; Filter(); }
+            set 
+            {
+                useRegex = value;
+                OnPropertyChanged("MatchCaseEnabled");
+                Filter(); 
+            }
         }
 
         private bool excludeHiddenAndSystem;
@@ -323,6 +332,7 @@ namespace Indexer
             DateTo = DateTime.Now;
 
             excludeHiddenAndSystem = false;
+            UseRegex = false;
 
             if (SystemConfigFlagsWrapper.Instance().CallWatchChanges)
             {
