@@ -321,11 +321,6 @@
                 
             </Grid.ColumnDefinitions>
 
-            <!-- TODO
-                 <explorerTree:ExplorerTreeControl Visibility="Collapsed"
-                 x:Name="ExplorerTreeControl"
-                 Grid.Column="0" />-->
-
             <GridSplitter x:Name="GridSplitter"
                           Visibility="Collapsed"
                           HorizontalAlignment="Center"

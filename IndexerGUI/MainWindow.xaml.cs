@@ -26,7 +26,7 @@ using Indexer.Controls;
 
 namespace Indexer
 {
-    public partial class MainWindow : Window, INotifyPropertyChanged, IDisposable
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private DispatcherTimer dispatcherTimer;
         private Dispatcher dispatcher;
@@ -142,21 +142,6 @@ namespace Indexer
             set
             {
                 dirFilterEnabled = value;
-
-                // TODO: need to implement filesystem changes listener, in order to update folders (and their content)
-                // in the tree correctly.
-                //
-                //if (dirFilterEnabled)
-                //{
-                //    ExplorerTreeControl.Visibility = Visibility.Visible;
-                //    GridSplitter.Visibility = Visibility.Visible;
-                //}
-                //else
-                //{
-                //    ExplorerTreeControl.Visibility = Visibility.Collapsed;
-                //    GridSplitter.Visibility = Visibility.Collapsed;
-                //}
-
                 OnPropertyChanged("DirFilterEnabled");
                 Filter();
             }
@@ -292,33 +277,10 @@ namespace Indexer
             RowPreviewMouseRightButtonUp = new RelayCommand(DetailsViewRow_PreviewMouseUp);
             FileItemMouseDoubleClick = new RelayCommand(FileItem_MouseDoubleClick);
 
-            // TODO: revive after implementing filesystem changes listener.
-            //var searchDirPathProperty = DependencyPropertyDescriptor.FromProperty(
-            //    ExplorerTreeControl.SearchDirPathProperty, typeof(ExplorerTreeControl));
-
-            //searchDirPathProperty.AddValueChanged(ExplorerTreeControl, OnSearchDirPathchanged);
-
-            Closed += MainWindow_Closed;
-
             Filter();
 
             Log.Instance.Debug("MainWindow: Filter calling finished. NewWindow must be created now.");
         }
-
-        private static void MainWindow_Closed(object sender, EventArgs e)
-        {
-            // TODO: revive after implementing filesystem changes listener.
-            //if (ExplorerTreeControl != null)
-            //{
-            //    ExplorerTreeControl.Dispose();
-            //}
-        }
-
-        // TODO: revive after implementing filesystem changes listener.
-        //private void OnSearchDirPathchanged(object sender, EventArgs e)
-        //{
-        //    SearchDirPath = ExplorerTreeControl.SearchDirPath;
-        //}
 
         public Visibility DebugLogWndCommandVisibility
         {
@@ -509,6 +471,9 @@ namespace Indexer
                 if (Equals(Application.Current.MainWindow, this))
                     cancelEventArgs.Cancel = true;
             }
+
+            if (folderDialog != null)
+                folderDialog.Dispose();
         }
 
         #region Commands
@@ -663,12 +628,6 @@ namespace Indexer
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UserSettings.Instance.Save(this);
-        }
-
-        public void Dispose()
-        {
-            Log.Instance.Debug("MainWnd Dispose called.");
-            //DrivesManager.OnDriveSelectedChanged += DrivesManager_OnDriveSelectedChanged;
         }
 
         private void OnFilters_Click(object sender, RoutedEventArgs e)
