@@ -2,7 +2,6 @@
 
 #ifdef WIN32
 #include <io.h>
-//#include <winbase.h>
 #include <Windows.h>
 #else
 #pragma pack(8)  //(push, 4)

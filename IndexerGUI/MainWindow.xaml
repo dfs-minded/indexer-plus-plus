@@ -273,6 +273,12 @@
                         </Binding>
                     </TextBox.Text>
                 </TextBox>
+                <Button Grid.Row="2"
+                        Grid.Column="2"
+                        Click="OpenSelectFolderDialog_Click" 
+                        IsEnabled="{Binding DirFilterEnabled}"
+                        HorizontalAlignment="Right" Width="20" Margin="0 0 10 0" Height="20" 
+                        Content="..."/>
 
                 <Button Grid.Row="2"
                         Grid.Column="3"

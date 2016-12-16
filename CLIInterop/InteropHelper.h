@@ -6,6 +6,7 @@
 
 #include <vcclr.h>
 #include <string>
+
 #include "WindowsWrapper.h"
 
 #include "typedefs.h"

@@ -4,8 +4,6 @@
 
 #include "InteropHelper.h"
 
-#include "WindowsWrapper.h"
-
 #include "IndexerDateTime.h"
 
 using namespace std;

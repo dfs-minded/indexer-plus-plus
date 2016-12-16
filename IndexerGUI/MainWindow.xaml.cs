@@ -31,6 +31,12 @@ namespace Indexer
         private DispatcherTimer dispatcherTimer;
         private Dispatcher dispatcher;
 
+        private System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog()
+            { 
+                RootFolder = Environment.SpecialFolder.MyComputer, 
+                ShowNewFolderButton = false 
+            };
+
         public ObservableCollection<DriveInfo> Drives { get; set; }
 
         public static RoutedCommand NewSearchWindowCommand = new RoutedCommand();
@@ -670,6 +676,14 @@ namespace Indexer
             FiltersVisibility = FiltersVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        private void OpenSelectFolderDialog_Click(object sender, RoutedEventArgs e)
+        {
+            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SearchDirPath = folderDialog.SelectedPath;
+            }
+        }
+
         // TODO: revive this functionality
         //private void OnMenuDetailsView_Click(object sender, RoutedEventArgs e)
         //{
@@ -901,5 +915,6 @@ namespace Indexer
         }
 
         #endregion
+
     }
 }
