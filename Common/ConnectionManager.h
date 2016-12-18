@@ -7,9 +7,12 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "WindowsWrapper.h"
 
 #include "typedefs.h"
+
+class Log;
 
 class IQueryProcessor {
    public:
@@ -23,10 +26,11 @@ typedef std::shared_ptr<IQueryProcessor> pIQueryProcessor;
 
 class ConnectionManager {
    public:
-    ConnectionManager() = default;
+    ConnectionManager();
 
-    // This method is synchronous, argument is callback which called when query is received.
-    void CreateServer(pIQueryProcessor queryProcessor);
+    // Creates the server in the separate thread which listens
+    // |query_processor| is a callback which is called when a new query arrives.
+    void CreateServer(pIQueryProcessor query_processor);
 
     // The method for send query and receiving result on client, this method is synchronous.
     // Return false in case of failure.
@@ -34,20 +38,23 @@ class ConnectionManager {
                    std::vector<std::wstring>* result);
 
    private:
-    void ServerMain();
+    void ServerWorker();
 
     void Reply(const std::wstring& query, const std::wstring& format, const std::wstring& data_pipename, int max_files);
+
+    static void ParseData(const std::wstring& data, std::wstring* pipename, std::wstring* query, std::wstring* format,
+                          int* max_files);
+
 
     static HANDLE CreatePipe(const std::wstring& pipename);
 
     static HANDLE OpenPipe(const std::wstring& pipename);
 
-    static void ParseData(const std::wstring& data, std::wstring* pipename, std::wstring* query, std::wstring* format,
-                          int* max_files);
-
     static bool WriteMessageToPipe(HANDLE pipe, const std::wstring& message);
 
     bool ReadMessageFromPipe(HANDLE pipe, std::wstring& result);
+
+    Log* logger_;
 
     HANDLE pipe_ = nullptr;
 
