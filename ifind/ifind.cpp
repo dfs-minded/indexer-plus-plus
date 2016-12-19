@@ -20,7 +20,7 @@ using namespace std;
 const int kMaxOutputLines = 50;
 
 int wmain(int argc, wchar_t* argv[]) {
-    _setmode(_fileno(stdout), _O_U16TEXT);
+    _setmode(_fileno(stdout), _O_U16TEXT);  // For correct Unicode output to console.
     wstring appName = argv[0];
 
     if (argc <= 1) {
@@ -90,7 +90,10 @@ int wmain(int argc, wchar_t* argv[]) {
 
     int num_to_display = min(res.size(), kMaxOutputLines);
 
-    if (res.size() == kMaxOutputLines) wcout << L"Listing first " + to_wstring(kMaxOutputLines) + L" results:" << endl;
+    if (res.size() == kMaxOutputLines)
+        wcout << L"Listing first " + to_wstring(kMaxOutputLines) + L" results:" << endl;
+    else
+        wcout << num_to_display << " files found" << endl;
 
     for (size_t i = 0; i < num_to_display; ++i)
         wcout << res[i] << endl;
