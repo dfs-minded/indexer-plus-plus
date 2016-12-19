@@ -19,7 +19,7 @@ void ReaderDataComparator::Compare(const vector<FileInfo*>& lhs, const FileInfo&
                                    const vector<FileInfo*>& rhs, const FileInfo& rhs_root, const wstring& rhs_name) {
     lhs_name_ = lhs_name;
     rhs_name_ = rhs_name;
-    result_   = L"ReaderDataComparator::Compare\n";
+    result_ = L"ReaderDataComparator::Compare\n";
     result_ += L"lhs count: " + to_wstring(lhs.size()) + L" rhs count: " + to_wstring(rhs.size());
     result_ += lhs_root.ID == rhs_root.ID ? L" Roots are the same\n" : L"Roots are the different\n";
 

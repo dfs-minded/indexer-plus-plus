@@ -28,39 +28,39 @@ wstring CurrentDir() {
 
 int QueryFactory::TryParseSize(const std::wstring& text) {
     long multiplier = 1;  // if nothing specified, default is Kilobytes
-	int number_length = text.size();
+    int number_length = text.size();
 
     // try to find unit name.
-	if (!isdigit(text.back())) {		
-		if (multipliers.find(text.back()) == multipliers.end())
-			throw std::invalid_argument(static_cast<char>(text.back()) + string(" is not valid unit for size"));		
-		multiplier = multipliers[text.back()];
-		--number_length;
-	}
-	
+    if (!isdigit(text.back())) {
+        if (multipliers.find(text.back()) == multipliers.end())
+            throw std::invalid_argument(static_cast<char>(text.back()) + string(" is not valid unit for size"));
+        multiplier = multipliers[text.back()];
+        --number_length;
+    }
+
     auto size = HelperCommon::ParseNumber<long>(text.substr(0, number_length));
     return size * multiplier;
 }
 
 uSearchQuery QueryFactory::ParseInput(const vector<wstring>& args, wstring* format, wstring* outputPath) {
 
-    wstring searchText    = L"";
+    wstring searchText = L"";
     wstring searchDirPath = L"";
-    bool matchCase        = false;
-    int sizeFrom          = 0;
-    int sizeTo            = INT_MAX;
-    uint cTimeFrom        = 0;
-    uint cTimeTo          = UINT_MAX;
-    uint aTimeFrom        = 0;
-    uint aTimeTo          = UINT_MAX;
-    uint mTimeFrom        = 0;
-    uint mTimeTo          = UINT_MAX;
+    bool matchCase = false;
+    int sizeFrom = 0;
+    int sizeTo = INT_MAX;
+    uint cTimeFrom = 0;
+    uint cTimeTo = UINT_MAX;
+    uint aTimeFrom = 0;
+    uint aTimeTo = UINT_MAX;
+    uint mTimeFrom = 0;
+    uint mTimeTo = UINT_MAX;
     bool excludeHidden = false;
-    bool excludeFolders   = false;
-    bool excludeFiles     = false;
+    bool excludeFolders = false;
+    bool excludeFiles = false;
 
-    size_t argNumber   = 0;
-    wstring path       = args[0];
+    size_t argNumber = 0;
+    wstring path = args[0];
     bool pathSpecified = path[0] != '-';
 
     if (pathSpecified) {
@@ -210,9 +210,9 @@ uSearchQuery QueryFactory::ParseInput(const vector<wstring>& args, wstring* form
     }
 
     auto res = make_unique<SearchQuery>(HelperCommon::WstringToU16string(searchText),
-                                        HelperCommon::WstringToU16string(searchDirPath), matchCase, sizeFrom, sizeTo,
-                                        excludeHidden, excludeFolders, excludeFiles, cTimeFrom, cTimeTo, aTimeFrom,
-                                        aTimeTo, mTimeFrom, mTimeTo);
+                                        HelperCommon::WstringToU16string(searchDirPath), matchCase, false, sizeFrom,
+                                        sizeTo, excludeHidden, excludeFolders, excludeFiles, cTimeFrom, cTimeTo,
+                                        aTimeFrom, aTimeTo, mTimeFrom, mTimeTo);
     return res;
 }
 
@@ -222,12 +222,12 @@ void QueryFactory::SetSize(const wstring& sizeText, int* sizeFrom, int* sizeTo) 
         int size = TryParseSize(sizeText.substr(1));
         *sizeFrom = max(*sizeFrom, size);
     } else if (sizeText[0] == '-') {
-		int size = TryParseSize(sizeText.substr(1));
+        int size = TryParseSize(sizeText.substr(1));
         *sizeTo = min(*sizeTo, size);
     } else {  // exact (precise) size
-		int size = TryParseSize(sizeText);
+        int size = TryParseSize(sizeText);
         *sizeFrom = max(*sizeFrom, size);
-        *sizeTo   = min(*sizeTo, size);
+        *sizeTo = min(*sizeTo, size);
     }
 
     if (*sizeFrom > *sizeTo) {

@@ -34,6 +34,6 @@ class QueryFactory {
 
     void SetTime(const std::wstring& timeText, uint* timeFrom, uint* timeTo, IndexerDateTimeEnum timeType);
 
-	// TODO: remove std::map at right-hand side after stopping supporing VS 2013.
-	std::map<wchar_t, int> multipliers = std::map<wchar_t, int>({ { L'k', 1 }, { L'M', 1024 }, { L'G', 1024 * 1024 } });
+    // TODO: remove std::map at right-hand side after stopping supporing VS 2013.
+    std::map<wchar_t, int> multipliers = std::map<wchar_t, int>({{L'k', 1}, {L'M', 1024}, {L'G', 1024 * 1024}});
 };

@@ -4,18 +4,18 @@
 
 #pragma once
 
-#using <WindowsBase.dll>
+#using < WindowsBase.dll >
 
-#include "Log.h"
-#include "SearchEngine.h"
 #include "CompilerSymb.h"
 #include "ConnectionManager.h"
+#include "Log.h"
+#include "SearchEngine.h"
 #include "SearchResult.h"
 
 #include "FileInfoWrapper.h"
 #include "FileInfoWrapperFactory.h"
-#include "SearchQueryWrapper.h"
 #include "ModelEnumerator.h"
+#include "SearchQueryWrapper.h"
 // clang-format off
 
 namespace CLIInterop 

@@ -16,21 +16,18 @@ class FileInfo;
 // This class is used for destruction obsolete FileInfo objects when they are not needed anymore.
 // It works like a smart pointer for FileInfos.
 
-class OldFileInfosDeleter
-{
-public:
-	OldFileInfosDeleter() = default;
+class OldFileInfosDeleter {
+   public:
+    OldFileInfosDeleter() = default;
 
-	NO_COPY(OldFileInfosDeleter)
+    NO_COPY(OldFileInfosDeleter)
 
-	~OldFileInfosDeleter();
+    ~OldFileInfosDeleter();
 
-	void AddItemsToDelete(std::vector<const FileInfo*>&& file_infos);
+    void AddItemsToDelete(std::vector<const FileInfo*>&& file_infos);
 
-private:
-	
-	static Log& Logger();
+   private:
+    static Log& Logger();
 
-	std::vector<std::vector<const FileInfo*>> file_infos_to_delete_;
+    std::vector<std::vector<const FileInfo*>> file_infos_to_delete_;
 };
-

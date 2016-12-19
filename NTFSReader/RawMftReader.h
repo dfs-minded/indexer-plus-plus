@@ -8,9 +8,9 @@
 #include <memory>
 #include <vector>
 
-#include "WindowsWrapper.h"
 #include "MFTReadResult.h"
 #include "Macros.h"
+#include "WindowsWrapper.h"
 #include "typedefs.h"
 
 #include "MFTReader.h"

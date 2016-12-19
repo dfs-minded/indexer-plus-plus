@@ -11,20 +11,23 @@
 
 class LogMessagesListener;
 
-#ifdef SINGLE_THREAD_LOG							
+#ifdef SINGLE_THREAD_LOG
 #define GET_LOGGER logger_ = &OneThreadLog::Instance();
-#else									
-#define GET_LOGGER logger_ = &AsyncLog::Instance();	
+#else
+#define GET_LOGGER logger_ = &AsyncLog::Instance();
 #endif
 
-#define COMPOSE_MSG(logLevel) wstring msg =  GetTime() + L" | " + wstring(logLevel) + L" | " + GetThreadID() + L" | " + message;
+#define COMPOSE_MSG(logLevel) \
+    wstring msg = GetTime() + L" | " + wstring(logLevel) + L" | " + GetThreadID() + L" | " + message;
 
 #define METHOD_METADATA HelperCommon::StringToWstring(string(__FUNCTION__) + ":" + to_string(__LINE__) + " ")
 
 #define TIK auto start_time = GetTickCount64();
-#define TOK(msg) {	auto elapsed_time = GetTickCount64() - start_time; \
-					logger_->Debug(wstring(L"PERF | ") + (msg) + wstring(L" | Elapsed ") + to_wstring(elapsed_time)); \
-				 }
+#define TOK(msg)                                                                                          \
+    {                                                                                                     \
+        auto elapsed_time = GetTickCount64() - start_time;                                                \
+        logger_->Debug(wstring(L"PERF | ") + (msg) + wstring(L" | Elapsed ") + to_wstring(elapsed_time)); \
+    }
 
 class Log {
    public:

@@ -46,7 +46,7 @@ class RawMFTRecordsParser {
     std::unique_ptr<std::vector<FileInfo*>> GetCompleteFileInfos() const;
 
     mutable int files_with_hardlinks_num_ = 0;
-    mutable int not_in_use_for_debug_     = 0;
+    mutable int not_in_use_for_debug_ = 0;
 
    private:
     // Iterates throw MFT record header attributes and writes their valuable content such as file size,

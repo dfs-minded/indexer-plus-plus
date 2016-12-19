@@ -10,10 +10,10 @@ SystemConfigFlags& SystemConfigFlags::Instance() {
 }
 
 SystemConfigFlags::SystemConfigFlags() {
-    TrayIcon           = false;
-    PipeManager        = false;
-    CallWatchChanges   = false;
-    ShelContextMenu    = false;
+    TrayIcon = false;
+    PipeManager = false;
+    CallWatchChanges = false;
+    ShelContextMenu = false;
     ShowDebugLogWindow = false;
 
 #ifdef TRAY_ICON

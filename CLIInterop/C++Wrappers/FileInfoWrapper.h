@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "typedefs.h"
 #include "FileInfo.h"
+#include "typedefs.h"
 // clang-format off
 
 namespace CLIInterop 

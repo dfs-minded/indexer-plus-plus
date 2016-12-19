@@ -1,19 +1,19 @@
 #pragma once
 
 #ifdef WIN32
-#include <io.h>
 #include <Windows.h>
+#include <io.h>
 #else
 #pragma pack(8)  //(push, 4)
 #define FALSE 0
 #define TRUE 1
 
-#define FILE_ATTRIBUTE_HIDDEN               0x00000002
-#define FILE_ATTRIBUTE_SYSTEM               0x00000004
-#define FILE_ATTRIBUTE_DIRECTORY            0x00000010
+#define FILE_ATTRIBUTE_HIDDEN 0x00000002
+#define FILE_ATTRIBUTE_SYSTEM 0x00000004
+#define FILE_ATTRIBUTE_DIRECTORY 0x00000010
 #define FILE_ATTRIBUTE_ARCHIVE 0x00000020
-#define FILE_ATTRIBUTE_DEVICE               0x00000040
-#define FILE_ATTRIBUTE_VIRTUAL              0x00010000
+#define FILE_ATTRIBUTE_DEVICE 0x00000040
+#define FILE_ATTRIBUTE_VIRTUAL 0x00010000
 
 #define USN_REASON_DATA_OVERWRITE (0x00000001)
 #define USN_REASON_DATA_EXTEND (0x00000002)
@@ -45,31 +45,31 @@ typedef void *HANDLE;
 typedef char CHAR;
 typedef char BYTE;
 typedef unsigned short USHORT;
-typedef unsigned short      WORD;
+typedef unsigned short WORD;
 typedef unsigned int DWORD;
 typedef int LONG;
 typedef unsigned int ULONG;
 typedef long long LONGLONG;
 typedef unsigned long long ULONGLONG;
-typedef ULONGLONG  DWORDLONG;
+typedef ULONGLONG DWORDLONG;
 typedef LONGLONG USN;
 typedef char16_t WCHAR;
 typedef WCHAR TCHAR;
 typedef unsigned char UCHAR;
 typedef const CHAR *LPCSTR, *PCSTR;
-typedef void            *LPVOID;
+typedef void *LPVOID;
 typedef DWORD *LPDWORD;
 
 typedef union _LARGE_INTEGER {
-        struct {
-                DWORD LowPart;
-                LONG HighPart;
-        } DUMMYSTRUCTNAME;
-        struct {
-                DWORD LowPart;
-                LONG HighPart;
-        } u;
-        LONGLONG QuadPart;
+    struct {
+        DWORD LowPart;
+        LONG HighPart;
+    } DUMMYSTRUCTNAME;
+    struct {
+        DWORD LowPart;
+        LONG HighPart;
+    } u;
+    LONGLONG QuadPart;
 } LARGE_INTEGER;
 
 
@@ -86,20 +86,20 @@ typedef union _ULARGE_INTEGER {
 } ULARGE_INTEGER;
 
 typedef struct {
-        DWORD RecordLength;
-        WORD   MajorVersion;
-        WORD   MinorVersion;
-        DWORDLONG FileReferenceNumber;
-        DWORDLONG ParentFileReferenceNumber;
-        USN Usn;
-        LARGE_INTEGER TimeStamp;
-        DWORD Reason;
-        DWORD SourceInfo;
-        DWORD SecurityId;
-        DWORD FileAttributes;
-        WORD   FileNameLength;
-        WORD   FileNameOffset;
-        WCHAR FileName[1];
+    DWORD RecordLength;
+    WORD MajorVersion;
+    WORD MinorVersion;
+    DWORDLONG FileReferenceNumber;
+    DWORDLONG ParentFileReferenceNumber;
+    USN Usn;
+    LARGE_INTEGER TimeStamp;
+    DWORD Reason;
+    DWORD SourceInfo;
+    DWORD SecurityId;
+    DWORD FileAttributes;
+    WORD FileNameLength;
+    WORD FileNameOffset;
+    WCHAR FileName[1];
 
 } USN_RECORD;
 
@@ -132,19 +132,19 @@ typedef struct {
 
 // Date time
 typedef struct _FILETIME {
-        DWORD dwLowDateTime;
-        DWORD dwHighDateTime;
+    DWORD dwLowDateTime;
+    DWORD dwHighDateTime;
 } FILETIME, *PFILETIME, *LPFILETIME;
 
 typedef struct _SYSTEMTIME {
-        WORD wYear;
-        WORD wMonth;
-        WORD wDayOfWeek;
-        WORD wDay;
-        WORD wHour;
-        WORD wMinute;
-        WORD wSecond;
-        WORD wMilliseconds;
+    WORD wYear;
+    WORD wMonth;
+    WORD wDayOfWeek;
+    WORD wDay;
+    WORD wHour;
+    WORD wMinute;
+    WORD wSecond;
+    WORD wMilliseconds;
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
 

@@ -14,7 +14,7 @@ using namespace std;
 
 // Thu Aug 23 14:55:02 2001, locale-dependent
 const wstring OutputFormatter::kDefaultTimeFormat = L"c";
-const wchar_t OutputFormatter::kDefaultDateType   = L'0';
+const wchar_t OutputFormatter::kDefaultDateType = L'0';
 
 const wstring OutputFormatter::kTimeFields = L"@HIMpSXZ";
 const wstring OutputFormatter::kDateFields = L"aAbBcdjmUwWxyY";
@@ -38,19 +38,19 @@ OutputFormatter::OutputFormatter(vector<const FileInfo*>* const input, wstring f
     size_t pos = format_.find(L"%a");
     while (pos != string::npos) {
         format_ = format_.replace(pos + 1, 1, L"A" + kDefaultTimeFormat);
-        pos     = format_.find(L"%a");
+        pos = format_.find(L"%a");
     }
 
     pos = format_.find(L"%t");
     while (pos != string::npos) {
         format_ = format_.replace(pos + 1, 1, L"T" + kDefaultTimeFormat);
-        pos     = format_.find(L"%t");
+        pos = format_.find(L"%t");
     }
 
     pos = format_.find(L"%c");
     while (pos != string::npos) {
         format_ = format_.replace(pos + 1, 1, L"C" + kDefaultTimeFormat);
-        pos     = format_.find(L"%c");
+        pos = format_.find(L"%c");
     }
 
     fmt_iter_ = begin(format_);
@@ -156,9 +156,9 @@ std::wstring OutputFormatter::GetDateTimeStr(uint64 ticks) const {
         return to_wstring(IndexerDateTime::TicksToSeconds(ticks));
     }
 
-    FILETIME filetime       = IndexerDateTime::TicksToFiletime(ticks);
+    FILETIME filetime = IndexerDateTime::TicksToFiletime(ticks);
     FILETIME local_filetime = IndexerDateTime::FiletimeToLocalFiletime(filetime);
-    const tm time_info      = IndexerDateTime::FiletimeToTM(local_filetime);
+    const tm time_info = IndexerDateTime::FiletimeToTM(local_filetime);
     wchar_t buffer[80];
 
     wstring fmt = L"%" + wstring(1, symbol);
@@ -215,7 +215,7 @@ void OutputFormatter::WriteDirective() {
 
 bool OutputFormatter::ParseEscape() {
     for (size_t i = 0; i < output_.size(); ++i) {
-        const FileInfo* fi   = (*input_)[i];
+        const FileInfo* fi = (*input_)[i];
         wstring& currentElem = output_[i];
 
         switch (*fmt_iter_) {

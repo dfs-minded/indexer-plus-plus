@@ -96,7 +96,7 @@ uint IndexerDateTime::UnixSeconds() const {
 }
 
 IndexerDateTime* IndexerDateTime::Now() {
-    auto dt      = new IndexerDateTime();
+    auto dt = new IndexerDateTime();
     dt->instance = SystemTimeNow();
     return dt;
 }
@@ -138,7 +138,7 @@ const int64 lowBitMask = (1LL << 32) - 1;
 FILETIME IndexerDateTime::TicksToFiletime(const uint64& ticks) {
     FILETIME ft;
     ft.dwHighDateTime = ticks >> 32;
-    ft.dwLowDateTime  = ticks & lowBitMask;
+    ft.dwLowDateTime = ticks & lowBitMask;
     return ft;
 }
 
@@ -175,11 +175,11 @@ tm IndexerDateTime::FiletimeToTM(const FILETIME& filetime) {
     memset(&res, 0, sizeof(struct tm));
 
     res.tm_mday = systemtime.wDay;
-    res.tm_mon  = systemtime.wMonth - 1;
+    res.tm_mon = systemtime.wMonth - 1;
     res.tm_year = systemtime.wYear - 1900;
 
-    res.tm_sec  = systemtime.wSecond;
-    res.tm_min  = systemtime.wMinute;
+    res.tm_sec = systemtime.wSecond;
+    res.tm_min = systemtime.wMinute;
     res.tm_hour = systemtime.wHour;
 
     mktime(&res);

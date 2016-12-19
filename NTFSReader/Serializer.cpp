@@ -23,13 +23,13 @@ Serializer::Serializer() {
     fopen_s(&mft_serialization_file_, fname.str().c_str(), "w");
     _setmode(_fileno(mft_serialization_file_), _O_U8TEXT);
 
-    /*wstring header = L"Signature" + delim + L"Lsn" + delim + L"SequenceNumber" + delim +
-                                     L"ReferenceCount" + delim + L"Flags" + delim + L"FirstFreeByte" + delim +
-                                     L"MFTRecordNumber" + delim + L"ParentID" + delim + L"SizeReal" + delim +
-                                     L"SizeAllocated" + delim + L"Flags" + delim + L"FileName";
+/*wstring header = L"Signature" + delim + L"Lsn" + delim + L"SequenceNumber" + delim +
+                                 L"ReferenceCount" + delim + L"Flags" + delim + L"FirstFreeByte" + delim +
+                                 L"MFTRecordNumber" + delim + L"ParentID" + delim + L"SizeReal" + delim +
+                                 L"SizeAllocated" + delim + L"Flags" + delim + L"FileName";
 
-    WriteToFile(header);
-    Endl();*/
+WriteToFile(header);
+Endl();*/
 #endif
 }
 
@@ -40,7 +40,7 @@ Serializer::~Serializer() {
 
 const Serializer* Serializer::Serialize(P_FILE_RECORD_HEADER record_header) {
     auto resptr = new wstring();
-    auto& res   = *resptr;
+    auto& res = *resptr;
 
     auto sign = *record_header->MultiSectorHeader.Signature;
 

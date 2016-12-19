@@ -43,8 +43,8 @@ FileInfo::~FileInfo() {
 }
 
 void FileInfo::UpdateFromRecord(const USN_RECORD& record) {
-    ID             = record.FileReferenceNumber & 0x00000000FFFFFFFF;
-    ParentID       = record.ParentFileReferenceNumber & 0x00000000FFFFFFFF;
+    ID = record.FileReferenceNumber & 0x00000000FFFFFFFF;
+    ParentID = record.ParentFileReferenceNumber & 0x00000000FFFFFFFF;
     FileAttributes = record.FileAttributes;
 
     ushort name_len;
@@ -57,7 +57,7 @@ void FileInfo::SetName(const char16_t* name, ushort name_length) {
     delete[] name_;
     // name_ = L""; return;
 
-    name_      = name;
+    name_ = name;
     NameLength = name_length;
 }
 

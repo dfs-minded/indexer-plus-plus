@@ -20,18 +20,17 @@ const wchar_t* kSaveRawMFTArgName = L"saveRawMFT";
 const wchar_t* kRawMFTPathArgName = L"rawMFTPath";
 }
 
-CommandlineArguments::CommandlineArguments() :
-	SaveUSNJournalRecords(false),
-	SaveFileInfos(false),
-	SaveRawMFT(false),
-	ReplayUSNRecPath(L""),
-	ReplayFileInfosPath(L"")
-{
+CommandlineArguments::CommandlineArguments()
+    : SaveUSNJournalRecords(false),
+      SaveFileInfos(false),
+      SaveRawMFT(false),
+      ReplayUSNRecPath(L""),
+      ReplayFileInfosPath(L"") {
 }
 
 void CommandlineArguments::SetPath(const wstring& arg, const wchar_t* path_arg_name, std::wstring* path) {
     if (arg.find(path_arg_name) != -1) {
-        int splitter_index              = arg.find(L'=');
+        int splitter_index = arg.find(L'=');
         if (splitter_index != -1) *path = arg.substr(splitter_index + 1);
     }
 }

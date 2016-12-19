@@ -71,27 +71,27 @@ typedef struct _FILE_RECORD_SEGMENT_HEADER {
 
 // FILE_RECORD_HEADER Flags attribute possible values.
 enum class FrhFlagsEnum {
-    FRH_IN_USE    = 0x0001,  // Record is in use.
+    FRH_IN_USE = 0x0001,  // Record is in use.
     FRH_DIRECTORY = 0x0002,  // Record is a directory.
 };
 
 
 enum class AttributeTypeCodes {
     STANDARD_INFORMATION = 0x10,
-    ATTRIBUTE_LIST       = 0x20,
-    FILENAME             = 0x30,
-    OBJECT_ID            = 0x40,
-    SECURITY_DESCRIPTOR  = 0x50,
-    VOLUME_NAME          = 0x60,
-    VOLUME_INFORMATION   = 0x70,
-    DATA                 = 0x80,
-    INDEX_ROOT           = 0x90,
-    INDEX_ALLOCATION     = 0xA0,
-    BITMAP               = 0xB0,
-    REPARSE_POINT        = 0xC0,
-    EA_INFORMATION       = 0xD0,
-    EA                   = 0xE0,
-    END_INDICATOR        = -1
+    ATTRIBUTE_LIST = 0x20,
+    FILENAME = 0x30,
+    OBJECT_ID = 0x40,
+    SECURITY_DESCRIPTOR = 0x50,
+    VOLUME_NAME = 0x60,
+    VOLUME_INFORMATION = 0x70,
+    DATA = 0x80,
+    INDEX_ROOT = 0x90,
+    INDEX_ALLOCATION = 0xA0,
+    BITMAP = 0xB0,
+    REPARSE_POINT = 0xC0,
+    EA_INFORMATION = 0xD0,
+    EA = 0xE0,
+    END_INDICATOR = -1
 };
 
 // An MFT entry consists of attributes, and each attribute has the same header data structure.
@@ -195,10 +195,10 @@ typedef struct _FILE_NAME_INFORMATION {
 
 
 enum class FilenameFlagsEnum {
-    EMPTY          = -1,
-    POSIX          = 0,
-    WIN_32         = 1,
-    DOS            = 2,
+    EMPTY = -1,
+    POSIX = 0,
+    WIN_32 = 1,
+    DOS = 2,
     WIN_32_AND_DOS = 3,
 
     // This bit is duplicated from the file record, to indicate that this file has a file name index present

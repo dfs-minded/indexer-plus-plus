@@ -31,14 +31,14 @@ unique_ptr<MFTReadResult> WinApiMFTReader::ReadAllRecords() {
     auto volume_data = VolumeData(drive_letter_, volume_data_buff);
 
     DWORD bytecount = 0;
-    auto data       = make_unique<vector<FileInfo*>>(static_cast<size_t>(volume_data.MFTRecordsNum));
-    auto buffer     = make_unique<char[]>(kBufferSize);
+    auto data = make_unique<vector<FileInfo*>>(static_cast<size_t>(volume_data.MFTRecordsNum));
+    auto buffer = make_unique<char[]>(kBufferSize);
 
     while (ReadUSNRecords(mft_enum_data.get(), buffer.get(), bytecount)) {
 
         mft_enum_data->StartFileReferenceNumber = *(DWORDLONG*)buffer.get();
 
-        auto record    = (USN_RECORD*)((USN*)buffer.get() + 1);
+        auto record = (USN_RECORD*)((USN*)buffer.get() + 1);
         auto recordend = (USN_RECORD*)((BYTE*)buffer.get() + bytecount);
 
         if (record == recordend) {
@@ -46,7 +46,7 @@ unique_ptr<MFTReadResult> WinApiMFTReader::ReadAllRecords() {
         }
 
         for (; record < recordend; record = (USN_RECORD*)(((BYTE*)record) + record->RecordLength)) {
-            auto fi         = new FileInfo(*record, drive_letter_);
+            auto fi = new FileInfo(*record, drive_letter_);
             (*data)[fi->ID] = fi;
         }
     }
@@ -74,10 +74,10 @@ unique_ptr<MFT_ENUM_DATA> WinApiMFTReader::GetMFTEnumData() const {
     auto mft_enum_data = make_unique<MFT_ENUM_DATA>();
 
     mft_enum_data->StartFileReferenceNumber = 0;
-    mft_enum_data->LowUsn                   = 0;
-    mft_enum_data->HighUsn                  = u_journal->MaxUsn;
-    mft_enum_data->MinMajorVersion          = 2;  // journal->MinSupportedMajorVersion;
-    mft_enum_data->MaxMajorVersion          = 2;  // journal->MaxSupportedMajorVersion;
+    mft_enum_data->LowUsn = 0;
+    mft_enum_data->HighUsn = u_journal->MaxUsn;
+    mft_enum_data->MinMajorVersion = 2;  // journal->MinSupportedMajorVersion;
+    mft_enum_data->MaxMajorVersion = 2;  // journal->MaxSupportedMajorVersion;
 
     return mft_enum_data;
 }

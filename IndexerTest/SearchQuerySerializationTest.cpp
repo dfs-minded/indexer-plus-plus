@@ -6,8 +6,8 @@
 
 #include <memory>
 
-#include "SearchQuery.h"
 #include "Helpers.h"
+#include "SearchQuery.h"
 
 using namespace std;
 
@@ -15,16 +15,16 @@ using namespace std;
 
 TEST(SearchQuerySerializationTest, DeserializedQueryEqToOrig) {
 
-    u16string text            = __L__("That's * ^~..:the str@n/ge text *** &");
-	u16string search_dir_path = __L__("C:/mydir");
-    bool match_case         = false;
+    u16string text = __L__("That's * ^~..:the str@n/ge text *** &");
+    u16string search_dir_path = __L__("C:/mydir");
+    bool match_case = false;
 
     uint64 size_from = 102;
-    uint64 size_to   = 300;
+    uint64 size_to = 300;
 
     bool exclude_hidden_and_system = true;
-    bool exclude_folders           = true;
-    bool exclude_files             = false;
+    bool exclude_folders = true;
+    bool exclude_files = false;
 
     uint64 c_time_from = 3309855552900976;
     uint64 c_time_to   = 88783687468765949;

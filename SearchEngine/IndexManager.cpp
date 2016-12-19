@@ -100,7 +100,7 @@ void IndexManager::DisableIndex() {
 
     auto* data = index_->ReleaseData();
 
-	index_->UnlockData();
+    index_->UnlockData();
 
     reading_mft_finished_->store(false);
 
@@ -135,7 +135,7 @@ void IndexManager::Run() {
     logger_->Debug(METHOD_METADATA + L"Started for drive " + DriveLetterW());
     TIK
 
-    auto u_read_res = u_reader->ReadAllRecords();
+        auto u_read_res = u_reader->ReadAllRecords();
 
     // It's here for debug and testing: compares results which were retrieved from win API and
     // from direct parsing of the filesystem.
@@ -158,7 +158,7 @@ void IndexManager::Run() {
 
     index_->BuildTree();
 
-	index_->UnlockData();
+    index_->UnlockData();
 
     TOK(L"Build tree finished for drive " + DriveLetterW())
 
@@ -178,7 +178,7 @@ void IndexManager::Run() {
 
     index_->CalculateDirsSizes();
 
-	index_->UnlockData();
+    index_->UnlockData();
 
     // Form new index change event args and populate them with index files (all added to the new_items collection).
 
@@ -252,8 +252,8 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         if (existing != nullptr) {
 
             auto log_msg = METHOD_METADATA + L"Cannot insert new. File with such ID already exists in index. ID = " +
-                           to_wstring(new_fi->ID) + wstring(L" Name = ") + 
-						   HelperCommon::Char16ToWstring(new_fi->GetName());
+                           to_wstring(new_fi->ID) + wstring(L" Name = ") +
+                           HelperCommon::Char16ToWstring(new_fi->GetName());
 
             if (new_fi->NameLength != existing->NameLength ||
                 memcmp(new_fi->GetName(), existing->GetName(), existing->NameLength) != 0) {
@@ -347,7 +347,7 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
         delete fi_with_changes;
     }
 
-	index_->UnlockData();
+    index_->UnlockData();
 
     if (!old_items.empty() || !new_items.empty() || !changed_items.empty()) {
         auto p_args = make_shared<NotifyIndexChangedEventArgs>(move(new_items), move(old_items), move(changed_items));
@@ -378,11 +378,11 @@ void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
         WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), fi);
     }
 
-	win_api_index->UnlockData();
+    win_api_index->UnlockData();
 
     ReaderDataComparator comparator;
     comparator.Compare(*raw_result->Data, *raw_result->Root, L"RawReader", *win_api_data, *win_api_index->Root(),
-                       L"WinAPIReader");  
+                       L"WinAPIReader");
 }
 
 void IndexManager::DisposeReaderResult(unique_ptr<MFTReadResult> u_read_res) {

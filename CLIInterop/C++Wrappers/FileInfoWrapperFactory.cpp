@@ -2,11 +2,11 @@
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
-#include "FileInfoWrapperFactory.h" 
+#include "FileInfoWrapperFactory.h"
 
 #include <algorithm>
-#include <vector>
 #include <string>
+#include <vector>
 // clang-format off
 
 using namespace System;

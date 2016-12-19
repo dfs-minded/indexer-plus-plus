@@ -6,19 +6,16 @@
 
 #include "IndexChangeObserver.h"
 
-class MockIndexChangeObserver : public IndexChangeObserver
-{
+class MockIndexChangeObserver : public IndexChangeObserver {
    public:
-	MockIndexChangeObserver() = default;
+    MockIndexChangeObserver() = default;
 
-	virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override
-	{
-		IndexChangedArgs = p_args;
-	}
+    virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override {
+        IndexChangedArgs = p_args;
+    }
 
-	virtual void OnVolumeStatusChanged(char drive_letter) override
-	{
-	}
+    virtual void OnVolumeStatusChanged(char drive_letter) override {
+    }
 
-	pNotifyIndexChangedEventArgs IndexChangedArgs;
+    pNotifyIndexChangedEventArgs IndexChangedArgs;
 };

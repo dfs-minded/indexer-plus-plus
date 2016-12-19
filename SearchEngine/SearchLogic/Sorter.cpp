@@ -34,7 +34,7 @@ void Sorter::Sort(vector<const FileInfo*>* file_infos) const {
 
     TIK
 
-    if (prop_ == SortingProperty::SORT_EXTENSION || prop_ == SortingProperty::SORT_TYPE) {
+        if (prop_ == SortingProperty::SORT_EXTENSION || prop_ == SortingProperty::SORT_TYPE) {
         SortByExtensionOrType(file_infos);
     }
     else {
@@ -57,20 +57,19 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
     logger_->Debug(METHOD_METADATA + L" called");
     auto input_size = file_infos->size();
 
-	auto cores_num = HelperCommon::GetNumberOfProcessors();
+    auto cores_num = HelperCommon::GetNumberOfProcessors();
     auto num_files_to_sort_per_thread = input_size / cores_num + 1;
     const auto& begin_iter = file_infos->begin();
     vector<vector<const FileInfo*>> sub_vectors_to_sort;
 
-	TIK
-    for (uint from = 0, to = min(input_size, num_files_to_sort_per_thread); from < input_size;) {
+    TIK for (uint from = 0, to = min(input_size, num_files_to_sort_per_thread); from < input_size;) {
 
         sub_vectors_to_sort.push_back(vector<const FileInfo*>(begin_iter + from, begin_iter + to));
 
         from = to;
-        to   = min(input_size, to + num_files_to_sort_per_thread);
+        to = min(input_size, to + num_files_to_sort_per_thread);
     }
-	TOK(L"Sorting: file copying " + to_wstring(input_size) + L" " + to_wstring(num_files_to_sort_per_thread));
+    TOK(L"Sorting: file copying " + to_wstring(input_size) + L" " + to_wstring(num_files_to_sort_per_thread));
 
     int sub_vectors_count = sub_vectors_to_sort.size();
 
@@ -78,7 +77,7 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
     for (auto i = 0; i < sub_vectors_count; ++i) {
         sort(sub_vectors_to_sort[i].begin(), sub_vectors_to_sort[i].end(), cmp);
     }
-	TOK(L"Sorting: parallel sort");
+    TOK(L"Sorting: parallel sort");
 
     unordered_set<const FileInfo*> empty_do_not_include;
 
@@ -89,14 +88,14 @@ void Sorter::SortParallel(vector<const FileInfo*>* file_infos, PropertyComparato
 
             auto u_merge_res = Merger::MergeWithMainCollection(sub_vectors_to_sort[j], empty_do_not_include,
                                                                sub_vectors_to_sort[j + step], cmp);
-            sub_vectors_to_sort[j] = move(*u_merge_res);			
+            sub_vectors_to_sort[j] = move(*u_merge_res);
         }
-		TOK(L"Sorting: merge  " + to_wstring(step));
+        TOK(L"Sorting: merge  " + to_wstring(step));
     }
 
     file_infos->swap(sub_vectors_to_sort[0]);
     sub_vectors_to_sort.clear();
-	TOK(L"Sorting: finished");
+    TOK(L"Sorting: finished");
 }
 
 PropertyComparatorFunc Sorter::GetCurrentPropertyComparator() const {
@@ -120,7 +119,7 @@ struct PairIntComparator {
 
 
 void Sorter::ResetSortingProperties(SortingProperty prop, int direction) {
-    prop_      = prop;
+    prop_ = prop;
     direction_ = direction;
 }
 
@@ -139,7 +138,7 @@ void Sorter::SortByExtensionOrType(vector<const FileInfo*>* file_infos) const {
         for (size_t i = 0; i < input_size; ++i) {
             if (sort_prop_to_int.find(ext_cache[i]) == sort_prop_to_int.end()) WriteToOutput("Fuck");
 
-            sort_prop_to_fi_pairs[i].first  = sort_prop_to_int.at(ext_cache[i]);
+            sort_prop_to_fi_pairs[i].first = sort_prop_to_int.at(ext_cache[i]);
             sort_prop_to_fi_pairs[i].second = (*file_infos)[i];
         }
 
@@ -150,7 +149,7 @@ void Sorter::SortByExtensionOrType(vector<const FileInfo*>* file_infos) const {
         auto& sort_prop_to_int = FileInfoHelper::GetDistinctOrderedTypes(*file_infos, &types_cache);
 
         for (size_t i = 0; i < input_size; ++i) {
-            sort_prop_to_fi_pairs[i].first  = sort_prop_to_int.at(types_cache[i]);
+            sort_prop_to_fi_pairs[i].first = sort_prop_to_int.at(types_cache[i]);
             sort_prop_to_fi_pairs[i].second = (*file_infos)[i];
         }
     }

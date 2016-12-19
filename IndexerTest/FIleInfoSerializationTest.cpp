@@ -24,7 +24,7 @@ TEST(FIleInfoSerializationTest, DeserializedFileInfoEqToOrig) {
     fi.LastAccessTime = 135022224;
     fi.LastWriteTime  = 136066664;
 
-    auto serialized   = SerializeFileInfo(fi);
+    auto serialized = SerializeFileInfo(fi);
     auto deserialized = DeserializeFileInfo(serialized);
 
     EXPECT_TRUE(fi == *deserialized.get());

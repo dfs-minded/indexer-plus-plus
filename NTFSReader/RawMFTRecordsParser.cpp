@@ -88,8 +88,8 @@ void RawMFTRecordsParser::Parse(const char* buffer, uint records_num) const {
         }
 
         auto base_record_id = (uint) * (uint64*)&file_record_header->BaseFileRecordSegment;
-        auto frn            = GetFRN(*file_record_header);
-        auto id             = base_record_id ? base_record_id : frn;
+        auto frn = GetFRN(*file_record_header);
+        auto id = base_record_id ? base_record_id : frn;
 
         AccumulatedFileInfo* fi_info = (*accum_file_infos_)[id];
 
@@ -177,7 +177,7 @@ bool RawMFTRecordsParser::GetNextAttrHeader(const FILE_RECORD_HEADER& record_hea
 
 int64 RawMFTRecordsParser::GetVariableLengthFieldValue(const char* field_begin, short field_size) {
 
-    int64 res      = 0;
+    int64 res = 0;
     char* res_char = reinterpret_cast<char*>(&res);
 
     for (auto i = 0; i < field_size; ++i) {
@@ -239,7 +239,7 @@ unique_ptr<vector<FileInfo*>> RawMFTRecordsParser::GetCompleteFileInfos() const 
         auto u_fi = accum_fi->GetFinalResult();
         if (!u_fi) continue;
 
-        auto fi        = u_fi.release();
+        auto fi = u_fi.release();
         (*res)[fi->ID] = fi;
     }
 

@@ -74,7 +74,7 @@ wstring Helper::SerializeRecord(const USN_RECORD& record, char drive) {
 
 pair<unique_ptr<USN_RECORD, function<void(USN_RECORD*)>>, char> Helper::DeserializeRecord(const wstring& s) {
 
-    auto parts           = HelperCommon::Split(s, kDelim);
+    auto parts = HelperCommon::Split(s, kDelim);
     auto filename_length = HelperCommon::ParseNumber<int>(parts[14]);
 
     if (filename_length != 2 * parts[16].size()) {
@@ -97,9 +97,9 @@ pair<unique_ptr<USN_RECORD, function<void(USN_RECORD*)>>, char> Helper::Deserial
     record->Usn                       = HelperCommon::ParseNumber<USN>(parts[6]);
 
     record->TimeStamp.HighPart = HelperCommon::ParseNumber<LONG>(parts[7]);
-    record->TimeStamp.LowPart  = HelperCommon::ParseNumber<DWORD>(parts[8]);
+    record->TimeStamp.LowPart = HelperCommon::ParseNumber<DWORD>(parts[8]);
 
-    record->Reason     = HelperCommon::ParseNumber<DWORD>(parts[9]);
+    record->Reason = HelperCommon::ParseNumber<DWORD>(parts[9]);
     record->SourceInfo = HelperCommon::ParseNumber<DWORD>(parts[11]);
     record->SecurityId = HelperCommon::ParseNumber<DWORD>(parts[12]);
 

@@ -69,9 +69,8 @@ u16string HelperCommon::WstringToU16string(const wstring& s) {
     return res;
 }
 
-const wstring HelperCommon::Char16ToWstring(const char16_t* s)
-{
-	return wstring(reinterpret_cast<const wchar_t*>(s));
+const wstring HelperCommon::Char16ToWstring(const char16_t* s) {
+    return wstring(reinterpret_cast<const wchar_t*>(s));
 }
 
 bool HelperCommon::Utf16ToUtf8(const u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size) {
@@ -168,7 +167,7 @@ bool HelperCommon::DirExist(const wstring& path) {
 char16_t* HelperCommon::GetFilename(const USN_RECORD& record, ushort* name_length) {
     *name_length = (ushort)(record.FileNameLength / 2);
 
-    char16_t* filename         = new char16_t[*name_length + 1];
+    char16_t* filename = new char16_t[*name_length + 1];
     char16_t* filenameInRecord = (char16_t*)((unsigned char*)&record + record.FileNameOffset);
     memcpy(filename, filenameInRecord, record.FileNameLength);
     *(filename + record.FileNameLength / 2) = L'\0';
@@ -192,10 +191,10 @@ typedef struct tagTHREADNAME_INFO {
 void HelperCommon::SetThreadName(thread* thread, const char* thread_name) {
 #ifdef WIN32
     THREADNAME_INFO info;
-    info.dwType     = 0x1000;
-    info.szName     = thread_name;
+    info.dwType = 0x1000;
+    info.szName = thread_name;
     info.dwThreadID = GetThreadId(thread->native_handle());
-    info.dwFlags    = 0;
+    info.dwFlags = 0;
 #pragma warning(push)
 #pragma warning(disable : 6320 6322)
     __try {
@@ -214,10 +213,10 @@ bool HelperCommon::IsAsciiString(const wchar_t* s) {
 }
 
 char16_t* HelperCommon::GetDriveName(char16_t drive_letter) {
-    auto drive_name     = new char16_t[3];
-    drive_name[0]       = drive_letter;
-    drive_name[1]       = ':';
-    drive_name[2]       = '\0';
+    auto drive_name = new char16_t[3];
+    drive_name[0] = drive_letter;
+    drive_name[1] = ':';
+    drive_name[2] = '\0';
     return drive_name;
 }
 

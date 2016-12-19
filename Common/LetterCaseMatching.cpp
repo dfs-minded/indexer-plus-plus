@@ -3,6 +3,7 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 #include "LetterCaseMatching.h"
+// clang-format off
 
 static ushort lowers[] = {
     (ushort)0x0061, (ushort)0x0062, (ushort)0x0063, (ushort)0x0064, (ushort)0x0065, (ushort)0x0066, (ushort)0x0067, (ushort)0x0068, (ushort)0x0069, 

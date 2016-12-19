@@ -52,33 +52,34 @@ void Index::UnlockData() {
 void Index::BuildTree() {
 
     for (auto* fi : *data_) {
-		if (!fi) continue;
+        if (!fi) continue;
 
-		if (fi->ID == RootID()) continue;
+        if (fi->ID == RootID()) continue;
 
-		FileInfo* parent = GetNode(fi->ParentID);
+        FileInfo* parent = GetNode(fi->ParentID);
 
-		if (parent == nullptr) {
-			logger_->Warning(METHOD_METADATA + L"Cannot find patent for file" +
-				HelperCommon::Char16ToWstring(fi->GetName()) + L" with ParentID = " +
-				to_wstring(fi->ParentID) + L" Deleting this FileInfo and assigning nullptr to it in the Index.");
+        if (parent == nullptr) {
+            logger_->Warning(METHOD_METADATA + L"Cannot find parent for file" +
+                             HelperCommon::Char16ToWstring(fi->GetName()) + L" with ParentID = " +
+                             to_wstring(fi->ParentID) +
+                             L" Deleting this FileInfo and assigning nullptr to it in the Index.");
 
-			(*data_)[fi->ID] = nullptr;
-			delete fi;
+            (*data_)[fi->ID] = nullptr;
+            delete fi;
 
-			continue;
-		}
+            continue;
+        }
 
-		fi->Parent = parent;
+        fi->Parent = parent;
 
-		if (parent->FirstChild == nullptr) {
-			parent->FirstChild = fi;
-			continue;
+        if (parent->FirstChild == nullptr) {
+            parent->FirstChild = fi;
+            continue;
         }
 
         parent->FirstChild->PrevSibling = fi;
-        fi->NextSibling                 = parent->FirstChild;
-        parent->FirstChild              = fi;
+        fi->NextSibling = parent->FirstChild;
+        parent->FirstChild = fi;
     }
 }
 

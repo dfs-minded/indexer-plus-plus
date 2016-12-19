@@ -63,8 +63,8 @@ bool USNJournalRecordsProvider::Empty() const {
     return records_.empty();
 }
 
-uint64 g_ms_multiplier     = 10000;
-uint64 g_min_group_time    = 1000 * g_ms_multiplier;
+uint64 g_ms_multiplier = 10000;
+uint64 g_min_group_time = 1000 * g_ms_multiplier;
 uint64 g_max_dist_event_ms = 10 * g_ms_multiplier;
 
 void USNJournalRecordsProvider::FindLastGroupRecord() {
@@ -73,13 +73,13 @@ void USNJournalRecordsProvider::FindLastGroupRecord() {
         return;
     }
 
-    auto time       = HelperCommon::LargeIntegerToInt64(records_[next_record_]->TimeStamp);
+    auto time = HelperCommon::LargeIntegerToInt64(records_[next_record_]->TimeStamp);
     auto min_end_to = time + g_min_group_time;
-    auto irecord    = next_record_ + 1;
+    auto irecord = next_record_ + 1;
 
     while (irecord < static_cast<int>(records_.size())) {
         auto current_time = HelperCommon::LargeIntegerToInt64(records_[irecord]->TimeStamp);
-        auto diff         = current_time - time;
+        auto diff = current_time - time;
 
         if (diff > g_max_dist_event_ms && current_time > min_end_to) {
             break;
@@ -95,13 +95,13 @@ void USNJournalRecordsProvider::FindLastGroupRecord() {
 void USNJournalRecordsProvider::CopyMessagesToBuffer(LPVOID& buffer, LPDWORD& bytes_returned) {
 
     *(DWORDLONG*)buffer = 0;  // First start FRN is returned, not needed for RecordsProvider.
-    auto p              = (char*)buffer;
+    auto p = (char*)buffer;
     p += sizeof(DWORDLONG);
     *bytes_returned = sizeof(DWORDLONG);
-    auto to         = last_group_record_ + 1;
+    auto to = last_group_record_ + 1;
 
     while (next_record_ < to) {
-        auto u_record     = move(records_[next_record_]);
+        auto u_record = move(records_[next_record_]);
         int record_length = u_record->RecordLength;
         memcpy(p, u_record.get(), record_length);
         p = p + record_length;

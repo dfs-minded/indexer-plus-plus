@@ -8,10 +8,10 @@
 
 class MockSearchResultObserver : public SearchResultObserver {
 
-public:
-	void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) {
-		LastResult = search_result;
-	}
+   public:
+    void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) {
+        LastResult = search_result;
+    }
 
     pSearchResult LastResult;
 };

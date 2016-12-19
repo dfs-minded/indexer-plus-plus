@@ -59,7 +59,7 @@ void RawMFTSerializer::SerializeMFT(void* buff, DWORD bytes_count) const {
 bool RawMFTSerializer::GetNtfsVolumeData(NTFS_VOLUME_DATA_BUFFER* volume_data_buff) {
 
     DWORD volume_data_size = sizeof(*volume_data_buff);
-    auto u_buff            = make_unique<char[]>(volume_data_size);
+    auto u_buff = make_unique<char[]>(volume_data_size);
 
     // bool ok = WinApiCommon::ReadBytes(raw_mft_file_, u_buff.get(), volume_data_size);
     bool ok = serialized_raw_mft_file_->read((char*)u_buff.get(), volume_data_size) ? true : false;

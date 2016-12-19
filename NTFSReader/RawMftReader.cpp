@@ -27,7 +27,7 @@ RawMFTReader::RawMFTReader(char drive_letter)
       save_raw_mft_(CommandlineArguments::Instance().SaveRawMFT) {
 
     auto serialiezed_mft_path = CommandlineArguments::Instance().RawMFTPath;
-    read_serialized_mft_      = !serialiezed_mft_path.empty();
+    read_serialized_mft_ = !serialiezed_mft_path.empty();
 #ifdef WIN32
     if (!read_serialized_mft_) {
         volume_ = unique_ptr<void, function<void(HANDLE)>>(WinApiCommon::OpenVolume(drive_letter),
@@ -143,7 +143,7 @@ void RawMFTReader::FindAndSetRoot(const vector<FileInfo*>& file_infos, MFTReadRe
 
         if (fi->ID == fi->ParentID) {
             fi->SetName(HelperCommon::GetDriveName(drive_letter), 2);
-            fi->Parent   = fi;
+            fi->Parent = fi;
             result->Root = fi;
             break;
         }

@@ -5,13 +5,13 @@
 #pragma once
 
 #include "FileInfoWrapper.h"
+// clang-format off
 
 namespace CLIInterop 
 {
-
 	ref struct ModelEnumerator: public System::Collections::Generic::IEnumerator<FileInfoWrapper^>
 	{
-	public:
+	   public:
 
 		property FileInfoWrapper^ Current 
 		{ 
@@ -35,5 +35,4 @@ namespace CLIInterop
 
 		~ModelEnumerator(){};
 	};
-
 }

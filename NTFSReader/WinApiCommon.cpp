@@ -106,7 +106,7 @@ void WinApiCommon::WriteBytes(HANDLE h_file, LPVOID buffer, DWORD bytes_to_write
 
 void WinApiCommon::SetFilePointerFromFileBegin(HANDLE volume, ULONGLONG bytes_to_move) {
 
-    long low_part  = (bytes_to_move << 32) >> 32;
+    long low_part = (bytes_to_move << 32) >> 32;
     long high_part = bytes_to_move >> 32;
 #ifdef WIN32
     auto current_file_pos = SetFilePointer(volume, low_part, &high_part, FILE_BEGIN);
@@ -185,9 +185,9 @@ bool WinApiCommon::GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info
             HelperCommon::PairDwordToInt64(file_attr_data.nFileSizeHigh, file_attr_data.nFileSizeLow));
     }
 
-    file_info->CreationTime   = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftCreationTime);
+    file_info->CreationTime = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftCreationTime);
     file_info->LastAccessTime = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftLastAccessTime);
-    file_info->LastWriteTime  = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftLastWriteTime);
+    file_info->LastWriteTime = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftLastWriteTime);
 #endif
     return true;
 }

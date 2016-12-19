@@ -40,12 +40,12 @@ TEST(HelperCommonTest, StringToWstring) {
 }
 
 TEST(HelperCommonTest, Char16ToWstring) {
-	const char16_t* s = reinterpret_cast<char16_t*>(L"file_name3");
+    const char16_t* s = reinterpret_cast<char16_t*>(L"file_name3");
 
-	wstring expected = L"file_name3";
-	wstring result = HelperCommon::Char16ToWstring(s);
+    wstring expected = L"file_name3";
+    wstring result = HelperCommon::Char16ToWstring(s);
 
-	ASSERT_EQ(expected, result);
+    ASSERT_EQ(expected, result);
 }
 
 TEST(HelperCommonTest, SplitOnlyNonEmpty) {
@@ -61,9 +61,9 @@ TEST(HelperCommonTest, SplitOnlyNonEmpty) {
                                         {L"one", L"type", L"splitters"},
                                         {L"text", L"with", L"different", L"splitters"}};
 
-    size_t n_inp       = sizeof(input_strings) / sizeof(input_strings[0]);
+    size_t n_inp = sizeof(input_strings) / sizeof(input_strings[0]);
     size_t n_splitters = sizeof(input_splitters) / sizeof(input_splitters[0]);
-    size_t n_exp       = sizeof(expected) / sizeof(expected[0]);
+    size_t n_exp = sizeof(expected) / sizeof(expected[0]);
 
     ASSERT_EQ(n_exp, n_inp);
     ASSERT_EQ(n_exp, n_splitters);
@@ -88,9 +88,9 @@ TEST(HelperCommonTest, SplitIncludeEmpty) {
                                         {L"one", L"type", L"", L"splitters", L""},
                                         {L"text", L"with", L"", L"different", L"", L"", L"", L"splitters"}};
 
-    size_t n_inp       = sizeof(input_strings) / sizeof(input_strings[0]);
+    size_t n_inp = sizeof(input_strings) / sizeof(input_strings[0]);
     size_t n_splitters = sizeof(input_splitters) / sizeof(input_splitters[0]);
-    size_t n_exp       = sizeof(expected) / sizeof(expected[0]);
+    size_t n_exp = sizeof(expected) / sizeof(expected[0]);
 
     ASSERT_EQ(n_exp, n_inp);
     ASSERT_EQ(n_exp, n_splitters);
@@ -107,7 +107,7 @@ TEST(HelperCommonTest, SplitIncludeSplitters) {
     const wstring input_strings[] = {L"_==_+", L"no_splitters", L"no_splitters", L"one_type__splitters_",
                                      L"text with_ different ||_splitters"};
 
-    const wstring input_splitters[]  = {L"+=_", L"", L" ", L"_", L" _|"};
+    const wstring input_splitters[] = {L"+=_", L"", L" ", L"_", L" _|"};
     const vector<wstring> expected[] = {
         {L"_", L"==", L"_", L"+"},
         {L"no_splitters"},
@@ -115,9 +115,9 @@ TEST(HelperCommonTest, SplitIncludeSplitters) {
         {L"one", L"_", L"type", L"__", L"splitters", L"_"},
         {L"text", L" ", L"with", L"_", L" ", L"different", L" ", L"||", L"_", L"splitters"}};
 
-    size_t n_inp       = sizeof(input_strings) / sizeof(input_strings[0]);
+    size_t n_inp = sizeof(input_strings) / sizeof(input_strings[0]);
     size_t n_splitters = sizeof(input_splitters) / sizeof(input_splitters[0]);
-    size_t n_exp       = sizeof(expected) / sizeof(expected[0]);
+    size_t n_exp = sizeof(expected) / sizeof(expected[0]);
 
     ASSERT_EQ(n_exp, n_inp);
     ASSERT_EQ(n_exp, n_splitters);
@@ -146,10 +146,10 @@ TEST(HelperCommonTest, IsAsciiString) {
 
 TEST(HelperCommonTest, GetDriveName) {
 
-	const char16_t* input = __L__(L"ABaz0");
-	const u16string expected[] = { __L__(L"A:"), __L__(L"B:"), __L__(L"a:"), __L__(L"z:"), __L__(L"0:") };
-    auto n_inp               = 5;
-    auto n_exp               = sizeof(expected) / sizeof(expected[0]);
+    const char16_t* input = __L__(L"ABaz0");
+    const u16string expected[] = {__L__(L"A:"), __L__(L"B:"), __L__(L"a:"), __L__(L"z:"), __L__(L"0:")};
+    auto n_inp = 5;
+    auto n_exp = sizeof(expected) / sizeof(expected[0]);
 
     ASSERT_EQ(n_exp, n_inp);
 

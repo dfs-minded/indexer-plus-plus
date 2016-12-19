@@ -198,8 +198,7 @@ const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path)
         if (compare(root->GetName(), path_components[i].c_str(), table) == 0) {
             ++i;
 
-            if (i == path_components.size()) 
-				return root;
+            if (i == path_components.size()) return root;
 
             root = root->FirstChild;
             continue;

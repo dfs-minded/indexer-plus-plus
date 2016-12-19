@@ -7,18 +7,18 @@
 #include "Model.h"
 
 #include <algorithm>
-#include <string>
 #include <list>
 #include <memory>
+#include <string>
 
-#include "IndexManagersContainer.h"
-#include "FileInfoComparatorFactory.h"
 #include "AsyncLog.h"
-#include "OneThreadLog.h"
-#include "HelperCommon.h"
 #include "ConnectionManager.h"
-#include "QueryProcessor.h"
+#include "FileInfoComparatorFactory.h"
+#include "HelperCommon.h"
+#include "IndexManagersContainer.h"
+#include "OneThreadLog.h"
 #include "OutputFormatter.h"
+#include "QueryProcessor.h"
 
 #include "InteropHelper.h"
 #include "ModelUpdater.h"

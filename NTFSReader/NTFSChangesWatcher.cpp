@@ -37,23 +37,23 @@ NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, NTFSChangeObserver* ob
       usn_records_provider_(nullptr) {
     usn_records_serializer_ = &USNJournalRecordsSerializer::Instance();
 
-    auto records_filename          = CommandlineArguments::Instance().ReplayUSNRecPath;
+    auto records_filename = CommandlineArguments::Instance().ReplayUSNRecPath;
     read_volume_changes_from_file_ = !records_filename.empty();
 
     if (read_volume_changes_from_file_) {
         usn_records_serializer_->DeserializeAllRecords(records_filename);
 
         usn_records_provider_ = usn_records_serializer_->GetRecordsProvider(drive_letter_);
-	} else {
-		volume_ = WinApiCommon::OpenVolume(drive_letter_);
+    } else {
+        volume_ = WinApiCommon::OpenVolume(drive_letter_);
 
-		journal_ = make_unique<USN_JOURNAL_DATA>();
+        journal_ = make_unique<USN_JOURNAL_DATA>();
 
-		WinApiCommon::LoadJournal(volume_, journal_.get());
+        WinApiCommon::LoadJournal(volume_, journal_.get());
 
-		journal_id_ = journal_->UsnJournalID;
-		last_usn_ = journal_->NextUsn;
-	}
+        journal_id_ = journal_->UsnJournalID;
+        last_usn_ = journal_->NextUsn;
+    }
 }
 
 void NTFSChangesWatcher::WatchChanges() {
@@ -97,7 +97,7 @@ USN NTFSChangesWatcher::ReadChanges(USN low_usn, char* buffer) {
         return low_usn;
     }
 
-    auto record     = (USN_RECORD*)((USN*)buffer + 1);
+    auto record = (USN_RECORD*)((USN*)buffer + 1);
     auto record_end = (USN_RECORD*)((BYTE*)buffer + byte_count);
 
     auto u_args = make_unique<NotifyNTFSChangedEventArgs>();
@@ -159,7 +159,7 @@ USN NTFSChangesWatcher::ReadChanges(USN low_usn, char* buffer) {
             // safely we need to create new FileInfo, which will store all modifications.
 
             if (!file_to_update) {
-                file_to_update           = new FileInfo(drive_letter_);
+                file_to_update = new FileInfo(drive_letter_);
                 u_args->ChangedItems[ID] = file_to_update;
             }
 
@@ -180,14 +180,14 @@ unique_ptr<READ_USN_JOURNAL_DATA> NTFSChangesWatcher::GetReadJournalQuery(USN lo
 
     auto query = make_unique<READ_USN_JOURNAL_DATA>();
 
-    query->StartUsn          = low_usn;
-    query->ReasonMask        = 0xFFFFFFFF;  // All bits.
+    query->StartUsn = low_usn;
+    query->ReasonMask = 0xFFFFFFFF;  // All bits.
     query->ReturnOnlyOnClose = FALSE;
-    query->Timeout           = 0;  // No timeout.
-    query->BytesToWaitFor    = 0;
-    query->UsnJournalID      = journal_id_;
-    query->MinMajorVersion   = 2;
-    query->MaxMajorVersion   = 2;
+    query->Timeout = 0;  			 // No timeout.
+    query->BytesToWaitFor = 0;
+    query->UsnJournalID = journal_id_;
+    query->MinMajorVersion = 2;
+    query->MaxMajorVersion = 2;
 
     return query;
 }
@@ -210,14 +210,14 @@ unique_ptr<READ_USN_JOURNAL_DATA> NTFSChangesWatcher::GetWaitForNextUsnQuery(USN
 
     auto query = make_unique<READ_USN_JOURNAL_DATA>();
 
-    query->StartUsn          = start_usn;
-    query->ReasonMask        = 0xFFFFFFFF;   // All bits.
-    query->ReturnOnlyOnClose = FALSE;        // All entries.
-    query->Timeout           = 0;            // No timeout.
-    query->BytesToWaitFor    = 1;            // Wait for this.
-    query->UsnJournalID      = journal_id_;  // The journal.
-    query->MinMajorVersion   = 2;
-    query->MaxMajorVersion   = 2;
+    query->StartUsn = start_usn;
+    query->ReasonMask = 0xFFFFFFFF;     // All bits.
+    query->ReturnOnlyOnClose = FALSE;   // All entries.
+    query->Timeout = 0;                 // No timeout.
+    query->BytesToWaitFor = 1;          // Wait for this.
+    query->UsnJournalID = journal_id_;  // The journal.
+    query->MinMajorVersion = 2;
+    query->MaxMajorVersion = 2;
 
     return query;
 }
@@ -250,7 +250,7 @@ void NTFSChangesWatcher::CheckUpdates() {
 
     do {
         last_usn_ = nextUSN;
-        nextUSN   = ReadChanges(last_usn_, u_buffer.get());
+        nextUSN = ReadChanges(last_usn_, u_buffer.get());
     } while (last_usn_ != nextUSN);
 }
 #endif

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "DriveInfo.h"
+// clang-format off
 
 namespace CLIInterop 
 {
@@ -15,6 +16,7 @@ namespace CLIInterop
 		~DrivesManager();
 		static System::Collections::Generic::List<DriveInfo^>^ GetDrives();
 
+		// TODo: revive this functionality.
 		//~DrivesManager() {
 		//	if (isDisposed)
 		//		return;
@@ -39,7 +41,7 @@ namespace CLIInterop
 
 		//static event System::Action<DriveInfo^>^ OnDeviceInserted;
 		//static event System::Action<char>^ OnDeviceRemoved;
-	private:
+	//private:
 		//static System::Management::ManagementEventWatcher^ InsertEventWatcher;
 		//static System::Management::ManagementEventWatcher^ RemoveEventWatcher;
 		//static System::Collections::Generic::List<System::Char>^ selectedDrives;

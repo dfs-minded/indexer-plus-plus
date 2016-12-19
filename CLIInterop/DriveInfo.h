@@ -3,12 +3,13 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 #pragma once
+// clang-format off
 
 namespace CLIInterop 
 {
 	public ref class DriveInfo
 	{
-	public:
+	   public:
 		DriveInfo(System::String^ Label, char Name);
 
 		System::String^ Label; 

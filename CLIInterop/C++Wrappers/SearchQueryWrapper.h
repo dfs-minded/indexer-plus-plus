@@ -6,16 +6,15 @@
 
 #include <memory>
 
-#include "typedefs.h"
 #include "SearchQuery.h"
+#include "typedefs.h"
 // clang-format off
 
 namespace CLIInterop
 {
-
 	public ref struct SearchQueryWrapper
 	{
-	public:
+	   public:
 		SearchQueryWrapper();
 
 		System::String^ Text;
@@ -35,5 +34,4 @@ namespace CLIInterop
 
 		SearchQuery* ToUnmanagedQuery();
 	};
-
 }

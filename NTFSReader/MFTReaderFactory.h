@@ -9,7 +9,7 @@
 #include "MFTReader.h"
 
 // Depending on cmd arguments, creates mock or real MFT reader. It also can create WinAPI MFT reader (if the
-// corresponding compilation symbol defined) - one more option for testing purposes to compare results, which 
+// corresponding compilation symbol defined) - one more option for testing purposes to compare results, which
 // retrieved with raw data parsing.
 
 class MFTReaderFactory {

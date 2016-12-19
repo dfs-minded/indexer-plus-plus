@@ -11,7 +11,7 @@ bool FileTimeToLocalFileTime(const FILETIME *lpFileTime, LPFILETIME lpLocalFileT
 }
 
 void GetLocalTime(LPSYSTEMTIME lpSystemTime) {
-    lpSystemTime->wYear  = 1970;
+    lpSystemTime->wYear = 1970;
     lpSystemTime->wMonth = lpSystemTime->wDay = 1;
     lpSystemTime->wHour = lpSystemTime->wMinute = lpSystemTime->wSecond = lpSystemTime->wMilliseconds = 0;
 }
@@ -22,7 +22,7 @@ bool SystemTimeToFileTime(const SYSTEMTIME *lpSystemTime, LPFILETIME lpFileTime)
 }
 
 bool FileTimeToSystemTime(const FILETIME *lpFileTime, LPSYSTEMTIME lpSystemTime) {
-    lpSystemTime->wYear  = 1970;
+    lpSystemTime->wYear = 1970;
     lpSystemTime->wMonth = lpSystemTime->wDay = 1;
     lpSystemTime->wHour = lpSystemTime->wMinute = lpSystemTime->wSecond = lpSystemTime->wMilliseconds = 0;
     return true;

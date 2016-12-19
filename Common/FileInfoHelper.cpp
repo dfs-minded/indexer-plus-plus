@@ -31,7 +31,7 @@ unique_ptr<const char16_t[]> FileInfoHelper::GetPath(const FileInfo& fi, bool in
         current = current->Parent;
     }
 
-    auto res  = make_unique<const char16_t[]>(total_name_length);
+    auto res = make_unique<const char16_t[]>(total_name_length);
     auto curr = const_cast<char16_t*>(res.get());
 
     for (int i = path_to_root.size() - 1; i >= 0; --i) {
@@ -77,7 +77,7 @@ const char16_t* FileInfoHelper::GetType(const FileInfo& fi) {
 #ifdef WIN32
     if (fi.IsDirectory()) return kFileFolderTypename;
 
-    const auto* ext    = GetExtension(fi);
+    const auto* ext = GetExtension(fi);
     const auto& it_res = extension_to_type_map_.find(ext);
 
     if (it_res != extension_to_type_map_.end()) {
@@ -88,7 +88,7 @@ const char16_t* FileInfoHelper::GetType(const FileInfo& fi) {
 
     SHFILEINFO info{};
     auto file_attributes = FILE_ATTRIBUTE_NORMAL;
-    auto flags           = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
+    auto flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
 
     bool ok =
         SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()), file_attributes, &info, sizeof(info), flags);
@@ -96,7 +96,7 @@ const char16_t* FileInfoHelper::GetType(const FileInfo& fi) {
     if (!ok) Logger().Error(METHOD_METADATA + L"SHGetFileInfo failed.");
 
     auto u_type_name = HelperCommon::CopyToNewWchar(reinterpret_cast<char16_t*>(info.szTypeName));
-    auto u_ext       = HelperCommon::CopyToNewWchar(ext);
+    auto u_ext = HelperCommon::CopyToNewWchar(ext);
 
     extension_to_type_map_[u_ext.release()] = u_type_name.release();
     return extension_to_type_map_[ext];
@@ -197,7 +197,7 @@ wstring SerializeFileInfo(const FileInfo& fi) {
     res += to_wstring(fi.ParentID) + g_delim;    // 2
     res += to_wstring(fi.NameLength) + g_delim;  // 3
 
-	res += HelperCommon::Char16ToWstring(fi.GetName()) + g_delim;  // 4
+    res += HelperCommon::Char16ToWstring(fi.GetName()) + g_delim;  // 4
 
     res += to_wstring(fi.FileAttributes) + g_delim;  // 5
 
@@ -237,7 +237,7 @@ unique_ptr<FileInfo> DeserializeFileInfo(const wstring& source) {
 
     auto fi = make_unique<FileInfo>(drive_letter);
 
-    fi->ID       = HelperCommon::ParseNumber<uint>(parts[1]);
+    fi->ID = HelperCommon::ParseNumber<uint>(parts[1]);
     fi->ParentID = HelperCommon::ParseNumber<uint>(parts[2]);
 
     auto name_len = HelperCommon::ParseNumber<ushort>(parts[3]);
@@ -247,9 +247,9 @@ unique_ptr<FileInfo> DeserializeFileInfo(const wstring& source) {
     fi->SizeReal = HelperCommon::ParseNumber<int>(parts[6]);
     // fi->SizeAllocated = HelperCommon::ParseNumber<uint64>(parts[7]);
 
-    fi->CreationTime   = HelperCommon::ParseNumber<uint>(parts[7]);
+    fi->CreationTime = HelperCommon::ParseNumber<uint>(parts[7]);
     fi->LastAccessTime = HelperCommon::ParseNumber<uint>(parts[8]);
-    fi->LastWriteTime  = HelperCommon::ParseNumber<uint>(parts[9]);
+    fi->LastWriteTime = HelperCommon::ParseNumber<uint>(parts[9]);
 
     return fi;
 }

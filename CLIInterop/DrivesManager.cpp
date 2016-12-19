@@ -8,6 +8,7 @@
 using namespace System::Collections::Generic;
 //using namespace System::Management;
 //using namespace System::Threading::Tasks;
+// clang-format off
 
 namespace CLIInterop 
 {
