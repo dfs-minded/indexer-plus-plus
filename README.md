@@ -9,7 +9,7 @@ Indexer++ is an open-source desktop files and folders search utility. It is a Wi
 You can search your files using a command-line as well. **ifind** (Indexer++ find) implements a subset of the options of the Linux **find** command, so for Linux users it is easy to start right away. For those, who are not familiar with **find** command <a href="https://github.com/dfs-minded/indexer-plus-plus/blob/master/ifind%20commands%20doc.md" target="_blank">here is options description with some examples</a>.
 
 ###Documentation
-Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8/" target="_blank">General Design Doc</a>.
+Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/document/d/17nXQxh4nTiUfIOtnyCv60XTkxgCZciZvFRkawLz5bb8" target="_blank">General Design Doc</a>.
 
 
 ###To build Indexer++ from source
@@ -18,19 +18,10 @@ Do not upgrade VC++ Compiler and libraries in Visual Studio dialog box.
 
 IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be installed using NuGet package manager in Visual Studio.
 
-###To create an installer
-
-Indexer++ installer is written using <a href="http://nsis.sourceforge.net/Download" target="_blank">NSIS</a>. 
-
- - Build the solution in release configuration
- - Install NSIS software if you do not have it on your machine
- - Run installerPickingUpScript.cmd located in the Project root directory
- 
- Generated installer path: ./Installer/Indexer++Installer.exe.
- 
+Indexer++ uses <a href="https://github.com/google/re2" target="_blank">RE2 regular expression engine</a>.
 
 ###Links
-See the <a href="http://indexer-plus-plus.com/" target="_blank">Indexer++ official site</a> for more information.
+See the <a href="http://indexer-plus-plus.com" target="_blank">Indexer++ official site</a> for more information.
 For bugs and feature requests relay to <a href="https://github.com/dfs-minded/indexer-plus-plus/issues" target="_blank">https://github.com/dfs-minded/indexer-plus-plus/issues</a>.
 
 
