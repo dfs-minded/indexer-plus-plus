@@ -91,7 +91,7 @@ TEST_F(FileInfosFilterTest, ResetQueryDefaultQueryTest) {
 
 TEST_F(FileInfosFilterTest, ResetQueryCustomQueryTest) {
 
-    SearchQuery custom_query(__L__("myfile*"), __L__("d:/"), true, 2, 33, false, false, true, 1344556677, 1366556677,
+    SearchQuery custom_query(__L__("myfile*"), __L__("d:/"), true, true, 2, 33, false, false, true, 1344556677, 1366556677,
                              1333556677, 1333556677, 1333444455, 1333444466);
 
     unique_ptr<SearchQuery> u_custom_query;

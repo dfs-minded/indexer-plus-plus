@@ -55,7 +55,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework;..\3dParty\re2Project\re2</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
     </ClCompile>
     <Link>
@@ -75,7 +75,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework;..\3dParty\re2Project\re2</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
     </ClCompile>
     <Link>

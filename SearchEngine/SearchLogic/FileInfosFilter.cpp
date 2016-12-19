@@ -9,7 +9,6 @@
 #include "TextComparison.h"
 
 using namespace std;
-using namespace re2;
 
 FileInfosFilter::FileInfosFilter() : match_case_table_(nullptr), buffer_(new char[kBufferSize]) {
 }
