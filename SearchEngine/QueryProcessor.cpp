@@ -10,14 +10,12 @@
 
 using namespace std;
 
-QueryProcessor::QueryProcessor() : engine_(make_unique<SearchEngine>(nullptr, false)) {
-}
-
 vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
+    std::unique_ptr<SearchEngine> engine(make_unique<SearchEngine>(nullptr, true));
 
     uSearchQuery query = DeserializeQuery(query_string);
 
-    auto search_res = engine_->Search(query.release());
+    auto search_res = engine->Search(query.release());
 
     OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
     return fmt.Format();

@@ -15,13 +15,11 @@ class SearchEngine;
 class QueryProcessor : public IQueryProcessor {
 
    public:
-    QueryProcessor();
+    QueryProcessor() {
+    }
 
     NO_COPY(QueryProcessor)
 
     virtual std::vector<std::wstring> Process(const std::wstring& query_string, const std::wstring& format_string,
                                               int max_files) override;
-
-   private:
-    std::unique_ptr<SearchEngine> engine_;
 };

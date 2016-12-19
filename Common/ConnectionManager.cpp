@@ -4,7 +4,6 @@
 
 #include "ConnectionManager.h"
 
-#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
@@ -28,13 +27,6 @@ ConnectionManager::ConnectionManager() {
 
 void ConnectionManager::CreateServer(pIQueryProcessor queryProcessor) {
     query_processor_ = queryProcessor;
-
-    pipe_ = CreatePipe(kDefaultPipeName);
-    if (pipe_ == INVALID_HANDLE_VALUE) {
-        wcout << L"Invalid pipe " << GetLastError() << endl;
-        return;
-    }
-
     thread worker(&ConnectionManager::ServerWorker, *this);
     HelperCommon::SetThreadName(&worker, "NamedPipeServerWorker ");
     worker.detach();
@@ -43,92 +35,84 @@ void ConnectionManager::CreateServer(pIQueryProcessor queryProcessor) {
 void ConnectionManager::ServerWorker() {
 
     while (true) {
-
-        bool connected = ConnectNamedPipe(pipe_, NULL) ? true : (GetLastError() == ERROR_PIPE_CONNECTED);
-        if (!connected) {
-            logger_->Error(METHOD_METADATA + L"Cannot connect to the named pipe.");
+        HANDLE pipe = CreatePipe(kDefaultPipeName);
+        if (pipe == INVALID_HANDLE_VALUE) {
+            logger_->Error(L"Invalid pipe " + GetLastError());
+            return;
         }
 
-        wstring message;
+        bool connected = ConnectNamedPipe(pipe, NULL) ? true : (GetLastError() == ERROR_PIPE_CONNECTED);
+        if (!connected) {
+            logger_->Error(METHOD_METADATA + L"Cannot connect to the named pipe.");
+            CloseHandle(pipe);
+        }
 
-        ReadMessageFromPipe(pipe_, message);
-
-        if (message.empty()) continue;
-
-        wstring data_pipename, query, format;
-        int max_files;
-
-        ParseData(message, &data_pipename, &query, &format, &max_files);
-
-        thread reply_runner(&ConnectionManager::Reply, *this, query, format, data_pipename, max_files);
+        thread reply_runner(&ConnectionManager::Reply, *this, pipe);
         HelperCommon::SetThreadName(&reply_runner, "ReplyFromNamedPipeServer ");
         reply_runner.detach();
     }
-
-    CloseHandle(pipe_);
 }
 
+void ConnectionManager::Reply(HANDLE pipe) {
+    wstring message;
+    TCHAR buffer[kBufSize + 1];
+    ReadMessageFromPipe(pipe, buffer, &message);
 
-void ConnectionManager::Reply(const wstring& query, const wstring& format, const wstring& data_pipename,
-                              int max_files) {
+    if (message.empty()) return;
+
+    wstring data_pipename, query, format;
+    int max_files;
+    ParseData(message, &query, &format, &max_files);
 
     vector<wstring> result = query_processor_->Process(query, format, max_files);
 
-    HANDLE data_pipe = OpenPipe(data_pipename);
-
     for (const wstring& s : result) {
-
-        if (!WriteMessageToPipe(data_pipe, s)) {
+        if (!WriteMessageToPipe(pipe, s)) {
             logger_->Error(METHOD_METADATA + L"Cannot write message to named pipe.");
             break;
         }
     }
 
-    WriteMessageToPipe(data_pipe, kLastMessageIndicator);  // Last message.
-    CloseHandle(data_pipe);
+    WriteMessageToPipe(pipe, kLastMessageIndicator);  // Last message.
+    logger_->Info(METHOD_METADATA + L"Search result is sent to a client, number of files = " +
+                  to_wstring(result.size()));
+
+    CloseHandle(pipe);
 }
 
 
 const wstring delimeter = L";";
-const wchar_t* kConnectionError = L"Error connecting to Indexer++ process. May be the process was not started or cmd client was not run as administrator.";
+const wchar_t* kConnectionError =
+    L"Error connecting to Indexer++ process. Maybe the process was not started or cmd client was not run as "
+    L"administrator.";
 
 bool ConnectionManager::SendQuery(const wstring& query, const wstring& format, int max_files, vector<wstring>* result) {
+    TCHAR buffer[kBufSize + 1];
+    HANDLE pipe = OpenPipe(kDefaultPipeName);
 
-    HANDLE main_pipe = OpenPipe(kDefaultPipeName);
-    wstring data_pipe_name = L"indexer" + to_wstring(GetCurrentProcessId());
-    HANDLE data_pipe = CreatePipe(data_pipe_name);
+    wstring message = query + delimeter + format + delimeter + to_wstring(max_files);
 
-    wstring message = data_pipe_name + delimeter + query + delimeter + format + delimeter + to_wstring(max_files);
-
-    bool ok = WriteMessageToPipe(main_pipe, message);
+    bool ok = WriteMessageToPipe(pipe, message);
     if (!ok) {
         result->push_back(kConnectionError);
         return false;
     }
 
-    bool connected = ConnectNamedPipe(data_pipe, nullptr);
-    if (!connected) {
-        result->push_back(kConnectionError);
-        return false;
-    }
-
-    bool received_search_res = false;
-    bool can_read_more = true;
-
+    wstring tmp;
     while (true) {
-
-        if (can_read_more) result->push_back(wstring());
-
-        can_read_more = ReadMessageFromPipe(data_pipe, result->back());
-
-        if (result->back().size() > 1 && result->back() == kLastMessageIndicator) {
-            received_search_res = true;
-            result->pop_back();
-            break;
+        ok = ReadMessageFromPipe(pipe, buffer, &tmp);
+        if (!ok) {
+            // Probably the server is not ready yet.
+            Sleep(100);
+            continue;
         }
+
+        if (tmp == kLastMessageIndicator) break;
+
+        result->push_back(move(tmp));
     }
 
-    return received_search_res;
+    return true;
 }
 
 HANDLE ConnectionManager::CreatePipe(const wstring& pipename) {
@@ -145,23 +129,33 @@ HANDLE ConnectionManager::CreatePipe(const wstring& pipename) {
 }
 
 HANDLE ConnectionManager::OpenPipe(const wstring& pipename) {
-    return CreateFile((L"\\\\.\\pipe\\" + pipename).c_str(),  // pipe name
-                      GENERIC_READ | GENERIC_WRITE,           // read/write access
-                      0,                                      // no sharing
-                      NULL,                                   // default security attributes
-                      OPEN_EXISTING,                          // opens existing pipe
-                      0,                                      // default attributes
-                      NULL);                                  // no template file
+    HANDLE pipe = CreateFile((L"\\\\.\\pipe\\" + pipename).c_str(),  // pipe name
+                             GENERIC_READ | GENERIC_WRITE,           // read/write access
+                             0,                                      // no sharing
+                             NULL,                                   // default security attributes
+                             OPEN_EXISTING,                          // opens existing pipe
+                             0,                                      // default attributes
+                             NULL);                                  // no template file
+    DWORD mode = PIPE_READMODE_MESSAGE;
+    BOOL ok = SetNamedPipeHandleState(pipe,   // pipe handle
+                                      &mode,  // new pipe mode
+                                      NULL,   // don't set maximum bytes
+                                      NULL);  // don't set maximum time
+    if (!ok) {
+        logger_->Error(L"SetNamedPipeHandleState failed, GetLastError = "+ GetLastError());
+        CloseHandle(pipe);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    return pipe;
 }
 
-void ConnectionManager::ParseData(const wstring& data, wstring* pipename, wstring* query, wstring* format,
-                                  int* max_files) {
+void ConnectionManager::ParseData(const wstring& data, wstring* query, wstring* format, int* max_files) {
 
     auto parts = HelperCommon::Split(data, delimeter, HelperCommon::SplitOptions::INCLUDE_EMPTY);
-    *pipename  = parts[0];
-    *query     = parts[1];
-    *format    = parts[2];
-    *max_files = HelperCommon::ParseNumber<int>(parts[3]);
+    *query = parts[0];
+    *format = parts[1];
+    *max_files = HelperCommon::ParseNumber<int>(parts[2]);
 }
 
 bool ConnectionManager::WriteMessageToPipe(HANDLE pipe, const wstring& message) {
@@ -169,10 +163,10 @@ bool ConnectionManager::WriteMessageToPipe(HANDLE pipe, const wstring& message) 
     return WriteFile(pipe, message.c_str(), 2 * message.size(), &bytes_written, NULL /* not overlapped */) != 0;
 }
 
-bool ConnectionManager::ReadMessageFromPipe(HANDLE pipe, wstring& result) {
+bool ConnectionManager::ReadMessageFromPipe(HANDLE pipe, TCHAR* buffer, wstring* result) {
     DWORD bytes_read;
-    bool ok = ReadFile(pipe, buffer_, kBufSize * sizeof(TCHAR), &bytes_read, NULL /*not overlapped */) != 0;
-    result = wstring(buffer_, bytes_read / 2);
+    bool ok = ReadFile(pipe, buffer, kBufSize * sizeof(TCHAR), &bytes_read, NULL /*not overlapped */) != 0;
+    *result = wstring(buffer, bytes_read / 2);
     return ok;
 }
 
