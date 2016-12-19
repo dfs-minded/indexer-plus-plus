@@ -476,10 +476,34 @@ namespace Indexer
                 folderDialog.Dispose();
         }
 
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UserSettings.Instance.Save(this);
+        }
+
+        private void OnFilters_Click(object sender, RoutedEventArgs e)
+        {
+            FiltersVisibility = FiltersVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void OpenSelectFolderDialog_Click(object sender, RoutedEventArgs e)
+        {
+            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SearchDirPath = folderDialog.SelectedPath;
+            }
+        }
+
         #region Commands
 
-        private DebugLogWindow debugLogWnd;
+        // Used for commands which always return true in CanExecute callback.
+        private void AlwaysCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            e.Handled = true;
+        }
 
+        private DebugLogWindow debugLogWnd;
         private void ShowDebugLogWndCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = debugLogWnd == null && SystemConfigFlagsWrapper.Instance().ShowDebugLogWindow;
@@ -492,13 +516,7 @@ namespace Indexer
             debugLogWnd.Show();
         }
 
-
-        private void SaveAsCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-            e.Handled = true;
-        }
-
+     
         private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             var dlg = new SaveFileDialog();
@@ -524,7 +542,7 @@ namespace Indexer
                 try
                 {
                     // Format files and save formatted data into the document.
-                   
+
                     contents.AddRange(DataModel.Format(format));
 
                     File.WriteAllLines(filename, contents);
@@ -537,36 +555,17 @@ namespace Indexer
             });
         }
 
-
         private void NewSearchWindowExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             // Helper.OpenNewIndexerWnd(string.Empty);
         }
 
-        private void NewSearchWindowCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-            e.Handled = true;
-        }
-
-
-        private void CloseSearchWindowCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-            e.Handled = true;
-        }
 
         private void CloseSearchWindowExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Close();
         }
 
-
-        private void ExitAppCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-            e.Handled = true;
-        }
 
         private void ExitAppExecuted(object sender, ExecutedRoutedEventArgs e)
         {
@@ -591,7 +590,15 @@ namespace Indexer
             //var menu = GetShellContextMenu(fi);
             //menu.InvokeDelete();
         }
+       
+        
+        private void RenameCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            // ToDo: implement
 
+            //e.CanExecute = ListView.SelectedItems.Count > 0;
+            e.Handled = true;
+        }
 
         private void RenameExecuted(object sender, ExecutedRoutedEventArgs e)
         {
@@ -602,46 +609,21 @@ namespace Indexer
             //var menu = GetShellContextMenu(fi);
             //menu.InvokeRename();
         }
+      
 
-        private void RenameCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void AboutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            // ToDo: implement
+            var aboutWnd = new AboutWindow() { Owner = this };
+            aboutWnd.Show();
+        }
 
-            //e.CanExecute = ListView.SelectedItems.Count > 0;
-            e.Handled = true;
+
+        private void RegexSyntaxHelpExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
 
         #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
-        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UserSettings.Instance.Save(this);
-        }
-
-        private void OnFilters_Click(object sender, RoutedEventArgs e)
-        {
-            FiltersVisibility = FiltersVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void OpenSelectFolderDialog_Click(object sender, RoutedEventArgs e)
-        {
-            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                SearchDirPath = folderDialog.SelectedPath;
-            }
-        }
 
         // TODO: revive this functionality
         //private void OnMenuDetailsView_Click(object sender, RoutedEventArgs e)
@@ -789,50 +771,18 @@ namespace Indexer
             shelMenuManager.Show();
         }
 
-        private static bool IsExecutable(string fullPath, out string filename)
-        {
-            var ext = Path.GetExtension(fullPath);
-            if (ext == ".lnk")
-            {
-                fullPath = ShortcutResolver.Resolve(fullPath);
-            }
-
-            ext = Path.GetExtension(fullPath);
-            filename = Path.GetFileName(fullPath);
-
-            if (ext == ".exe" || ext == ".bat" || ext == ".cmd")
-                return true;
-
-            var twoBytes = new byte[2];
-            try
-            {
-                using (var fileStream = File.Open(fullPath, FileMode.Open))
-                {
-                    fileStream.Read(twoBytes, 0, 2);
-                }
-            }
-            catch
-            {
-            }
-
-            return Encoding.UTF8.GetString(twoBytes) == "MZ";
-        }
-
         private static void OpenFileDefault(string fullName)
         {
-            string name;
-
-            if (IsExecutable(fullName, out name))
+            string name = Path.GetFileName(fullName); 
+            
+            if (Helper.IsExecutable(fullName))
             {
-                var result =
-                    MessageBox.Show(
+                var result = MessageBox.Show(
                         "Do you want to allow the following program to make changes on this computer?\n\nProgramName:\t" +
                         name, "User Account Control", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result == MessageBoxResult.No)
-                {
                     return;
-                }
             }
 
             try
@@ -840,9 +790,7 @@ namespace Indexer
                 // Runs the default program for given file type or opens containing folder for dirs.
                 Process.Start(fullName);
             }
-            catch
-            {
-            }
+            catch {} // Catch everything, we do not responsible for other programs opening errors.
         }
 
 
@@ -875,5 +823,16 @@ namespace Indexer
 
         #endregion
 
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
     }
 }

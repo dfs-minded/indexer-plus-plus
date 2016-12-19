@@ -3,6 +3,7 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Text;
 
 namespace Indexer
 {
@@ -132,6 +134,35 @@ namespace Indexer
             return source;
         }
 
+        /// <summary>
+        /// Returns true, if the file is executable.
+        /// </summary>
+        /// <param name="fullPath">A full path to the file with name.</param>
+        /// <returns></returns>
+        public static bool IsExecutable(string fullPath)
+        {
+            var ext = Path.GetExtension(fullPath);
+            if (ext == ".lnk")
+            {
+                fullPath = ShortcutResolver.Resolve(fullPath);
+                ext = Path.GetExtension(fullPath); // Get again after resolving shortcut link reference.
+            }
+
+            if (ext == ".exe" || ext == ".bat" || ext == ".cmd")
+                return true;
+
+            var twoBytes = new byte[2];
+            try
+            {
+                using (var fileStream = File.Open(fullPath, FileMode.Open))
+                {
+                    fileStream.Read(twoBytes, 0, 2);
+                }
+            }
+            catch { }
+
+            return Encoding.UTF8.GetString(twoBytes) == "MZ";
+        }
 
         [DllImport("shell32.dll")]
         public static extern bool IsUserAnAdmin();

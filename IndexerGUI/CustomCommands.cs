@@ -13,10 +13,7 @@ namespace Indexer
             "Exit Application",
             "ExitAppCommand",
             typeof (CustomCommands),
-            new InputGestureCollection
-            {
-                new KeyGesture(Key.Escape, ModifierKeys.Shift)
-            }
+            new InputGestureCollection { new KeyGesture(Key.Escape, ModifierKeys.Shift) }
             );
 
         public static readonly RoutedUICommand CloseWndCommand = new RoutedUICommand
@@ -24,10 +21,7 @@ namespace Indexer
             "Close Window",
             "CloseWndCommand",
             typeof (CustomCommands),
-            new InputGestureCollection
-            {
-                new KeyGesture(Key.Escape)
-            }
+            new InputGestureCollection { new KeyGesture(Key.Escape) }
             );
 
         public static readonly RoutedUICommand SaveAsCommand = new RoutedUICommand
@@ -35,10 +29,7 @@ namespace Indexer
             "Save as",
             "SaveAsCommand",
             typeof (CustomCommands),
-            new InputGestureCollection
-            {
-                new KeyGesture(Key.S, ModifierKeys.Control)
-            }
+            new InputGestureCollection { new KeyGesture(Key.S, ModifierKeys.Control) }
             );
 
         public static readonly RoutedUICommand ShowDebugLogWndCommand = new RoutedUICommand
@@ -46,10 +37,22 @@ namespace Indexer
             "Open Debug Log Window",
             "ShowDebugLogWndCommand",
             typeof (CustomCommands),
-            new InputGestureCollection
-            {
-                new KeyGesture(Key.D, ModifierKeys.Control)
-            }
+            new InputGestureCollection { new KeyGesture(Key.D, ModifierKeys.Control) }
+            );
+
+        public static readonly RoutedUICommand About = new RoutedUICommand
+            (
+            "About Indexer++",
+            "About",
+            typeof(CustomCommands),
+            new InputGestureCollection { new KeyGesture(Key.F1) }
+            );
+
+        public static readonly RoutedUICommand RegexSyntaxHelpCommand = new RoutedUICommand
+            (
+            "Regex Syntax",
+            "RegexSyntaxHelpCommand",
+            typeof(CustomCommands)
             );
     }
 }

@@ -16,7 +16,7 @@
     Background="#F7F7F7"
     Closing="MainWindow_OnClosing"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
-    FontSize="12"
+    FontSize="11"
     Icon="Icons/icon_v3_2.ico"
     SizeChanged="MainWindow_OnSizeChanged"
     mc:Ignorable="d">
@@ -41,19 +41,19 @@
     -->
 
     <Window.CommandBindings>
-        <CommandBinding CanExecute="NewSearchWindowCanExecute"
+        <CommandBinding CanExecute="AlwaysCanExecute"
                         Command="ApplicationCommands.New"
                         Executed="NewSearchWindowExecuted" />
         <CommandBinding CanExecute="ShowDebugLogWndCanExecute"
                         Command="indexer:CustomCommands.ShowDebugLogWndCommand"
                         Executed="ShowDebugLogWndExecuted" />
-        <CommandBinding CanExecute="SaveAsCanExecute"
+        <CommandBinding CanExecute="AlwaysCanExecute"
                         Command="indexer:CustomCommands.SaveAsCommand"
                         Executed="SaveAsExecuted" />
-        <CommandBinding CanExecute="CloseSearchWindowCanExecute"
+        <CommandBinding CanExecute="AlwaysCanExecute"
                         Command="indexer:CustomCommands.CloseWndCommand"
                         Executed="CloseSearchWindowExecuted" />
-        <CommandBinding CanExecute="ExitAppCanExecute"
+        <CommandBinding CanExecute="AlwaysCanExecute"
                         Command="indexer:CustomCommands.ExitAppCommand"
                         Executed="ExitAppExecuted" />
         <CommandBinding CanExecute="DeleteCanExecute"
@@ -62,6 +62,11 @@
         <CommandBinding CanExecute="RenameCanExecute"
                         Command="ApplicationCommands.Replace"
                         Executed="RenameExecuted" />
+        <CommandBinding CanExecute="AlwaysCanExecute"
+                        Command="indexer:CustomCommands.About"
+                        Executed="AboutExecuted" />
+        <CommandBinding CanExecute="AlwaysCanExecute" 
+                        Command="indexer:CustomCommands.RegexSyntaxHelpCommand"/>
     </Window.CommandBindings>
 
 
@@ -159,6 +164,10 @@
                           IsCheckable="True"
                           Header="Extra Large Icons" />
             </MenuItem>-->
+            <MenuItem Header="Help">
+                <MenuItem Command="indexer:CustomCommands.RegexSyntaxHelpCommand" Header="Regex Syntax"/>
+                <MenuItem Command="indexer:CustomCommands.About" Header="About Indexer++"/>
+            </MenuItem>
         </Menu>
 
         <Grid Grid.Row="1"
@@ -172,10 +181,10 @@
                     <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
                 </Grid.RowDefinitions>
 
                 <CheckBox VerticalAlignment="Center"
@@ -188,7 +197,7 @@
                        Padding="0"
                        ToolTip="7 B, 50 KB, 8 MB, 14 GB. Default is KB" />
                 <TextBox Grid.Column="1"
-                         MaxHeight="20"
+                         MaxHeight="18"
                          Margin="40 0 10 0"
                          IsEnabled="{Binding SizeFilterEnabled}"
                          Style="{DynamicResource TextBoxStyle}"
@@ -209,7 +218,7 @@
                        Padding="5 0 0 0"
                        ToolTip="50 KB, 8 MB, 14 GB. Default is KB" />
                 <TextBox Grid.Column="2"
-                         MaxHeight="20"
+                         MaxHeight="18"
                          Margin="40 0 10 0"
                          IsEnabled="{Binding SizeFilterEnabled}"
                          Style="{DynamicResource TextBoxStyle}"
@@ -236,7 +245,7 @@
                        Padding="0" />
                 <DatePicker Grid.Row="1"
                             Grid.Column="1"
-                            Height="24"
+                            Height="22"
                             Margin="40 0 10 0"
                             IsEnabled="{Binding DateFilterEnabled}"
                             SelectedDate="{Binding DateFrom}" />
@@ -248,7 +257,7 @@
                        Padding="5 0 0 0" />
                 <DatePicker Grid.Row="1"
                             Grid.Column="2"
-                            Height="24"
+                            Height="22"
                             Margin="40 0 10 0"
                             IsEnabled="{Binding DateFilterEnabled}"
                             SelectedDate="{Binding DateTo}" />
@@ -280,7 +289,7 @@
                         HorizontalAlignment="Right" Width="20" Margin="0 0 10 0" Height="20" 
                         Content="..."/>
 
-                <Button Grid.Row="2"
+                <Button Grid.Row="3"
                         Grid.Column="3"
                         Click="OnFilters_Click"
                         Style="{StaticResource UpArrowButtonStyle}" />

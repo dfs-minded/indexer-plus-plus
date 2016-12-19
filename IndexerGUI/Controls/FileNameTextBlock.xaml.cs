@@ -237,7 +237,7 @@ namespace Indexer.Controls
                 {
                     File.Move(oldPath, newPath);
                 }
-                catch(UnauthorizedAccessException e)
+                catch(UnauthorizedAccessException)
                 {
                     MessageBox.Show("You are not permitted to modify this file.\nAltering or changing files used by operating system could damage your system!", "Unauthorized Access");
                 }
