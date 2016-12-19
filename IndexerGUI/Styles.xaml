@@ -111,4 +111,26 @@
         </Setter>
     </Style>
 
+    <Style x:Key="HelpWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="BorderBrush" Value="#444444" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style x:Key="HelpWindowButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Margin" Value="0 10 0 0"/>
+        <Setter Property="Height" Value="23" />
+        <Setter Property="Width" Value="90" />
+        <Setter Property="Background" Value="#ECECEC" />
+    </Style>
+
+    <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="YellowGreen"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

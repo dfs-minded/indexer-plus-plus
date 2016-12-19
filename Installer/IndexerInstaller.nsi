@@ -115,6 +115,7 @@ Section "Bare minimum" Section1
 	file "vcomp120.dll"
 	file "ifind.exe"
 	file "helpText.txt"
+	file "BasicRE2Syntax.txt"
 	file "LICENSE"
 	file "README"
  
@@ -251,6 +252,7 @@ Section "uninstall"
 	delete $INSTDIR\RecordsDB.txt
 	delete $INSTDIR\ifind.exe
 	delete $INSTDIR\helpText.txt
+	delete $INSTDIR\BasicRE2Syntax.txt
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
 	

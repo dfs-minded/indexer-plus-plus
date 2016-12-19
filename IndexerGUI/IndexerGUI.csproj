@@ -123,6 +123,7 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HelpWindowBase.cs" />
     <Compile Include="MouseEvents.cs" />
     <Compile Include="Controls\FileNameTextBlock.xaml.cs">
       <DependentUpon>FileNameTextBlock.xaml</DependentUpon>
@@ -131,6 +132,9 @@
     <Compile Include="Converters\IconSizeToIntegerConverter.cs" />
     <Compile Include="Controls\AutoScalingImage.cs" />
     <Compile Include="Converters\IconSizeToWrapPanelItemWidthConvertor.cs" />
+    <Compile Include="RegexSyntaxWindow.xaml.cs">
+      <DependentUpon>RegexSyntaxWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RelayCommand.cs" />
     <Compile Include="VisualTreeSearch.cs" />
     <Compile Include="IconProvider.cs" />
@@ -171,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DebugLogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RegexSyntaxWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

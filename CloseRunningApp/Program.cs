@@ -27,14 +27,14 @@ namespace CloseRunningApp
                     {
                         client.Connect(connectionTimeoutMs);
                     }
-                    catch (TimeoutException e)
+                    catch (TimeoutException)
                     {
                         Console.WriteLine(connectionTimeoutMs + " ms waiting server connection timeout has passed. Exiting.");
                         return;
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("En error occurred while trying to connect to pipe.");
+                        Console.WriteLine("En error occurred while trying to connect to pipe: " + e.Message);
                         return;
                     }
 
@@ -46,7 +46,7 @@ namespace CloseRunningApp
             }
             catch (Exception e)
             {
-                Console.WriteLine("En error occurred while creating a pipe.");
+                Console.WriteLine("En error occurred while creating a pipe:" + e.Message);
                 return;
             }
         }

@@ -5,16 +5,16 @@
 namespace Indexer
 {
     /// <summary>
-    /// Interaction logic for About Indexer++ Window.
+    /// Interaction logic for RegexSyntax Window.
     /// </summary>
-    public partial class AboutWindow : HelpWindowBase
+    public partial class RegexSyntaxWindow : HelpWindowBase
     {
-        private string licenseAgreement;
-        public string LicenseAgreement { get { return licenseAgreement; } }
+        private string regexSyntaxText;
+        public string RegexSyntaxText { get { return regexSyntaxText; } }
 
-        public AboutWindow()
+        public RegexSyntaxWindow()
         {
-            GetFileContent("LICENSE", ref licenseAgreement);
+            GetFileContent("BasicRE2Syntax.txt", ref regexSyntaxText);
 
             InitializeComponent();
         }

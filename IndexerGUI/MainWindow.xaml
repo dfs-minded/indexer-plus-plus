@@ -16,8 +16,8 @@
     Background="#F7F7F7"
     Closing="MainWindow_OnClosing"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
-    FontSize="11"
     Icon="Icons/icon_v3_2.ico"
+    FontSize="12"
     SizeChanged="MainWindow_OnSizeChanged"
     mc:Ignorable="d">
     <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
@@ -66,7 +66,8 @@
                         Command="indexer:CustomCommands.About"
                         Executed="AboutExecuted" />
         <CommandBinding CanExecute="AlwaysCanExecute" 
-                        Command="indexer:CustomCommands.RegexSyntaxHelpCommand"/>
+                        Command="indexer:CustomCommands.RegexSyntaxHelpCommand"
+                        Executed="RegexSyntaxHelpExecuted"/>
     </Window.CommandBindings>
 
 

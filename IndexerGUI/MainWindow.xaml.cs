@@ -620,7 +620,8 @@ namespace Indexer
 
         private void RegexSyntaxHelpExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-
+            var regexHelptWnd = new RegexSyntaxWindow() { Owner = this };
+            regexHelptWnd.Show();
         }
 
         #endregion
