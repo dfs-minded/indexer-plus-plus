@@ -9,14 +9,17 @@
 
 #include "typedefs.h"
 
-struct MFTReadResult {
-   public:
-    MFTReadResult() : Root(nullptr) {
-    }
+namespace indexer_common {
 
-    // The root directory in a volume.
-    FileInfo* Root;
+    struct MFTReadResult {
+       public:
+        MFTReadResult() : Root(nullptr) {
+        }
 
-    // All volume files. Each file stored at vector index equal to its ID.
-    std::unique_ptr<std::vector<FileInfo*>> Data;
-};
+        // The root directory in a volume.
+        FileInfo* Root;
+
+        // All volume files. Each file stored at vector index equal to its ID.
+        std::unique_ptr<std::vector<FileInfo*>> Data;
+    };
+} // namespace indexer_common

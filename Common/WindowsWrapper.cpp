@@ -5,38 +5,42 @@
 #include "WindowsWrapper.h"
 
 #ifndef WIN32
-bool FileTimeToLocalFileTime(const FILETIME *lpFileTime, LPFILETIME lpLocalFileTime) {
-    lpLocalFileTime->dwHighDateTime = lpLocalFileTime->dwLowDateTime = 0;
-    return true;
-}
+namespace indexer_common {
 
-void GetLocalTime(LPSYSTEMTIME lpSystemTime) {
-    lpSystemTime->wYear = 1970;
-    lpSystemTime->wMonth = lpSystemTime->wDay = 1;
-    lpSystemTime->wHour = lpSystemTime->wMinute = lpSystemTime->wSecond = lpSystemTime->wMilliseconds = 0;
-}
+    bool FileTimeToLocalFileTime(const FILETIME *lpFileTime, LPFILETIME lpLocalFileTime) {
+        lpLocalFileTime->dwHighDateTime = lpLocalFileTime->dwLowDateTime = 0;
+        return true;
+    }
 
-bool SystemTimeToFileTime(const SYSTEMTIME *lpSystemTime, LPFILETIME lpFileTime) {
-    lpFileTime->dwHighDateTime = lpFileTime->dwLowDateTime = 0;
-    return true;
-}
+    void GetLocalTime(LPSYSTEMTIME lpSystemTime) {
+        lpSystemTime->wYear = 1970;
+        lpSystemTime->wMonth = lpSystemTime->wDay = 1;
+        lpSystemTime->wHour = lpSystemTime->wMinute = lpSystemTime->wSecond = lpSystemTime->wMilliseconds = 0;
+    }
 
-bool FileTimeToSystemTime(const FILETIME *lpFileTime, LPSYSTEMTIME lpSystemTime) {
-    lpSystemTime->wYear = 1970;
-    lpSystemTime->wMonth = lpSystemTime->wDay = 1;
-    lpSystemTime->wHour = lpSystemTime->wMinute = lpSystemTime->wSecond = lpSystemTime->wMilliseconds = 0;
-    return true;
-}
+    bool SystemTimeToFileTime(const SYSTEMTIME *lpSystemTime, LPFILETIME lpFileTime) {
+        lpFileTime->dwHighDateTime = lpFileTime->dwLowDateTime = 0;
+        return true;
+    }
 
-ULONGLONG GetTickCount64(void) {
-    return 0;
-}
+    bool FileTimeToSystemTime(const FILETIME *lpFileTime, LPSYSTEMTIME lpSystemTime) {
+        lpSystemTime->wYear = 1970;
+        lpSystemTime->wMonth = lpSystemTime->wDay = 1;
+        lpSystemTime->wHour = lpSystemTime->wMinute = lpSystemTime->wSecond = lpSystemTime->wMilliseconds = 0;
+        return true;
+    }
 
-DWORD GetTickCount() {
-    return 0;
-}
+    ULONGLONG GetTickCount64(void) {
+        return 0;
+    }
 
-void Sleep(DWORD dwMilliseconds) {
-    // TODO
-}
+    DWORD GetTickCount() {
+        return 0;
+    }
+
+    void Sleep(DWORD dwMilliseconds) {
+        // TODO
+    }
+
+} // namespace indexer_common
 #endif

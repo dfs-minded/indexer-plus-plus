@@ -12,51 +12,55 @@
 #include "Macros.h"
 #include "typedefs.h"
 
-struct SearchQuery {
-   public:
-    NO_COPY(SearchQuery)
+namespace indexer_common {
 
-    // Constructs immutable query.
-    SearchQuery(std::u16string text = Empty16String, std::u16string search_dir_path = Empty16String,
-                bool match_case = false, bool use_regex = false,
+    struct SearchQuery {
+       public:
+        NO_COPY(SearchQuery)
 
-                int size_from = 0, int size_to = INT_MAX,
+        // Constructs immutable query.
+        SearchQuery(std::u16string text = Empty16String, std::u16string search_dir_path = Empty16String,
+                    bool match_case = false, bool use_regex = false,
 
-                bool exclude_hidden_and_system = true, bool exclude_folders = false, bool exclude_files = false,
+                    int size_from = 0, int size_to = INT_MAX,
 
-                uint c_time_from = 0, uint c_time_to = UINT_MAX, uint a_time_from = 0, uint a_time_to = UINT_MAX,
-                uint m_time_from = 0, uint m_time_to = UINT_MAX);
+                    bool exclude_hidden_and_system = true, bool exclude_folders = false, bool exclude_files = false,
+
+                    uint c_time_from = 0, uint c_time_to = UINT_MAX, uint a_time_from = 0, uint a_time_to = UINT_MAX,
+                    uint m_time_from = 0, uint m_time_to = UINT_MAX);
 
 
-    const std::u16string Text;
-    const std::u16string SearchDirPath;
-    const bool MatchCase;
-    const bool UseRegex;
+        const std::u16string Text;
+        const std::u16string SearchDirPath;
+        const bool MatchCase;
+        const bool UseRegex;
 
-    const int SizeFrom;
-    const int SizeTo;
+        const int SizeFrom;
+        const int SizeTo;
 
-    const bool ExcludeHiddenAndSystem;
-    const bool ExcludeFolders;
-    const bool ExcludeFiles;
+        const bool ExcludeHiddenAndSystem;
+        const bool ExcludeFolders;
+        const bool ExcludeFiles;
 
-    // Creation time filters.
-    const uint CTimeFrom;
-    const uint CTimeTo;
+        // Creation time filters.
+        const uint CTimeFrom;
+        const uint CTimeTo;
 
-    // Last accessed time filters.
-    const uint ATimeFrom;
-    const uint ATimeTo;
+        // Last accessed time filters.
+        const uint ATimeFrom;
+        const uint ATimeTo;
 
-    // Last modification time filters.
-    const uint MTimeFrom;
-    const uint MTimeTo;
-};
+        // Last modification time filters.
+        const uint MTimeFrom;
+        const uint MTimeTo;
+    };
 
-typedef std::unique_ptr<SearchQuery> uSearchQuery;
+    typedef std::unique_ptr<SearchQuery> uSearchQuery;
 
-bool operator==(const SearchQuery& lhs, const SearchQuery& rhs);
+    bool operator==(const SearchQuery& lhs, const SearchQuery& rhs);
 
-std::wstring SerializeQuery(const SearchQuery& query);
+    std::wstring SerializeQuery(const SearchQuery& query);
 
-uSearchQuery DeserializeQuery(const std::wstring& source);
+    uSearchQuery DeserializeQuery(const std::wstring& source);
+
+} // namespace indexer_common

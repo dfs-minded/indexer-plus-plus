@@ -12,57 +12,61 @@
 
 #include "typedefs.h"
 
-class Log;
+namespace indexer_common {
 
-class IQueryProcessor {
-   public:
-    virtual std::vector<std::wstring> Process(const std::wstring& query, const std::wstring& format, int max_files) = 0;
+    class Log;
 
-    virtual ~IQueryProcessor() {
-    }
-};
+    class IQueryProcessor {
+       public:
+        virtual std::vector<std::wstring> Process(const std::wstring& query, const std::wstring& format, int max_files) = 0;
 
-typedef std::shared_ptr<IQueryProcessor> pIQueryProcessor;
+        virtual ~IQueryProcessor() {
+        }
+    };
 
-class ConnectionManager {
-   public:
-    ConnectionManager();
+    typedef std::shared_ptr<IQueryProcessor> pIQueryProcessor;
 
-    // Creates the server in the separate thread which listens
-    // |query_processor| is a callback which is called when a new query arrives.
+    class ConnectionManager {
+       public:
+        ConnectionManager();
 
-    void CreateServer(pIQueryProcessor query_processor);
+        // Creates the server in the separate thread which listens
+        // |query_processor| is a callback which is called when a new query arrives.
 
-
-    // The method for send query and receiving result on a client, this method is synchronous.
-    // Return false in case of failure.
-
-    bool SendQuery(const std::wstring& query, const std::wstring& format, int max_files,
-                   std::vector<std::wstring>* result);
-
-   private:
-    void ServerWorker();
-
-    void Reply(HANDLE pipe);
-
-    static void ParseData(const std::wstring& data, std::wstring* query, std::wstring* format, int* max_files);
+        void CreateServer(pIQueryProcessor query_processor);
 
 
-    HANDLE CreatePipe(const std::wstring& pipename);
+        // The method for send query and receiving result on a client, this method is synchronous.
+        // Return false in case of failure.
 
-    HANDLE OpenPipe(const std::wstring& pipename);
+        bool SendQuery(const std::wstring& query, const std::wstring& format, int max_files,
+                       std::vector<std::wstring>* result);
 
-    bool WriteMessageToPipe(HANDLE pipe, const std::wstring& message);
+       private:
+        void ServerWorker();
 
-    bool ReadMessageFromPipe(HANDLE pipe, TCHAR* buffer, std::wstring* result);
+        void Reply(HANDLE pipe);
 
-    Log* logger_;
+        static void ParseData(const std::wstring& data, std::wstring* query, std::wstring* format, int* max_files);
 
-    pIQueryProcessor query_processor_;
 
-    static const int kBufSize = 1024;
+        HANDLE CreatePipe(const std::wstring& pipename);
 
-    static const wchar_t kDefaultPipeName[];
+        HANDLE OpenPipe(const std::wstring& pipename);
 
-    static const std::wstring kLastMessageIndicator;
-};
+        bool WriteMessageToPipe(HANDLE pipe, const std::wstring& message);
+
+        bool ReadMessageFromPipe(HANDLE pipe, TCHAR* buffer, std::wstring* result);
+
+        Log* logger_;
+
+        pIQueryProcessor query_processor_;
+
+        static const int kBufSize = 1024;
+
+        static const wchar_t kDefaultPipeName[];
+
+        static const std::wstring kLastMessageIndicator;
+    };
+
+} // namespace indexer_common

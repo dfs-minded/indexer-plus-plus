@@ -7,13 +7,17 @@
 #include "Macros.h"
 
 // Used for debug log window.
-class LogMessagesListener {
-   public:
-    NO_COPY(LogMessagesListener)
+namespace indexer_common {
 
-    LogMessagesListener() = default;
+    class LogMessagesListener {
+       public:
+        NO_COPY(LogMessagesListener)
 
-    virtual ~LogMessagesListener() = default;
+        LogMessagesListener() = default;
 
-    virtual void OnNewMessage(const std::wstring& msg) const = 0;
-};
+        virtual ~LogMessagesListener() = default;
+
+        virtual void OnNewMessage(const std::wstring& msg) const = 0;
+    };
+
+} // namespace indexer_common

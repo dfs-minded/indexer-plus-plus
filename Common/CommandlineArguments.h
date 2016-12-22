@@ -10,40 +10,44 @@
 #include "Macros.h"
 
 // Parses and stores commandline arguments. All of them are used for testing purposes.
-class CommandlineArguments {
-   public:
-    NO_COPY(CommandlineArguments)
+namespace indexer_common {
 
-    static CommandlineArguments& Instance() {
-        static CommandlineArguments instance_;
-        return instance_;
-    }
+    class CommandlineArguments {
+       public:
+        NO_COPY(CommandlineArguments)
 
-    static void Parse(const std::vector<std::wstring>& command_line_args);
+        static CommandlineArguments& Instance() {
+            static CommandlineArguments instance_;
+            return instance_;
+        }
 
-    // If set to true, the test framework serializes all received USN Journal records to file.
-    bool SaveUSNJournalRecords;
+        static void Parse(const std::vector<std::wstring>& command_line_args);
 
-    // If set to true, the test framework serializes created FileInfo objects from MFT records to file.
-    bool SaveFileInfos;
+        // If set to true, the test framework serializes all received USN Journal records to file.
+        bool SaveUSNJournalRecords;
 
-    // If set to true, the test framework serializes raw MFT to a file.
-    // The file path is specified in RawMFTSerializer ctor.
-    bool SaveRawMFT;
+        // If set to true, the test framework serializes created FileInfo objects from MFT records to file.
+        bool SaveFileInfos;
 
-    // Serialized USN Journal records file path for the test framework.
-    std::wstring ReplayUSNRecPath;
+        // If set to true, the test framework serializes raw MFT to a file.
+        // The file path is specified in RawMFTSerializer ctor.
+        bool SaveRawMFT;
 
-    // Serialized FileInfo objects file path for the test framework.
-    std::wstring ReplayFileInfosPath;
+        // Serialized USN Journal records file path for the test framework.
+        std::wstring ReplayUSNRecPath;
 
-    // Serialized NTFS volume raw MFT file path for the test framework.
-    std::wstring RawMFTPath;
+        // Serialized FileInfo objects file path for the test framework.
+        std::wstring ReplayFileInfosPath;
 
-   private:
-    CommandlineArguments();
+        // Serialized NTFS volume raw MFT file path for the test framework.
+        std::wstring RawMFTPath;
 
-    static void SetPath(const std::wstring& arg, const wchar_t* path_arg_name, std::wstring* path);
+       private:
+        CommandlineArguments();
 
-    static void SetBoolFlag(const std::wstring& arg, const wchar_t* flag_name, bool* flag);
-};
+        static void SetPath(const std::wstring& arg, const wchar_t* path_arg_name, std::wstring* path);
+
+        static void SetBoolFlag(const std::wstring& arg, const wchar_t* flag_name, bool* flag);
+    };
+
+} // namespace indexer_common

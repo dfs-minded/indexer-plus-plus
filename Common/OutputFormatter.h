@@ -10,62 +10,65 @@
 #include "Macros.h"
 #include "typedefs.h"
 
-class FileInfo;
+namespace indexer_common {
+
+    class FileInfo;
 
 // From the input FileInfo objects list and formatting string, creates serialized into strings (in a given format)
 // FileInfos output result.
-class OutputFormatter {
-   public:
-    OutputFormatter(std::vector<const FileInfo*>* const input, std::wstring format_string = std::wstring(L""),
-                    int max_files = -1);
+    class OutputFormatter {
+       public:
+        OutputFormatter(std::vector<const FileInfo*>* const input, std::wstring format_string = std::wstring(L""),
+                        int max_files = -1);
 
-    NO_COPY(OutputFormatter)
+        NO_COPY(OutputFormatter)
 
-    std::vector<std::wstring> Format();
+        std::vector<std::wstring> Format();
 
-   private:
-    bool DefaultFormat();
+       private:
+        bool DefaultFormat();
 
-    void WriteDefaultFormat();
+        void WriteDefaultFormat();
 
-    bool DateTypeIsSet() const;
+        bool DateTypeIsSet() const;
 
-    bool DateTimeType() const;
+        bool DateTimeType() const;
 
-    bool DateTimeDirective() const;
+        bool DateTimeDirective() const;
 
-    void ParseDateTime();
+        void ParseDateTime();
 
-    // Returns locale's and timezone specific time.
-    std::wstring GetDateTimeStr(uint64 ticks) const;
+        // Returns locale's and timezone specific time.
+        std::wstring GetDateTimeStr(uint64 ticks) const;
 
-    bool ParseEscape();
+        bool ParseEscape();
 
-    void WriteCustomUserText();
+        void WriteCustomUserText();
 
-    bool OtherSupportedDirective() const;
+        bool OtherSupportedDirective() const;
 
-    void WriteDirective();
+        void WriteDirective();
 
 
-    static const std::wstring kDefaultTimeFormat;
+        static const std::wstring kDefaultTimeFormat;
 
-    static const wchar_t kDefaultDateType;
+        static const wchar_t kDefaultDateType;
 
-    static const std::wstring kTimeFields;
-    static const std::wstring kDateFields;
-    static const std::wstring kDateTypes;
-    static const std::wstring kOtherSupportedFields;
+        static const std::wstring kTimeFields;
+        static const std::wstring kDateFields;
+        static const std::wstring kDateTypes;
+        static const std::wstring kOtherSupportedFields;
 
-    std::wstring format_;
-    int output_size_;
-    std::wstring::iterator fmt_iter_;
+        std::wstring format_;
+        int output_size_;
+        std::wstring::iterator fmt_iter_;
 
-    std::vector<const FileInfo*>* input_;
-    std::vector<std::wstring> output_;
+        std::vector<const FileInfo*>* input_;
+        std::vector<std::wstring> output_;
 
-    wchar_t date_type_;
+        wchar_t date_type_;
 
-    bool intrerpret_symbol_as_directive_;
-    bool intrerpret_symbol_as_escape_;
-};
+        bool intrerpret_symbol_as_directive_;
+        bool intrerpret_symbol_as_escape_;
+    };
+} // namespace indexer_common

@@ -6,6 +6,9 @@
 
 #include "typedefs.h"
 
-ushort* GetIdentityTable();
+namespace indexer_common {
 
-ushort* GetLowerMatchTable();
+    ushort* GetIdentityTable();
+
+    ushort* GetLowerMatchTable();
+} // namespace indexer_common

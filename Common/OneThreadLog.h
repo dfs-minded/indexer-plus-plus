@@ -9,26 +9,30 @@
 #include "Log.h"
 #include "Macros.h"
 
-class OneThreadLog : public Log {
-   public:
-    static Log& Instance();
+namespace indexer_common {
 
-    NO_COPY(OneThreadLog)
+    class OneThreadLog : public Log {
+       public:
+        static Log& Instance();
 
-    virtual void Debug(const std::wstring& message) override;
+        NO_COPY(OneThreadLog)
 
-    virtual void Info(const std::wstring& message) override;
+        virtual void Debug(const std::wstring& message) override;
 
-    virtual void Warning(const std::wstring& message) override;
+        virtual void Info(const std::wstring& message) override;
 
-    virtual void Error(const std::wstring& message) override;
+        virtual void Warning(const std::wstring& message) override;
 
-   private:
-    OneThreadLog();
+        virtual void Error(const std::wstring& message) override;
 
-    ~OneThreadLog();
+       private:
+        OneThreadLog();
 
-    inline void WriteToFile(std::wstring& msg);
+        ~OneThreadLog();
 
-    FILE* log_file_;
-};
+        inline void WriteToFile(std::wstring& msg);
+
+        FILE* log_file_;
+    };
+
+} // namespace indexer_common

@@ -6,9 +6,11 @@
 
 #include "CompilerSymb.h"
 
+namespace indexer_common {
+
 #define NO_COPY(classname)                \
-    classname(const classname&) = delete; \
-    classname& operator=(const classname&) = delete;
+        classname(const classname&) = delete; \
+        classname& operator=(const classname&) = delete;
 
 
 #ifdef SINGLE_THREAD
@@ -37,8 +39,10 @@
 #define UNLOCK locker_.unlock();
 #define PUNLOCK locker_->unlock();
 #define UNLOCK_AND_NOTIFY_ONE \
-    locker_.unlock();         \
-    conditional_var_->notify_one();
+        locker_.unlock();         \
+        conditional_var_->notify_one();
 #define NOTIFY_ONE conditional_var_->notify_one();
 
 #endif  // SINGLE_THREAD
+
+} // namespace indexer_common

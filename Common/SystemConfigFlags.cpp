@@ -4,36 +4,40 @@
 
 #include "SystemConfigFlags.h"
 
-SystemConfigFlags& SystemConfigFlags::Instance() {
-    static SystemConfigFlags instance;
-    return instance;
-}
+namespace indexer_common {
 
-SystemConfigFlags::SystemConfigFlags() {
-    TrayIcon = false;
-    PipeManager = false;
-    CallWatchChanges = false;
-    ShelContextMenu = false;
-    ShowDebugLogWindow = false;
+    SystemConfigFlags& SystemConfigFlags::Instance() {
+        static SystemConfigFlags instance;
+        return instance;
+    }
+
+    SystemConfigFlags::SystemConfigFlags() {
+        TrayIcon = false;
+        PipeManager = false;
+        CallWatchChanges = false;
+        ShelContextMenu = false;
+        ShowDebugLogWindow = false;
 
 #ifdef TRAY_ICON
-    TrayIcon = true;
+        TrayIcon = true;
 #endif
 
 #ifdef PIPE_MANAGER
-    PipeManager = true;
+        PipeManager = true;
 #endif
 
 // Tells Main window to call CheckUpdates on DataModel to force updates check in single thread mode.
 #if defined(WATCH_CHANGES) && defined(SINGLE_THREAD)
-    CallWatchChanges = true;
+        CallWatchChanges = true;
 #endif
 
 #ifdef SHELL_CONTEXT_MENU
-    ShelContextMenu = true;
+        ShelContextMenu = true;
 #endif
 
 #ifdef SHOW_DEBUG_LOG_WINDOW
-    ShowDebugLogWindow = true;
+        ShowDebugLogWindow = true;
 #endif
-}
+    }
+
+} // namespace indexer_common

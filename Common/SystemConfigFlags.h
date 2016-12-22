@@ -9,18 +9,22 @@
 // Wrapper on CompilerSymbols.h to make it reachable for C++/CLI classes.
 // All defines must be made only in CompilerSymbols.h file.
 
-class SystemConfigFlags {
-   public:
-    static SystemConfigFlags& Instance();
+namespace indexer_common {
 
-    NO_COPY(SystemConfigFlags)
+    class SystemConfigFlags {
+       public:
+        static SystemConfigFlags& Instance();
 
-    bool CallWatchChanges;
-    bool TrayIcon;
-    bool PipeManager;
-    bool ShelContextMenu;
-    bool ShowDebugLogWindow;
+        NO_COPY(SystemConfigFlags)
 
-   private:
-    SystemConfigFlags();
-};
+        bool CallWatchChanges;
+        bool TrayIcon;
+        bool PipeManager;
+        bool ShelContextMenu;
+        bool ShowDebugLogWindow;
+
+       private:
+        SystemConfigFlags();
+    };
+
+} // namespace indexer_common

@@ -4,13 +4,16 @@
 
 #pragma once
 
+namespace indexer_common {
+
 //-------------------------------------------------------------------------
 // Compilation symbols
 //-------------------------------------------------------------------------
 
 #define TRAY_ICON           // Enables windows tray icon support for the application.
 #define PIPE_MANAGER        // For interprocess communication, to prevent from starting one more instance of app (if it
-                            // already runs).
+							// already runs).
+
 #define SHELL_CONTEXT_MENU  // Enables on file right click context menu, the same as in Windows Explorer.
 #define SHOW_DEBUG_LOG_WINDOW
 
@@ -25,3 +28,5 @@
 
 // !!! *** *** ***
 // For other options use commandline arguments, which you can find in CmdArgumentsParser class.
+
+} // namespace indexer_common

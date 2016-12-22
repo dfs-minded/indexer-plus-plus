@@ -11,245 +11,249 @@
 #include "HelperCommon.h"
 #include "OneThreadLog.h"
 
-using namespace std;
+namespace indexer_common {
 
-unique_ptr<const char16_t[]> FileInfoHelper::GetPath(const FileInfo& fi, bool include_filename) {
+    using namespace std;
 
-    vector<const FileInfo*> path_to_root;
-    path_to_root.reserve(15);
+    unique_ptr<const char16_t[]> FileInfoHelper::GetPath(const FileInfo& fi, bool include_filename) {
 
-    const FileInfo* current = &fi;
+        vector<const FileInfo*> path_to_root;
+        path_to_root.reserve(15);
 
-    if (!include_filename) current = current->Parent;
+        const FileInfo* current = &fi;
 
-    ushort total_name_length = 0;
+        if (!include_filename) current = current->Parent;
 
-    while (true) {
-        path_to_root.push_back(current);
-        total_name_length += current->NameLength + 1;  // For path separators and '\0' in the path end.
-        if (current->ID == current->ParentID) break;
-        current = current->Parent;
-    }
+        ushort total_name_length = 0;
 
-    auto res = make_unique<const char16_t[]>(total_name_length);
-    auto curr = const_cast<char16_t*>(res.get());
-
-    for (int i = path_to_root.size() - 1; i >= 0; --i) {
-        if (curr != res.get())  // Not the drive name.
-        {
-            *curr = '\\';
-            ++curr;
+        while (true) {
+            path_to_root.push_back(current);
+            total_name_length += current->NameLength + 1;  // For path separators and '\0' in the path end.
+            if (current->ID == current->ParentID) break;
+            current = current->Parent;
         }
 
-        auto num_bytes = path_to_root[i]->NameLength << 1;
-        memcpy(curr, (void*)path_to_root[i]->GetName(), num_bytes);
-        curr += (num_bytes >> 1);
+        auto res = make_unique<const char16_t[]>(total_name_length);
+        auto curr = const_cast<char16_t*>(res.get());
+
+        for (int i = path_to_root.size() - 1; i >= 0; --i) {
+            if (curr != res.get())  // Not the drive name.
+            {
+                *curr = '\\';
+                ++curr;
+            }
+
+            auto num_bytes = path_to_root[i]->NameLength << 1;
+            memcpy(curr, (void*)path_to_root[i]->GetName(), num_bytes);
+            curr += (num_bytes >> 1);
+        }
+
+        *curr = '\0';
+        return res;
     }
 
-    *curr = '\0';
-    return res;
-}
+    const char16_t* FileInfoHelper::GetExtension(const FileInfo& fi) {
+        if (fi.IsDirectory() || fi.NameLength == 0) return Empty16String;
+        auto* name = fi.GetName();
 
-const char16_t* FileInfoHelper::GetExtension(const FileInfo& fi) {
-    if (fi.IsDirectory() || fi.NameLength == 0) return Empty16String;
-    auto* name = fi.GetName();
-
-    for (auto c = name + fi.NameLength - 1; c != name; --c)
-        if (*c == '.') return c;
-    return Empty16String;
-}
-
-WcharToWcharMap FileInfoHelper::extension_to_type_map_;
-
-const char16_t* FileInfoHelper::kFileFolderTypename =
-    reinterpret_cast<const char16_t*>(L"File folder");  // TODO add localization.
-
-Log& FileInfoHelper::Logger() {
-    static Log* logger_;
-    if (!logger_) {
-        GET_LOGGER
+        for (auto c = name + fi.NameLength - 1; c != name; --c)
+            if (*c == '.') return c;
+        return Empty16String;
     }
-    return *logger_;
-}
 
-const char16_t* FileInfoHelper::GetType(const FileInfo& fi) {
+    WcharToWcharMap FileInfoHelper::extension_to_type_map_;
+
+    const char16_t* FileInfoHelper::kFileFolderTypename =
+        reinterpret_cast<const char16_t*>(L"File folder");  // TODO add localization.
+
+    Log& FileInfoHelper::Logger() {
+        static Log* logger_;
+        if (!logger_) {
+            GET_LOGGER
+        }
+        return *logger_;
+    }
+
+    const char16_t* FileInfoHelper::GetType(const FileInfo& fi) {
 
 #ifdef WIN32
-    if (fi.IsDirectory()) return kFileFolderTypename;
+        if (fi.IsDirectory()) return kFileFolderTypename;
 
-    const auto* ext = GetExtension(fi);
-    const auto& it_res = extension_to_type_map_.find(ext);
+        const auto* ext = GetExtension(fi);
+        const auto& it_res = extension_to_type_map_.find(ext);
 
-    if (it_res != extension_to_type_map_.end()) {
-        return it_res->second;
-    }
+        if (it_res != extension_to_type_map_.end()) {
+            return it_res->second;
+        }
 
-    auto u_full_name = GetPath(fi, true);
+        auto u_full_name = GetPath(fi, true);
 
-    SHFILEINFO info{};
-    auto file_attributes = FILE_ATTRIBUTE_NORMAL;
-    auto flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
+        SHFILEINFO info{};
+        auto file_attributes = FILE_ATTRIBUTE_NORMAL;
+        auto flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
 
-    bool ok =
-        SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()), file_attributes, &info, sizeof(info), flags);
+        bool ok =
+            SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()), file_attributes, &info, sizeof(info), flags);
 
-    if (!ok) Logger().Error(METHOD_METADATA + L"SHGetFileInfo failed.");
+        if (!ok) Logger().Error(METHOD_METADATA + L"SHGetFileInfo failed.");
 
-    auto u_type_name = HelperCommon::CopyToNewWchar(reinterpret_cast<char16_t*>(info.szTypeName));
-    auto u_ext = HelperCommon::CopyToNewWchar(ext);
+        auto u_type_name = HelperCommon::CopyToNewWchar(reinterpret_cast<char16_t*>(info.szTypeName));
+        auto u_ext = HelperCommon::CopyToNewWchar(ext);
 
-    extension_to_type_map_[u_ext.release()] = u_type_name.release();
-    return extension_to_type_map_[ext];
+        extension_to_type_map_[u_ext.release()] = u_type_name.release();
+        return extension_to_type_map_[ext];
 #else
-    return u"Type";
+        return u"Type";
 #endif
-}
-
-
-WcharToIntMap FileInfoHelper::extension_to_int_map_;
-
-WcharToIntMap FileInfoHelper::type_to_int_map_;
-
-const WcharToIntMap& FileInfoHelper::GetDistinctOrderedExtensions(const vector<const FileInfo*>& files,
-                                                                  vector<const char16_t*>* extensions) {
-    Logger().Debug(METHOD_METADATA + L" Current ext count = " + to_wstring(extension_to_int_map_.size()));
-
-    extensions->reserve(files.size());
-    bool need_reindex = false;  // Indicates whether extension ordered number needed recalculation.
-
-    for (size_t i = 0; i < files.size(); ++i) {
-        const auto* ext = GetExtension(*files[i]);
-        extensions->push_back(ext);
-        if (extension_to_int_map_.find(ext) == extension_to_int_map_.end()) {
-            need_reindex = true;
-            auto new_ext = HelperCommon::CopyToNewWchar(ext);
-            extension_to_int_map_.emplace(new_ext.release(), 0);
-        }
     }
 
-    if (need_reindex) {
-        auto i = 0;
-        for (auto& key_val : extension_to_int_map_) {
-            key_val.second = i++;
-        }
-    }
 
-    return extension_to_int_map_;
-}
+    WcharToIntMap FileInfoHelper::extension_to_int_map_;
 
-const WcharToIntMap& FileInfoHelper::GetDistinctOrderedTypes(const vector<const FileInfo*>& files,
-                                                             vector<const char16_t*>* types) {
-    Logger().Debug(METHOD_METADATA + L" Current types count = " + to_wstring(type_to_int_map_.size()));
+    WcharToIntMap FileInfoHelper::type_to_int_map_;
 
-    types->reserve(files.size());
-    bool need_reindex = false;  // Indicates whether types ordered number needed recalculation.
+    const WcharToIntMap& FileInfoHelper::GetDistinctOrderedExtensions(const vector<const FileInfo*>& files,
+                                                                      vector<const char16_t*>* extensions) {
+        Logger().Debug(METHOD_METADATA + L" Current ext count = " + to_wstring(extension_to_int_map_.size()));
 
-    for (size_t i = 0; i < files.size(); ++i) {
-        const auto* type = GetType(*files[i]);
-        types->push_back(type);
-        if (type_to_int_map_.find(type) == type_to_int_map_.end()) {
-            need_reindex = true;
-            type_to_int_map_.emplace(type, 0);
-        }
-    }
+        extensions->reserve(files.size());
+        bool need_reindex = false;  // Indicates whether extension ordered number needed recalculation.
 
-    if (need_reindex) {
-        auto i = 1;
-        for (auto& key_val : type_to_int_map_) {
-            key_val.second = i++;
+        for (size_t i = 0; i < files.size(); ++i) {
+            const auto* ext = GetExtension(*files[i]);
+            extensions->push_back(ext);
+            if (extension_to_int_map_.find(ext) == extension_to_int_map_.end()) {
+                need_reindex = true;
+                auto new_ext = HelperCommon::CopyToNewWchar(ext);
+                extension_to_int_map_.emplace(new_ext.release(), 0);
+            }
         }
 
-        // Folders must be listed first in sorting.
-        type_to_int_map_[kFileFolderTypename] = 0;
+        if (need_reindex) {
+            auto i = 0;
+            for (auto& key_val : extension_to_int_map_) {
+                key_val.second = i++;
+            }
+        }
+
+        return extension_to_int_map_;
     }
 
-    return type_to_int_map_;
-}
+    const WcharToIntMap& FileInfoHelper::GetDistinctOrderedTypes(const vector<const FileInfo*>& files,
+                                                                 vector<const char16_t*>* types) {
+        Logger().Debug(METHOD_METADATA + L" Current types count = " + to_wstring(type_to_int_map_.size()));
+
+        types->reserve(files.size());
+        bool need_reindex = false;  // Indicates whether types ordered number needed recalculation.
+
+        for (size_t i = 0; i < files.size(); ++i) {
+            const auto* type = GetType(*files[i]);
+            types->push_back(type);
+            if (type_to_int_map_.find(type) == type_to_int_map_.end()) {
+                need_reindex = true;
+                type_to_int_map_.emplace(type, 0);
+            }
+        }
+
+        if (need_reindex) {
+            auto i = 1;
+            for (auto& key_val : type_to_int_map_) {
+                key_val.second = i++;
+            }
+
+            // Folders must be listed first in sorting.
+            type_to_int_map_[kFileFolderTypename] = 0;
+        }
+
+        return type_to_int_map_;
+    }
 
 
-wostream& operator<<(wostream& os, const class FileInfo& fi) {
-    auto u_full_name = FileInfoHelper::GetPath(fi, true);
-    os << fi.ID << L" " << u_full_name.get();
-    return os;
-}
+    wostream& operator<<(wostream& os, const class FileInfo& fi) {
+        auto u_full_name = FileInfoHelper::GetPath(fi, true);
+        os << fi.ID << L" " << u_full_name.get();
+        return os;
+    }
 
-const wstring g_delim = L"|";
+    const wstring g_delim = L"|";
 
-bool operator==(const FileInfo& lhs, const FileInfo& rhs) {
-    if (&lhs == &rhs) return true;
+    bool operator==(const FileInfo& lhs, const FileInfo& rhs) {
+        if (&lhs == &rhs) return true;
 
-    bool res = lhs.DriveLetter == rhs.DriveLetter && lhs.ID == rhs.ID && lhs.ParentID == rhs.ParentID &&
-               lhs.NameLength == rhs.NameLength && memcmp(lhs.GetName(), rhs.GetName(), lhs.NameLength) == 0 &&
-               lhs.SizeReal == rhs.SizeReal &&
-               /*lhs.SizeAllocated == rhs.SizeAllocated &&*/
-               lhs.CreationTime == rhs.CreationTime && lhs.LastAccessTime == rhs.LastAccessTime &&
-               lhs.LastWriteTime == rhs.LastWriteTime;
+        bool res = lhs.DriveLetter == rhs.DriveLetter && lhs.ID == rhs.ID && lhs.ParentID == rhs.ParentID &&
+                   lhs.NameLength == rhs.NameLength && memcmp(lhs.GetName(), rhs.GetName(), lhs.NameLength) == 0 &&
+                   lhs.SizeReal == rhs.SizeReal &&
+                   /*lhs.SizeAllocated == rhs.SizeAllocated &&*/
+                   lhs.CreationTime == rhs.CreationTime && lhs.LastAccessTime == rhs.LastAccessTime &&
+                   lhs.LastWriteTime == rhs.LastWriteTime;
 
-    return res;
-}
+        return res;
+    }
 
-wstring SerializeFileInfo(const FileInfo& fi) {
-    wstring res;
+    wstring SerializeFileInfo(const FileInfo& fi) {
+        wstring res;
 
-    res += fi.DriveLetter;  // 0
-    res += g_delim;
-    res += to_wstring(fi.ID) + g_delim;          // 1
-    res += to_wstring(fi.ParentID) + g_delim;    // 2
-    res += to_wstring(fi.NameLength) + g_delim;  // 3
+        res += fi.DriveLetter;  // 0
+        res += g_delim;
+        res += to_wstring(fi.ID) + g_delim;          // 1
+        res += to_wstring(fi.ParentID) + g_delim;    // 2
+        res += to_wstring(fi.NameLength) + g_delim;  // 3
 
-    res += HelperCommon::Char16ToWstring(fi.GetName()) + g_delim;  // 4
+        res += HelperCommon::Char16ToWstring(fi.GetName()) + g_delim;  // 4
 
-    res += to_wstring(fi.FileAttributes) + g_delim;  // 5
+        res += to_wstring(fi.FileAttributes) + g_delim;  // 5
 
-    res += to_wstring(fi.SizeReal) + g_delim;  // 6
-    // res += to_wstring(fi.SizeAllocated) + g_delim; //
+        res += to_wstring(fi.SizeReal) + g_delim;  // 6
+        // res += to_wstring(fi.SizeAllocated) + g_delim; //
 
-    res += to_wstring(fi.CreationTime) + g_delim;    // 7
-    res += to_wstring(fi.LastAccessTime) + g_delim;  // 8
-    res += to_wstring(fi.LastWriteTime) + g_delim;   // 9
+        res += to_wstring(fi.CreationTime) + g_delim;    // 7
+        res += to_wstring(fi.LastAccessTime) + g_delim;  // 8
+        res += to_wstring(fi.LastWriteTime) + g_delim;   // 9
 
-    return res;
-}
+        return res;
+    }
 
-wstring SerializeFileInfoHumanReadable(const FileInfo& fi) {
-    wstring res;
+    wstring SerializeFileInfoHumanReadable(const FileInfo& fi) {
+        wstring res;
 
-    res += L"; ID = " + to_wstring(fi.ID);
-    res += L"; ParentID = " + to_wstring(fi.ParentID);
-    res += L"; FileInfo: Name = " + HelperCommon::Char16ToWstring(fi.GetName());
-    res += L"; NameLength = " + to_wstring(fi.NameLength);
-    res += L"; FileAttributes = " + to_wstring(fi.FileAttributes);
+        res += L"; ID = " + to_wstring(fi.ID);
+        res += L"; ParentID = " + to_wstring(fi.ParentID);
+        res += L"; FileInfo: Name = " + HelperCommon::Char16ToWstring(fi.GetName());
+        res += L"; NameLength = " + to_wstring(fi.NameLength);
+        res += L"; FileAttributes = " + to_wstring(fi.FileAttributes);
 
-    res += L"; SizeReal = " + to_wstring(fi.SizeReal);
-    // res += L"; SizeAllocated = " + to_wstring(fi.SizeAllocated);
+        res += L"; SizeReal = " + to_wstring(fi.SizeReal);
+        // res += L"; SizeAllocated = " + to_wstring(fi.SizeAllocated);
 
-    res += L"; CreationTime = " + to_wstring(fi.CreationTime);
-    res += L"; LastAccessTime = " + to_wstring(fi.LastAccessTime);
-    res += L"; LastWriteTime = " + to_wstring(fi.LastWriteTime);
+        res += L"; CreationTime = " + to_wstring(fi.CreationTime);
+        res += L"; LastAccessTime = " + to_wstring(fi.LastAccessTime);
+        res += L"; LastWriteTime = " + to_wstring(fi.LastWriteTime);
 
-    return res;
-}
+        return res;
+    }
 
-unique_ptr<FileInfo> DeserializeFileInfo(const wstring& source) {
-    auto parts = HelperCommon::Split(source, g_delim, HelperCommon::SplitOptions::INCLUDE_EMPTY);
+    unique_ptr<FileInfo> DeserializeFileInfo(const wstring& source) {
+        auto parts = HelperCommon::Split(source, g_delim, HelperCommon::SplitOptions::INCLUDE_EMPTY);
 
-    char drive_letter = static_cast<char>(parts[0][0]);
+        char drive_letter = static_cast<char>(parts[0][0]);
 
-    auto fi = make_unique<FileInfo>(drive_letter);
+        auto fi = make_unique<FileInfo>(drive_letter);
 
-    fi->ID = HelperCommon::ParseNumber<uint>(parts[1]);
-    fi->ParentID = HelperCommon::ParseNumber<uint>(parts[2]);
+        fi->ID = HelperCommon::ParseNumber<uint>(parts[1]);
+        fi->ParentID = HelperCommon::ParseNumber<uint>(parts[2]);
 
-    auto name_len = HelperCommon::ParseNumber<ushort>(parts[3]);
-    fi->CopyAndSetName(reinterpret_cast<const char16_t*>(parts[4].c_str()), name_len);
-    fi->FileAttributes = HelperCommon::ParseNumber<uint>(parts[5]);
+        auto name_len = HelperCommon::ParseNumber<ushort>(parts[3]);
+        fi->CopyAndSetName(reinterpret_cast<const char16_t*>(parts[4].c_str()), name_len);
+        fi->FileAttributes = HelperCommon::ParseNumber<uint>(parts[5]);
 
-    fi->SizeReal = HelperCommon::ParseNumber<int>(parts[6]);
-    // fi->SizeAllocated = HelperCommon::ParseNumber<uint64>(parts[7]);
+        fi->SizeReal = HelperCommon::ParseNumber<int>(parts[6]);
+        // fi->SizeAllocated = HelperCommon::ParseNumber<uint64>(parts[7]);
 
-    fi->CreationTime = HelperCommon::ParseNumber<uint>(parts[7]);
-    fi->LastAccessTime = HelperCommon::ParseNumber<uint>(parts[8]);
-    fi->LastWriteTime = HelperCommon::ParseNumber<uint>(parts[9]);
+        fi->CreationTime = HelperCommon::ParseNumber<uint>(parts[7]);
+        fi->LastAccessTime = HelperCommon::ParseNumber<uint>(parts[8]);
+        fi->LastWriteTime = HelperCommon::ParseNumber<uint>(parts[9]);
 
-    return fi;
-}
+        return fi;
+    }
+
+} // namespace indexer_common

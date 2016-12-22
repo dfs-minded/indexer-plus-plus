@@ -6,19 +6,23 @@
 
 #include "IndexerDateTime.h"
 
-using namespace std;
+namespace indexer_common {
 
-IndexerTimeSpan::IndexerTimeSpan(uint64 tiks) {
-    auto tmp = IndexerDateTime::TicksToFiletime(tiks);
-    instance = IndexerDateTime::FiletimeToSystemtime(tmp);
-}
+    using namespace std;
 
-uint64 IndexerTimeSpan::Tiks() const {
-    return IndexerDateTime::SystemtimeToUInt64(instance);
-}
+    IndexerTimeSpan::IndexerTimeSpan(uint64 tiks) {
+        auto tmp = IndexerDateTime::TicksToFiletime(tiks);
+        instance = IndexerDateTime::FiletimeToSystemtime(tmp);
+    }
 
-unique_ptr<IndexerTimeSpan> IndexerTimeSpan::Diff(uint64 lhs, uint64 rhs) {
-    if (rhs > lhs) swap(lhs, rhs);
+    uint64 IndexerTimeSpan::Tiks() const {
+        return IndexerDateTime::SystemtimeToUInt64(instance);
+    }
 
-    return make_unique<IndexerTimeSpan>(lhs - rhs);
-}
+    unique_ptr<IndexerTimeSpan> IndexerTimeSpan::Diff(uint64 lhs, uint64 rhs) {
+        if (rhs > lhs) swap(lhs, rhs);
+
+        return make_unique<IndexerTimeSpan>(lhs - rhs);
+    }
+
+} // namespace indexer_common

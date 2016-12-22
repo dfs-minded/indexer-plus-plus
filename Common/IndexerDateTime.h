@@ -11,80 +11,84 @@
 #include "Macros.h"
 #include "typedefs.h"
 
-enum class IndexerDateTimeEnum { Seconds, Minutes, Days };
+namespace indexer_common {
 
-class IndexerDateTime {
-   public:
-    IndexerDateTime() = default;
+    enum class IndexerDateTimeEnum { Seconds, Minutes, Days };
 
-    NO_COPY(IndexerDateTime)
+    class IndexerDateTime {
+       public:
+        IndexerDateTime() = default;
 
-    IndexerDateTime* AddSeconds(double value);
-    IndexerDateTime* AddMinutes(double value);
-    IndexerDateTime* AddDays(double value);
-    IndexerDateTime* Add(double value, IndexerDateTimeEnum timeType);
+        NO_COPY(IndexerDateTime)
 
-    uint64 Ticks() const;
-    uint UnixSeconds() const;
+        IndexerDateTime* AddSeconds(double value);
+        IndexerDateTime* AddMinutes(double value);
+        IndexerDateTime* AddDays(double value);
+        IndexerDateTime* Add(double value, IndexerDateTimeEnum timeType);
 
-    double Seconds() const {
-        return instance.wSecond;
-    }
-    double Minutes() const {
-        return instance.wMinute;
-    }
-    double Hours() const {
-        return instance.wHour;
-    }
-    double Days() const {
-        return instance.wDay;
-    }
+        uint64 Ticks() const;
+        uint UnixSeconds() const;
 
-    bool Equals(const IndexerDateTime& rhs, uint64 epsilon) const;
-    std::string ToString() const;
-    std::wstring ToWString() const;
+        double Seconds() const {
+            return instance.wSecond;
+        }
+        double Minutes() const {
+            return instance.wMinute;
+        }
+        double Hours() const {
+            return instance.wHour;
+        }
+        double Days() const {
+            return instance.wDay;
+        }
 
-    static IndexerDateTime* Now();
-    static uint64 TicksNow();
-    static FILETIME FileTimeNow();
-    static SYSTEMTIME SystemTimeNow();
+        bool Equals(const IndexerDateTime& rhs, uint64 epsilon) const;
+        std::string ToString() const;
+        std::wstring ToWString() const;
 
-    static int64 MinTicks() {
-        return 0;
-    }
-    static int64 MaxTicks() {
-        return 1LL << 63;
-    }
+        static IndexerDateTime* Now();
+        static uint64 TicksNow();
+        static FILETIME FileTimeNow();
+        static SYSTEMTIME SystemTimeNow();
 
-    static uint64 TicksToSeconds(const uint64& ticks);
-    static uint64 FiletimeToUInt64(const FILETIME& filetime);
-    static FILETIME TicksToFiletime(const uint64& ticks);
-    static uint64 SystemtimeToUInt64(const SYSTEMTIME& systemtime);
+        static int64 MinTicks() {
+            return 0;
+        }
+        static int64 MaxTicks() {
+            return 1LL << 63;
+        }
 
-    // Converts Windows ticks (filetime represented in this ticks) to the Unix timestamp.
-    static uint WindowsTicksToUnixSeconds(uint64 windows_ticks);
+        static uint64 TicksToSeconds(const uint64& ticks);
+        static uint64 FiletimeToUInt64(const FILETIME& filetime);
+        static FILETIME TicksToFiletime(const uint64& ticks);
+        static uint64 SystemtimeToUInt64(const SYSTEMTIME& systemtime);
 
-    static uint FiletimeToUnixTime(const FILETIME& filetime);
+        // Converts Windows ticks (filetime represented in this ticks) to the Unix timestamp.
+        static uint WindowsTicksToUnixSeconds(uint64 windows_ticks);
 
-    // Converts a system time to file time format. System time is based on Coordinated Universal Time (UTC).
-    static FILETIME SystemtimeToFiletime(const SYSTEMTIME& systemtime);
+        static uint FiletimeToUnixTime(const FILETIME& filetime);
 
-    // Converts a file time to system time format. System time is based on Coordinated Universal Time (UTC).
-    static SYSTEMTIME FiletimeToSystemtime(const FILETIME& fileTime);
+        // Converts a system time to file time format. System time is based on Coordinated Universal Time (UTC).
+        static FILETIME SystemtimeToFiletime(const SYSTEMTIME& systemtime);
 
-    static FILETIME FiletimeToLocalFiletime(const FILETIME& filetime);
+        // Converts a file time to system time format. System time is based on Coordinated Universal Time (UTC).
+        static SYSTEMTIME FiletimeToSystemtime(const FILETIME& fileTime);
 
-    // TM is based on UTC.
-    static tm FiletimeToTM(const FILETIME& filetime);
+        static FILETIME FiletimeToLocalFiletime(const FILETIME& filetime);
 
-   private:
-    SYSTEMTIME instance;
+        // TM is based on UTC.
+        static tm FiletimeToTM(const FILETIME& filetime);
 
-    static const double kSecondsPer100nsInterval;
+       private:
+        SYSTEMTIME instance;
 
-    static const uint kTicksPerSecond;
+        static const double kSecondsPer100nsInterval;
 
-    static const uint64 kEpochDifferenceInSecond;
-};
+        static const uint kTicksPerSecond;
 
-typedef std::shared_ptr<IndexerDateTime> pDateTime;
+        static const uint64 kEpochDifferenceInSecond;
+    };
+
+    typedef std::shared_ptr<IndexerDateTime> pDateTime;
+
+} // namespace indexer_common

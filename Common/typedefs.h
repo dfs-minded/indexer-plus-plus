@@ -8,13 +8,17 @@
 #include <string>
 #include <vector>
 
-typedef long long int64;
-typedef unsigned long ulong;
-typedef unsigned long long uint64;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned char uchar;
+namespace indexer_common {
 
-class FileInfo;
+    typedef long long int64;
+    typedef unsigned long ulong;
+    typedef unsigned long long uint64;
+    typedef unsigned short ushort;
+    typedef unsigned int uint;
+    typedef unsigned char uchar;
 
-typedef std::shared_ptr<std::vector<std::wstring>> pVectorWstring;
+    class FileInfo;
+
+    typedef std::shared_ptr<std::vector<std::wstring>> pVectorWstring;
+
+} // namespace indexer_common

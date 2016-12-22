@@ -13,75 +13,79 @@
 #include "Macros.h"
 #include "WindowsWrapper.h"
 
-using namespace std;
+namespace indexer_common {
 
-Log& AsyncLog::Instance() {
-    static AsyncLog instance;
-    return instance;
-}
+    using namespace std;
 
-AsyncLog::AsyncLog() {
+    Log& AsyncLog::Instance() {
+        static AsyncLog instance;
+        return instance;
+    }
+
+    AsyncLog::AsyncLog() {
 #ifdef WIN32
-    log_file_ = _wfopen(L"IndexerLog.txt", L"w");
-    _setmode(_fileno(log_file_), _O_U8TEXT);
+        log_file_ = _wfopen(L"IndexerLog.txt", L"w");
+        _setmode(_fileno(log_file_), _O_U8TEXT);
 #else
-    log_file_ = fopen("IndexerLog.txt", "w");
+        log_file_ = fopen("IndexerLog.txt", "w");
 #endif
 #if !defined(SINGLE_THREAD)
 
-    NEW_MUTEX
+        NEW_MUTEX
 
-    worker_thread_ = new thread(&AsyncLog::WriteToFile, this);
+        worker_thread_ = new thread(&AsyncLog::WriteToFile, this);
 
-    HelperCommon::SetThreadName(worker_thread_, "AsyncLog");
+        HelperCommon::SetThreadName(worker_thread_, "AsyncLog");
 
 #endif
-}
-
-AsyncLog::~AsyncLog() {
-    fclose(log_file_);
-}
-
-void AsyncLog::Debug(const wstring& message) {
-    PLOCK_GUARD
-    COMPOSE_MSG(L"DEBUG")
-    messages_.push_back(move(msg));
-}
-
-void AsyncLog::Info(const wstring& message) {
-    PLOCK_GUARD
-    COMPOSE_MSG(L"INFO");
-    messages_.push_back(move(msg));
-}
-
-void AsyncLog::Warning(const wstring& message) {
-    PLOCK_GUARD
-    COMPOSE_MSG(L"WARNING");
-    messages_.push_back(move(msg));
-}
-
-void AsyncLog::Error(const wstring& message) {
-    PLOCK_GUARD
-    COMPOSE_MSG(L"ERROR");
-    messages_.push_back(move(msg));
-}
-
-void AsyncLog::WriteToFile() {
-    while (true) {
-        this_thread::sleep_for(chrono::seconds(2));
-
-        PLOCK
-        swap(messages_, tmp_messages_storage_);
-        PUNLOCK
-
-        for (const auto& msg : tmp_messages_storage_) {
-            for (const auto& listener : messages_listeners_)
-                listener->OnNewMessage(msg);
-
-            fwprintf(log_file_, L"%s\n", msg.c_str());
-        }
-
-        tmp_messages_storage_.clear();
-        fflush(log_file_);
     }
-}
+
+    AsyncLog::~AsyncLog() {
+        fclose(log_file_);
+    }
+
+    void AsyncLog::Debug(const wstring& message) {
+        PLOCK_GUARD
+        COMPOSE_MSG(L"DEBUG")
+        messages_.push_back(move(msg));
+    }
+
+    void AsyncLog::Info(const wstring& message) {
+        PLOCK_GUARD
+        COMPOSE_MSG(L"INFO");
+        messages_.push_back(move(msg));
+    }
+
+    void AsyncLog::Warning(const wstring& message) {
+        PLOCK_GUARD
+        COMPOSE_MSG(L"WARNING");
+        messages_.push_back(move(msg));
+    }
+
+    void AsyncLog::Error(const wstring& message) {
+        PLOCK_GUARD
+        COMPOSE_MSG(L"ERROR");
+        messages_.push_back(move(msg));
+    }
+
+    void AsyncLog::WriteToFile() {
+        while (true) {
+            this_thread::sleep_for(chrono::seconds(2));
+
+            PLOCK
+            swap(messages_, tmp_messages_storage_);
+            PUNLOCK
+
+            for (const auto& msg : tmp_messages_storage_) {
+                for (const auto& listener : messages_listeners_)
+                    listener->OnNewMessage(msg);
+
+                fwprintf(log_file_, L"%s\n", msg.c_str());
+            }
+
+            tmp_messages_storage_.clear();
+            fflush(log_file_);
+        }
+    }
+
+} // namespace indexer_common
