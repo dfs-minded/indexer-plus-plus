@@ -12,28 +12,32 @@
 
 #include "NTFSDataStructures.h"
 
-class Serializer {
-   public:
-    Serializer();
+namespace ntfs_reader {
 
-    NO_COPY(Serializer)
+    class Serializer {
+       public:
+        Serializer();
 
-    ~Serializer();
+        NO_COPY(Serializer)
 
-    const Serializer* Serialize(P_FILE_RECORD_HEADER record_header);
+        ~Serializer();
 
-    const Serializer* Serialize(const std::wstring& data);
+        const Serializer* Serialize(P_FILE_RECORD_HEADER record_header);
 
-    const Serializer* Serialize(uint64 data);
+        const Serializer* Serialize(const std::wstring& data);
 
-    const Serializer* Endl();
+        const Serializer* Serialize(uint64 data);
 
-    const Serializer* Delim();
+        const Serializer* Endl();
 
-   private:
-    void WriteToFile(const std::wstring& data) const;
+        const Serializer* Delim();
 
-    FILE* mft_serialization_file_;
+       private:
+        void WriteToFile(const std::wstring& data) const;
 
-    static const std::wstring kDelim;
-};
+        FILE* mft_serialization_file_;
+
+        static const std::wstring kDelim;
+    };
+
+} // namespace ntfs_reader

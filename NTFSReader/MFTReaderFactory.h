@@ -12,9 +12,13 @@
 // corresponding compilation symbol defined) - one more option for testing purposes to compare results, which
 // retrieved with raw data parsing.
 
-class MFTReaderFactory {
-   public:
-    NO_COPY(MFTReaderFactory)
+namespace ntfs_reader {
 
-    static std::unique_ptr<MFTReader> CreateReader(char drive_letter);
-};
+    class MFTReaderFactory {
+       public:
+        NO_COPY(MFTReaderFactory)
+
+        static std::unique_ptr<MFTReader> CreateReader(char drive_letter);
+    };
+
+} // namespace ntfs_reader

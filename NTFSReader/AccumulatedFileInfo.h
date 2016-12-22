@@ -12,50 +12,54 @@
 #include "NTFSDataStructures.h"
 
 // During the MFT parsing intermediate USN records parsing result stored in AccumulatedFileInfo objects.
-class AccumulatedFileInfo {
-   public:
-    AccumulatedFileInfo(char drive_letter, uint id);
+namespace ntfs_reader {
 
-    NO_COPY(AccumulatedFileInfo)
+    class AccumulatedFileInfo {
+       public:
+        AccumulatedFileInfo(char drive_letter, uint id);
 
-    ~AccumulatedFileInfo();
+        NO_COPY(AccumulatedFileInfo)
 
-    uint ID() const {
-        return fi_->ID;
-    }
+        ~AccumulatedFileInfo();
 
-    FilenameFlagsEnum UsedFilenameFlags;
+        uint ID() const {
+            return fi_->ID;
+        }
 
-    // Not used right now and no logic was implemented to deal with hard links. TODO.
-    // ushort HardLinksCount;
+        FilenameFlagsEnum UsedFilenameFlags;
 
-    uint64 SizeReal;
+        // Not used right now and no logic was implemented to deal with hard links. TODO.
+        // ushort HardLinksCount;
 
-    // Not used right now.
-    // uint64 SizeAllocated;
+        uint64 SizeReal;
 
-
-    void SetTimestamps(const STANDARD_INFORMATION& std_info) const;
-
-
-    // |parent_id| parsed from FILENAME attribute and corresponding attribute flags.
-    bool SetParentID(uint64 parent_id, FilenameFlagsEnum flags) const;
+        // Not used right now.
+        // uint64 SizeAllocated;
 
 
-    bool NewFlagsBetterThanUsed(FilenameFlagsEnum new_flags) const;
+        void SetTimestamps(const STANDARD_INFORMATION& std_info) const;
 
 
-    bool SetName(const char16_t* name, ushort name_length, FilenameFlagsEnum flags) const;
+        // |parent_id| parsed from FILENAME attribute and corresponding attribute flags.
+        bool SetParentID(uint64 parent_id, FilenameFlagsEnum flags) const;
 
 
-    void SetFileAttributes(ulong file_attributes) const;
+        bool NewFlagsBetterThanUsed(FilenameFlagsEnum new_flags) const;
 
 
-    bool SetFilenameFlags(FilenameFlagsEnum new_flags);
+        bool SetName(const char16_t* name, ushort name_length, FilenameFlagsEnum flags) const;
 
 
-    std::unique_ptr<FileInfo> GetFinalResult();
+        void SetFileAttributes(ulong file_attributes) const;
 
-   private:
-    std::unique_ptr<FileInfo> fi_;
-};
+
+        bool SetFilenameFlags(FilenameFlagsEnum new_flags);
+
+
+        std::unique_ptr<FileInfo> GetFinalResult();
+
+       private:
+        std::unique_ptr<FileInfo> fi_;
+    };
+
+} // namespace ntfs_reader

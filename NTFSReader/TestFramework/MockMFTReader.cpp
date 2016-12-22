@@ -9,21 +9,25 @@
 
 #include "FileInfoObjectsSerializer.h"
 
-std::unique_ptr<MFTReadResult> MockMFTReader::ReadAllRecords() {
-    auto res = std::make_unique<MFTReadResult>();
+namespace ntfs_reader {
 
-    auto filename = CommandlineArguments::Instance().ReplayFileInfosPath;
+    std::unique_ptr<MFTReadResult> MockMFTReader::ReadAllRecords() {
+        auto res = std::make_unique<MFTReadResult>();
 
-    auto u_deserialized = FileInfoObjectsSerializer::Instance().DeserializeAllFileInfos(filename);
-    res->Data.swap(u_deserialized);
+        auto filename = CommandlineArguments::Instance().ReplayFileInfosPath;
 
-    // Find and set the root.
-    for (auto* fi : *res->Data) {
-        if (fi->ID == fi->ParentID) {
-            res->Root = fi;
-            break;
+        auto u_deserialized = FileInfoObjectsSerializer::Instance().DeserializeAllFileInfos(filename);
+        res->Data.swap(u_deserialized);
+
+        // Find and set the root.
+        for (auto* fi : *res->Data) {
+            if (fi->ID == fi->ParentID) {
+                res->Root = fi;
+                break;
+            }
         }
+
+        return res;
     }
 
-    return res;
-}
+} // namespace ntfs_reader

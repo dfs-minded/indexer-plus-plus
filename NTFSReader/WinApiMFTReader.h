@@ -16,39 +16,43 @@
 
 // Reads and parses volume MFT using winAPI functions into FileInfo objects.
 
-class WinApiMFTReader : public MFTReader {
-   public:
-    explicit WinApiMFTReader(char drive_letter);
+namespace ntfs_reader {
 
-    NO_COPY(WinApiMFTReader)
+    class WinApiMFTReader : public MFTReader {
+       public:
+        explicit WinApiMFTReader(char drive_letter);
 
-    ~WinApiMFTReader() = default;
+        NO_COPY(WinApiMFTReader)
 
-    virtual std::unique_ptr<MFTReadResult> ReadAllRecords() override;
+        ~WinApiMFTReader() = default;
 
-   private:
-    // Creates and fills MFT_ENUM_DATA data structure, which is used to query WinApi to get USN records.
+        virtual std::unique_ptr<MFTReadResult> ReadAllRecords() override;
 
-    std::unique_ptr<MFT_ENUM_DATA> GetMFTEnumData() const;
+       private:
+        // Creates and fills MFT_ENUM_DATA data structure, which is used to query WinApi to get USN records.
 
-
-    // Reads a chunk of records into buffer using WinApi function.
-
-    bool ReadUSNRecords(const PMFT_ENUM_DATA mft_enum_data, const LPVOID buffer, DWORD& byte_count) const;
+        std::unique_ptr<MFT_ENUM_DATA> GetMFTEnumData() const;
 
 
-    // Finds the root directory ID.
+        // Reads a chunk of records into buffer using WinApi function.
 
-    static uint FindRootID(const std::vector<FileInfo*>& data);
+        bool ReadUSNRecords(const PMFT_ENUM_DATA mft_enum_data, const LPVOID buffer, DWORD& byte_count) const;
 
 
-    // For each FileInfo that does not have parent FileInfo in the map assigns root FileInfo as a parent.
+        // Finds the root directory ID.
 
-    static void AssignRootAsParent(const MFTReadResult& read_res);
+        static uint FindRootID(const std::vector<FileInfo*>& data);
 
-    char drive_letter_;
 
-    HANDLE volume_;
+        // For each FileInfo that does not have parent FileInfo in the map assigns root FileInfo as a parent.
 
-    static const int kBufferSize;
-};
+        static void AssignRootAsParent(const MFTReadResult& read_res);
+
+        char drive_letter_;
+
+        HANDLE volume_;
+
+        static const int kBufferSize;
+    };
+
+} // namespace ntfs_reader

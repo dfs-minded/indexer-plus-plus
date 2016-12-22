@@ -15,28 +15,32 @@
 // and fire index changed event.
 // This args are accumulated result of one reading session.
 
-class NotifyNTFSChangedEventArgs {
-   public:
-    NotifyNTFSChangedEventArgs() = default;
+namespace ntfs_reader {
 
-    NO_COPY(NotifyNTFSChangedEventArgs)
+    class NotifyNTFSChangedEventArgs {
+       public:
+        NotifyNTFSChangedEventArgs() = default;
 
-    // Contains newly created files.
+        NO_COPY(NotifyNTFSChangedEventArgs)
 
-    std::map<uint, FileInfo*> CreatedItems;
+        // Contains newly created files.
 
-
-    // Contains IDs of deleted files.
-
-    std::set<uint> DeletedItems;
+        std::map<uint, FileInfo*> CreatedItems;
 
 
-    // Contains new FileInfo objects, that could be matched to the old ones by ID.
+        // Contains IDs of deleted files.
 
-    std::map<uint, FileInfo*> ChangedItems;
+        std::set<uint> DeletedItems;
 
 
-    // Returns string representation of the arguments.
+        // Contains new FileInfo objects, that could be matched to the old ones by ID.
 
-    std::wstring ToWString() const;
-};
+        std::map<uint, FileInfo*> ChangedItems;
+
+
+        // Returns string representation of the arguments.
+
+        std::wstring ToWString() const;
+    };
+
+} // namespace ntfs_reader

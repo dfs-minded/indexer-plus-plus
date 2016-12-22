@@ -11,14 +11,18 @@
 // Implement this interface for listening file system changes. When an NTFS volume files changed
 // (created, modified or deleted) |OnNTFSChanged| method will be called.
 
-class NTFSChangeObserver {
+namespace ntfs_reader {
 
-   public:
-    virtual ~NTFSChangeObserver() {
-    }
+    class NTFSChangeObserver {
+
+       public:
+        virtual ~NTFSChangeObserver() {
+        }
 
 
-    // Fired when file system changed. |args| provide the information what exactly has been changed.
+        // Fired when file system changed. |args| provide the information what exactly has been changed.
 
-    virtual void OnNTFSChanged(std::unique_ptr<NotifyNTFSChangedEventArgs> args){};
-};
+        virtual void OnNTFSChanged(std::unique_ptr<NotifyNTFSChangedEventArgs> args){};
+    };
+
+} // namespace ntfs_reader

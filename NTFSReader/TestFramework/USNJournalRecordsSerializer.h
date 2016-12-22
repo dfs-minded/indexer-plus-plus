@@ -20,49 +20,53 @@
 
 // Part of the test framework. Serializes and deserializes USN records for mocking calls to file system and OS layer.
 
-class USNJournalRecordsSerializer {
-   public:
-    NO_COPY(USNJournalRecordsSerializer)
+namespace ntfs_reader {
 
-    static USNJournalRecordsSerializer& Instance();
+    class USNJournalRecordsSerializer {
+       public:
+        NO_COPY(USNJournalRecordsSerializer)
 
-
-    // Serializes one single record to file.
-
-    void SerializeRecord(const USN_RECORD& record, char drive_letter);
+        static USNJournalRecordsSerializer& Instance();
 
 
-    // Creates records providers and populates them with corresponding to drive deserialized records.
+        // Serializes one single record to file.
 
-    void DeserializeAllRecords(const std::wstring& records_filename);
-
-
-    USNJournalRecordsProvider* GetRecordsProvider(char drive_letter);
+        void SerializeRecord(const USN_RECORD& record, char drive_letter);
 
 
-   private:
-    USNJournalRecordsSerializer();
+        // Creates records providers and populates them with corresponding to drive deserialized records.
 
-    ~USNJournalRecordsSerializer();
+        void DeserializeAllRecords(const std::wstring& records_filename);
 
-    void WriteToFileAsync();
+
+        USNJournalRecordsProvider* GetRecordsProvider(char drive_letter);
+
+
+       private:
+        USNJournalRecordsSerializer();
+
+        ~USNJournalRecordsSerializer();
+
+        void WriteToFileAsync();
 
 #ifdef SINGLE_THREAD_LOG
-    void WriteToFile(std::wstring* msg);
+        void WriteToFile(std::wstring* msg);
 #else
 
-    FILE* records_db_;
+        FILE* records_db_;
 
-    std::map<char, std::unique_ptr<USNJournalRecordsProvider> > records_providers_;
+        std::map<char, std::unique_ptr<USNJournalRecordsProvider> > records_providers_;
 
 
-    std::mutex* locker_;
+        std::mutex* locker_;
 
-    std::thread* worker_;
+        std::thread* worker_;
 
-    std::list<std::wstring> records_;
+        std::list<std::wstring> records_;
 
-    std::list<std::wstring> tmp_records_storage_;
+        std::list<std::wstring> tmp_records_storage_;
 
 #endif  // SINGLE_THREAD_LOG
-};
+    };
+
+} // namespace ntfs_reader

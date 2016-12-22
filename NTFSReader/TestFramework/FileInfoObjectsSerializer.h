@@ -8,20 +8,24 @@
 
 #include "FileInfo.h"
 
-class FileInfoObjectsSerializer {
-   public:
-    NO_COPY(FileInfoObjectsSerializer)
+namespace ntfs_reader {
 
-    static FileInfoObjectsSerializer& Instance();
+    class FileInfoObjectsSerializer {
+       public:
+        NO_COPY(FileInfoObjectsSerializer)
 
-    void SerializeFileInfoToFile(const FileInfo& fi) const;
+        static FileInfoObjectsSerializer& Instance();
 
-    std::unique_ptr<std::vector<FileInfo*>> DeserializeAllFileInfos(const std::wstring& filename) const;
+        void SerializeFileInfoToFile(const FileInfo& fi) const;
 
-   private:
-    FileInfoObjectsSerializer();
+        std::unique_ptr<std::vector<FileInfo*>> DeserializeAllFileInfos(const std::wstring& filename) const;
 
-    ~FileInfoObjectsSerializer();
+       private:
+        FileInfoObjectsSerializer();
 
-    FILE* file_infos_db_;
-};
+        ~FileInfoObjectsSerializer();
+
+        FILE* file_infos_db_;
+    };
+
+} // namespace ntfs_reader

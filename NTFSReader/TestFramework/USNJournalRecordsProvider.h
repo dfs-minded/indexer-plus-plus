@@ -13,37 +13,40 @@
 
 // Provides USN records for testing purposes. This class |records_| are populated by USNJournalRecordsSerializer class.
 
-class USNJournalRecordsProvider {
-   public:
-    USNJournalRecordsProvider(char drive_letter);
+namespace ntfs_reader {
 
-    NO_COPY(USNJournalRecordsProvider)
+    class USNJournalRecordsProvider {
+       public:
+        USNJournalRecordsProvider(char drive_letter);
 
-    ~USNJournalRecordsProvider();
+        NO_COPY(USNJournalRecordsProvider)
 
-    bool GetNextMFTRecords(LPVOID buffer, DWORD buffer_size, LPDWORD bytes_returned);
+        ~USNJournalRecordsProvider();
 
-    void CopyMessagesToBuffer(LPVOID& buffer, LPDWORD& bytes_returned);
+        bool GetNextMFTRecords(LPVOID buffer, DWORD buffer_size, LPDWORD bytes_returned);
 
-    static void ImitateWatchDelay();
+        void CopyMessagesToBuffer(LPVOID& buffer, LPDWORD& bytes_returned);
 
-    bool GetNextJournalRecords(LPVOID buffer, DWORD buffer_size, LPDWORD bytes_returned);
+        static void ImitateWatchDelay();
 
-    void AddRecord(std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>> record);
+        bool GetNextJournalRecords(LPVOID buffer, DWORD buffer_size, LPDWORD bytes_returned);
 
-    bool Empty() const;
+        void AddRecord(std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>> record);
 
-    char DriveLetter() const;
+        bool Empty() const;
 
-   private:
-    void FindLastGroupRecord();
+        char DriveLetter() const;
 
-    char drive_letter_;
+       private:
+        void FindLastGroupRecord();
 
-    std::vector<std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>>> records_;
+        char drive_letter_;
 
-    int next_record_;
+        std::vector<std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>>> records_;
 
-    // Finding groups of events. As an event considered group of close in time USN records.
-    int last_group_record_;
-};
+        int next_record_;
+
+        // Finding groups of events. As an event considered group of close in time USN records.
+        int last_group_record_;
+    };
+} // namespace ntfs_reader

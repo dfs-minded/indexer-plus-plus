@@ -11,24 +11,28 @@
 
 #include "Macros.h"
 
-class RawMFTSerializer {
-   public:
-    NO_COPY(RawMFTSerializer)
+namespace ntfs_reader {
 
-    static RawMFTSerializer& Instance();
+    class RawMFTSerializer {
+       public:
+        NO_COPY(RawMFTSerializer)
 
-    void SerializeMFT(void* buffer, DWORD bytes_to_write) const;
+        static RawMFTSerializer& Instance();
 
-    bool GetNtfsVolumeData(NTFS_VOLUME_DATA_BUFFER* volume_data_buff);
+        void SerializeMFT(void* buffer, DWORD bytes_to_write) const;
 
-    bool ReadMFTFromFile(void* buffer, DWORD bytes_to_read);
+        bool GetNtfsVolumeData(NTFS_VOLUME_DATA_BUFFER* volume_data_buff);
 
-   private:
-    RawMFTSerializer();
+        bool ReadMFTFromFile(void* buffer, DWORD bytes_to_read);
 
-    ~RawMFTSerializer();
+       private:
+        RawMFTSerializer();
 
-    HANDLE raw_mft_file_;
+        ~RawMFTSerializer();
 
-    std::unique_ptr<std::ifstream> serialized_raw_mft_file_;
-};
+        HANDLE raw_mft_file_;
+
+        std::unique_ptr<std::ifstream> serialized_raw_mft_file_;
+    };
+
+} // namespace ntfs_reader

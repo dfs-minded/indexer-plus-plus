@@ -11,11 +11,15 @@
 #include "MFTReadResult.h"
 #include "MFTReader.h"
 
-class MockMFTReader : public MFTReader {
-   public:
-    NO_COPY(MockMFTReader)
+namespace ntfs_reader {
 
-    MockMFTReader() = default;
+    class MockMFTReader : public MFTReader {
+       public:
+        NO_COPY(MockMFTReader)
 
-    virtual std::unique_ptr<MFTReadResult> ReadAllRecords() override;
-};
+        MockMFTReader() = default;
+
+        virtual std::unique_ptr<MFTReadResult> ReadAllRecords() override;
+    };
+
+} // namespace ntfs_reader

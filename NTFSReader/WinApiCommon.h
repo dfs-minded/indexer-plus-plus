@@ -8,59 +8,63 @@
 
 #include "WindowsWrapper.h"
 
-class FileInfo;
+namespace ntfs_reader {
+
+    class FileInfo;
 
 
 // Wraps common function calls to WinAPI.
 
-class WinApiCommon {
-   public:
-    // Opening physical drive for reading.
+    class WinApiCommon {
+       public:
+        // Opening physical drive for reading.
 
-    static HANDLE OpenVolume(char drive_letter);
-
-
-    static HANDLE CreateFileForWrite(const std::wstring& filename);
+        static HANDLE OpenVolume(char drive_letter);
 
 
-    static HANDLE OpenFileForRead(const std::wstring& filename);
+        static HANDLE CreateFileForWrite(const std::wstring& filename);
 
 
-    // Wrapper on the winAPI ReadFile function.
-
-    static bool ReadBytes(HANDLE h_file, LPVOID buffer, DWORD bytes_to_read);
+        static HANDLE OpenFileForRead(const std::wstring& filename);
 
 
-    // Wrapper on the winAPI WriteFile function.
+        // Wrapper on the winAPI ReadFile function.
 
-    static void WriteBytes(HANDLE h_file, LPVOID buffer, DWORD bytes_to_write);
-
-
-    // Sets the file pointer on the specified distance, starting from its beginning.
-
-    static void SetFilePointerFromFileBegin(HANDLE volume, ULONGLONG bytes_to_move);
+        static bool ReadBytes(HANDLE h_file, LPVOID buffer, DWORD bytes_to_read);
 
 
-    static bool GetNtfsVolumeData(HANDLE h_file, NTFS_VOLUME_DATA_BUFFER* volume_data_buff);
+        // Wrapper on the winAPI WriteFile function.
+
+        static void WriteBytes(HANDLE h_file, LPVOID buffer, DWORD bytes_to_write);
 
 
-    // Queries the current update sequence number (USN) change journal, its records, and its capacity
-    // and fills empty |journal_data|, provided by the caller.
+        // Sets the file pointer on the specified distance, starting from its beginning.
 
-    static bool LoadJournal(HANDLE volume, USN_JOURNAL_DATA* journal_data);
+        static void SetFilePointerFromFileBegin(HANDLE volume, ULONGLONG bytes_to_move);
 
 
-    // Reads file attributes - size and timestamps and updates with them corresponding members of |file_info|.
-    // This function can be called only when |file_info| full filename can be retrieved.
-    // |path| is the path of the |file_info|.
+        static bool GetNtfsVolumeData(HANDLE h_file, NTFS_VOLUME_DATA_BUFFER* volume_data_buff);
 
-    static bool GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info);
 
-    static bool GetSizeAndTimestamps(const std::u16string& path, FileInfo* file_info);
+        // Queries the current update sequence number (USN) change journal, its records, and its capacity
+        // and fills empty |journal_data|, provided by the caller.
 
-   private:
-    // Creates an update sequence number (USN) change journal stream on a target volume, or modifies
-    // an existing change journal stream.
+        static bool LoadJournal(HANDLE volume, USN_JOURNAL_DATA* journal_data);
 
-    static bool CreateJournal(HANDLE volume);
-};
+
+        // Reads file attributes - size and timestamps and updates with them corresponding members of |file_info|.
+        // This function can be called only when |file_info| full filename can be retrieved.
+        // |path| is the path of the |file_info|.
+
+        static bool GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info);
+
+        static bool GetSizeAndTimestamps(const std::u16string& path, FileInfo* file_info);
+
+       private:
+        // Creates an update sequence number (USN) change journal stream on a target volume, or modifies
+        // an existing change journal stream.
+
+        static bool CreateJournal(HANDLE volume);
+    };
+
+} // namespace ntfs_reader

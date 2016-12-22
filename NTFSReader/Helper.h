@@ -9,21 +9,25 @@
 
 #include "WindowsWrapper.h"
 
-class Helper {
-   public:
-    static std::wstring SerializeRecord(const USN_RECORD& record, char drive);
+namespace ntfs_reader {
 
-    // Returns pair of deserialized from the input string |s| USN record (with custom deleter) and corresponding drive
-    // letter.
-    static std::pair<std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>>, char> DeserializeRecord(
-        const std::wstring& s);
+    class Helper {
+       public:
+        static std::wstring SerializeRecord(const USN_RECORD& record, char drive);
 
-    static std::wstring GetEncodingString(const wchar_t* text);
+        // Returns pair of deserialized from the input string |s| USN record (with custom deleter) and corresponding drive
+        // letter.
+        static std::pair<std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>>, char> DeserializeRecord(
+            const std::wstring& s);
 
-    static std::wstring GetReasonString(DWORD reason);
+        static std::wstring GetEncodingString(const wchar_t* text);
 
-   private:
-    static const std::wstring kDelim;
+        static std::wstring GetReasonString(DWORD reason);
 
-    static const std::pair<std::wstring, DWORD> kUSNReasonsPairs[];
-};
+       private:
+        static const std::wstring kDelim;
+
+        static const std::pair<std::wstring, DWORD> kUSNReasonsPairs[];
+    };
+
+} // namespace ntfs_reader

@@ -8,26 +8,30 @@
 
 #include "typedefs.h"
 
-struct VolumeData {
-   public:
-    VolumeData();
+namespace ntfs_reader {
 
-    VolumeData(char drive_letter, const NTFS_VOLUME_DATA_BUFFER& volume_data);
+    struct VolumeData {
+       public:
+        VolumeData();
 
-    ~VolumeData() = default;
+        VolumeData(char drive_letter, const NTFS_VOLUME_DATA_BUFFER& volume_data);
 
-    char DriveLetter;
+        ~VolumeData() = default;
 
-    uint BytesPerCluster;
+        char DriveLetter;
 
-    uint BytesPerSector;
+        uint BytesPerCluster;
 
-    // Logical cluster number where the MFT begins.
-    uint64 MFTStartLCN;
+        uint BytesPerSector;
 
-    uint MFTRecordSize;
+        // Logical cluster number where the MFT begins.
+        uint64 MFTStartLCN;
 
-    uint64 MFTSize;
+        uint MFTRecordSize;
 
-    uint64 MFTRecordsNum;
-};
+        uint64 MFTSize;
+
+        uint64 MFTRecordsNum;
+    };
+
+} // namespace ntfs_reader
