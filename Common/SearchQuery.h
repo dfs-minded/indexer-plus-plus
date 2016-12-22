@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "Macros.h"
 #include "typedefs.h"
 

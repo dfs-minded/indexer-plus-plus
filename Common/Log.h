@@ -22,7 +22,7 @@ namespace indexer_common {
 #define COMPOSE_MSG(logLevel) \
         wstring msg = GetTime() + L" | " + wstring(logLevel) + L" | " + GetThreadID() + L" | " + message;
 
-#define METHOD_METADATA HelperCommon::StringToWstring(string(__FUNCTION__) + ":" + to_string(__LINE__) + " ")
+#define METHOD_METADATA Helper::StringToWstring(string(__FUNCTION__) + ":" + to_string(__LINE__) + " ")
 
 #define TIK auto start_time = GetTickCount64();
 #define TOK(msg)                                                                                          \

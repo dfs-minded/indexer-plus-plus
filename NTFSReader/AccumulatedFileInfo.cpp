@@ -92,7 +92,7 @@ namespace ntfs_reader {
 
         if (fi_ && fi_->ParentID && fi_->GetName() != nullptr) {
 
-            fi_->SizeReal = HelperCommon::SizeFromBytesToKiloBytes(SizeReal);
+            fi_->SizeReal = Helper::SizeFromBytesToKiloBytes(SizeReal);
             // fi_->SizeAllocated = SizeAllocated;
             return move(fi_);
         }

@@ -47,7 +47,7 @@ void IndexManager::RunAsync() {
 
     thread worker_thread(&IndexManager::Run, this);
 
-    HelperCommon::SetThreadName(&worker_thread, (string("ReaderAndWatcher ") + DriveLetter()).c_str());
+    Helper::SetThreadName(&worker_thread, (string("ReaderAndWatcher ") + DriveLetter()).c_str());
 
     worker_thread.detach();
 
@@ -253,11 +253,11 @@ void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) 
 
             auto log_msg = METHOD_METADATA + L"Cannot insert new. File with such ID already exists in index. ID = " +
                            to_wstring(new_fi->ID) + wstring(L" Name = ") +
-                           HelperCommon::Char16ToWstring(new_fi->GetName());
+                           Helper::Char16ToWstring(new_fi->GetName());
 
             if (new_fi->NameLength != existing->NameLength ||
                 memcmp(new_fi->GetName(), existing->GetName(), existing->NameLength) != 0) {
-                log_msg += wstring(L" OldName = ") + HelperCommon::Char16ToWstring(existing->GetName());
+                log_msg += wstring(L" OldName = ") + Helper::Char16ToWstring(existing->GetName());
             }
 
             logger_->Warning(log_msg);

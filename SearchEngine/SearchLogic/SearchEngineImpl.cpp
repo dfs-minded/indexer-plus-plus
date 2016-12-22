@@ -57,7 +57,7 @@ SearchEngineImpl::SearchEngineImpl(SearchEngine* interface_backlink, SearchResul
         conditional_var_ = new condition_variable();
 
         worker_thread_ = new thread(&SearchEngineImpl::SearchWorker, this);
-        HelperCommon::SetThreadName(worker_thread_, "SearchWorker ");
+        Helper::SetThreadName(worker_thread_, "SearchWorker ");
         worker_thread_->detach();
     }
 #endif
@@ -114,7 +114,7 @@ void SearchEngineImpl::SearchWorker() {
     HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
     if (FAILED(hr))
         logger_->Error(METHOD_METADATA + L"Worker thread after FAIL CoInitializeEx. Res = " +
-                       HelperCommon::GetLastErrorString());
+                       Helper::GetLastErrorString());
 #endif
 
 #ifdef SINGLE_THREAD

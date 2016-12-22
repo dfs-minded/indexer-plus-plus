@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "OneThreadLog.h"
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "LetterCaseMatching.h"
 
 namespace indexer_common {
@@ -21,7 +21,7 @@ namespace indexer_common {
         // Log* logger_;
         // GET_LOGGER
 
-        int m = HelperCommon::Str16Len(pattern), n = HelperCommon::Str16Len(text), diff = n - m;
+        int m = Helper::Str16Len(pattern), n = Helper::Str16Len(text), diff = n - m;
 
         for (int i = 0, j; i <= diff; ++i) {
 

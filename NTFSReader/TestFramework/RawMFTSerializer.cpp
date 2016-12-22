@@ -38,7 +38,7 @@ namespace ntfs_reader {
             // ifstream* ifs = new ifstream(file_path.c_str(), ios::binary);
             // serialized_raw_mft_file_.reset(ifs);
             serialized_raw_mft_file_ =
-                make_unique<ifstream>(HelperCommon::WStringToString(serialiezed_mft_path), ifstream::binary);
+                make_unique<ifstream>(Helper::WStringToString(serialiezed_mft_path), ifstream::binary);
 #endif
         }
     }

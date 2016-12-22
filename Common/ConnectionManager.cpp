@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "AsyncLog.h"
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "Log.h"
 #include "WindowsWrapper.h"
 
@@ -30,7 +30,7 @@ namespace indexer_common {
     void ConnectionManager::CreateServer(pIQueryProcessor queryProcessor) {
         query_processor_ = queryProcessor;
         thread worker(&ConnectionManager::ServerWorker, *this);
-        HelperCommon::SetThreadName(&worker, "NamedPipeServerWorker ");
+        Helper::SetThreadName(&worker, "NamedPipeServerWorker ");
         worker.detach();
     }
 
@@ -50,7 +50,7 @@ namespace indexer_common {
             }
 
             thread reply_runner(&ConnectionManager::Reply, *this, pipe);
-            HelperCommon::SetThreadName(&reply_runner, "ReplyFromNamedPipeServer ");
+            Helper::SetThreadName(&reply_runner, "ReplyFromNamedPipeServer ");
             reply_runner.detach();
         }
     }
@@ -154,10 +154,10 @@ namespace indexer_common {
 
     void ConnectionManager::ParseData(const wstring& data, wstring* query, wstring* format, int* max_files) {
 
-        auto parts = HelperCommon::Split(data, delimeter, HelperCommon::SplitOptions::INCLUDE_EMPTY);
+        auto parts = Helper::Split(data, delimeter, Helper::SplitOptions::INCLUDE_EMPTY);
         *query = parts[0];
         *format = parts[1];
-        *max_files = HelperCommon::ParseNumber<int>(parts[2]);
+        *max_files = Helper::ParseNumber<int>(parts[2]);
     }
 
     bool ConnectionManager::WriteMessageToPipe(HANDLE pipe, const wstring& message) {

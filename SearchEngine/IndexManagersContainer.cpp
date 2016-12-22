@@ -142,7 +142,7 @@ string IndexManagersContainer::GetStatus() const {
         res += string(";  ");
     }
 
-    logger_->Debug(METHOD_METADATA + HelperCommon::StringToWstring(res));
+    logger_->Debug(METHOD_METADATA + Helper::StringToWstring(res));
 
     return res;
 }
@@ -174,7 +174,7 @@ const IndexManager* IndexManagersContainer::GetIndexManager(char drive_letter) c
 const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path) const {
 
     u16string delim(reinterpret_cast<const char16_t*>(L"/\\"));
-    auto path_components = HelperCommon::Split(path, delim);
+    auto path_components = Helper::Split(path, delim);
     const FileInfo* root = nullptr;
 
     auto table = GetLowerMatchTable();

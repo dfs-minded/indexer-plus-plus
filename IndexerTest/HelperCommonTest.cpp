@@ -18,7 +18,7 @@ TEST(HelperCommonTest, WstringToWchar) {
 
     for (auto s : strs) {
         u16string input(s);
-        char16_t* res = HelperCommon::CopyU16StringToChar16(input);
+        char16_t* res = Helper::CopyU16StringToChar16(input);
         EXPECT_EQ(u16string(s), u16string(res));
         delete[] res;
     }
@@ -35,7 +35,7 @@ TEST(HelperCommonTest, StringToWstring) {
     ASSERT_EQ(n_exp, n_inp);
 
     for (size_t i = 0; i < n_inp; ++i) {
-        EXPECT_EQ(expected[i], HelperCommon::StringToWstring(input[i]));
+        EXPECT_EQ(expected[i], Helper::StringToWstring(input[i]));
     }
 }
 
@@ -43,7 +43,7 @@ TEST(HelperCommonTest, Char16ToWstring) {
     const char16_t* s = reinterpret_cast<char16_t*>(L"file_name3");
 
     wstring expected = L"file_name3";
-    wstring result = HelperCommon::Char16ToWstring(s);
+    wstring result = Helper::Char16ToWstring(s);
 
     ASSERT_EQ(expected, result);
 }
@@ -70,8 +70,8 @@ TEST(HelperCommonTest, SplitOnlyNonEmpty) {
 
     for (size_t i = 0; i < n_inp; ++i) {
         SCOPED_TRACE("Test " + to_string(i));
-        EXPECT_EQ(expected[i], HelperCommon::Split(input_strings[i], input_splitters[i],
-                                                   HelperCommon::SplitOptions::ONLY_NON_EMPTY));
+        EXPECT_EQ(expected[i], Helper::Split(input_strings[i], input_splitters[i],
+                                                   Helper::SplitOptions::ONLY_NON_EMPTY));
     }
 }
 
@@ -98,7 +98,7 @@ TEST(HelperCommonTest, SplitIncludeEmpty) {
     for (size_t i = 0; i < n_inp; ++i) {
         SCOPED_TRACE("Test " + to_string(i));
         EXPECT_EQ(expected[i],
-                  HelperCommon::Split(input_strings[i], input_splitters[i], HelperCommon::SplitOptions::INCLUDE_EMPTY));
+                  Helper::Split(input_strings[i], input_splitters[i], Helper::SplitOptions::INCLUDE_EMPTY));
     }
 }
 
@@ -124,8 +124,8 @@ TEST(HelperCommonTest, SplitIncludeSplitters) {
 
     for (size_t i = 0; i < n_inp; ++i) {
         SCOPED_TRACE("Test " + to_string(i));
-        EXPECT_EQ(expected[i], HelperCommon::Split(input_strings[i], input_splitters[i],
-                                                   HelperCommon::SplitOptions::INCLUDE_SPLITTERS));
+        EXPECT_EQ(expected[i], Helper::Split(input_strings[i], input_splitters[i],
+                                                   Helper::SplitOptions::INCLUDE_SPLITTERS));
     }
 }
 
@@ -140,7 +140,7 @@ TEST(HelperCommonTest, IsAsciiString) {
     ASSERT_EQ(n_exp, n_inp);
 
     for (size_t i = 0; i < n_inp; ++i) {
-        EXPECT_EQ(expected[i], HelperCommon::IsAsciiString(input[i].c_str()));
+        EXPECT_EQ(expected[i], Helper::IsAsciiString(input[i].c_str()));
     }
 }
 
@@ -154,6 +154,6 @@ TEST(HelperCommonTest, GetDriveName) {
     ASSERT_EQ(n_exp, n_inp);
 
     for (size_t i = 0; i < n_inp; ++i) {
-        EXPECT_EQ(expected[i], HelperCommon::GetDriveName(input[i]));
+        EXPECT_EQ(expected[i], Helper::GetDriveName(input[i]));
     }
 }

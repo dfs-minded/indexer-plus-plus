@@ -21,7 +21,7 @@ namespace indexer_common {
 
     extern const char16_t* Empty16String;
 
-    class HelperCommon {
+    class Helper {
 
        public:
         static char16_t* CopyU16StringToChar16(const std::u16string& s);

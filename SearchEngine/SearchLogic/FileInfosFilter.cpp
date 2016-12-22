@@ -29,7 +29,7 @@ void FileInfosFilter::ResetQuery(unique_ptr<SearchQuery> last_query) {
     unique_ptr<re2::RE2> empty_reg_exp = make_unique<re2::RE2>("");
     unique_ptr<re2::RE2> reg_exp;
 
-    bool ok = HelperCommon::Utf16ToUtf8(query_->Text, buffer_, kBufferSize);
+    bool ok = Helper::Utf16ToUtf8(query_->Text, buffer_, kBufferSize);
 
     if (ok) {
         reg_exp = make_unique<re2::RE2>(buffer_);
@@ -49,7 +49,7 @@ bool FileInfosFilter::PassesFilterByFilename(const FileInfo& fi) const {
 
     // Use regex engine:
     if (query_->UseRegex) {
-        if (!HelperCommon::Utf16ToUtf8(fi.GetName(), buffer_, kBufferSize)) return false;
+        if (!Helper::Utf16ToUtf8(fi.GetName(), buffer_, kBufferSize)) return false;
 
         return re2::RE2::PartialMatch(buffer_, *re_);
     }

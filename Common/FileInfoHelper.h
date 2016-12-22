@@ -7,7 +7,7 @@
 #include <map>
 #include <memory>
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "Log.h"
 #include "TextComparison.h"
 

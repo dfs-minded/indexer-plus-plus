@@ -55,7 +55,7 @@ namespace ntfs_reader {
 
         auto root = new FileInfo(drive_letter_);
 
-        root->SetName(HelperCommon::GetDriveName(drive_letter_), 2);
+        root->SetName(Helper::GetDriveName(drive_letter_), 2);
         root->ID = FindRootID(*data);
 
         (*data)[root->ID] = root;

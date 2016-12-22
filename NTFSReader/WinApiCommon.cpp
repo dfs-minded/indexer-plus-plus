@@ -35,7 +35,7 @@ namespace ntfs_reader {
             NULL                     // do not copy file attributes
             );
         if (volume == INVALID_HANDLE_VALUE) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
         }
 #endif
         return volume;
@@ -67,7 +67,7 @@ namespace ntfs_reader {
                             NULL);                  // no attr. template
 
         if (h_file == INVALID_HANDLE_VALUE) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
         }
 #endif
         return h_file;
@@ -83,7 +83,7 @@ namespace ntfs_reader {
                             NULL);          // lpOverlapped
 
         if (!res || bytes_to_read != read) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
         }
         return res;
 #endif
@@ -101,7 +101,7 @@ namespace ntfs_reader {
                             NULL);                  // no overlapped structure
 
         if (!ok || bytes_to_write != num_of_bytes_written) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
         }
 #endif
     }
@@ -137,7 +137,7 @@ namespace ntfs_reader {
                              NULL)) {
 
             // If failed (for example, in case journal is disabled), create journal and retry.
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
 
             if (CreateJournal(volume)) {
                 return LoadJournal(volume, journal_data);
@@ -164,7 +164,7 @@ namespace ntfs_reader {
                                   NULL) != 0;                   // OVERLAPPED structure
 
         if (!ok) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
         }
 
         return ok;
@@ -183,8 +183,8 @@ namespace ntfs_reader {
         }
         if (!file_info->IsDirectory())  // Using sizes only for files.
         {
-            file_info->SizeReal = HelperCommon::SizeFromBytesToKiloBytes(
-                HelperCommon::PairDwordToInt64(file_attr_data.nFileSizeHigh, file_attr_data.nFileSizeLow));
+            file_info->SizeReal = Helper::SizeFromBytesToKiloBytes(
+                Helper::PairDwordToInt64(file_attr_data.nFileSizeHigh, file_attr_data.nFileSizeLow));
         }
 
         file_info->CreationTime = IndexerDateTime::FiletimeToUnixTime(file_attr_data.ftCreationTime);
@@ -195,7 +195,7 @@ namespace ntfs_reader {
     }
 
     bool WinApiCommon::GetSizeAndTimestamps(const u16string& path, FileInfo* file_info) {
-        return GetSizeAndTimestamps(HelperCommon::U16stringToWstring(path)[0], file_info);
+        return GetSizeAndTimestamps(Helper::U16stringToWstring(path)[0], file_info);
     }
 
 } // namespace ntfs_reader

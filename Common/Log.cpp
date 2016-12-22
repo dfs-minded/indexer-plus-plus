@@ -7,7 +7,7 @@
 #include <sstream>
 #include <thread>
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "IndexerDateTime.h"
 
 namespace indexer_common {
@@ -27,7 +27,7 @@ namespace indexer_common {
 
         string str(output);
 
-        return HelperCommon::StringToWstring(move(str));
+        return Helper::StringToWstring(move(str));
     }
 
     wstring Log::GetThreadID() const {

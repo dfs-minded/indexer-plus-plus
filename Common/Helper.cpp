@@ -3,7 +3,7 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "WindowsWrapper.h"
 
 #include <string.h>
@@ -23,7 +23,7 @@ namespace indexer_common {
 #endif
 
 
-    char16_t* HelperCommon::CopyU16StringToChar16(const u16string& s) {
+    char16_t* Helper::CopyU16StringToChar16(const u16string& s) {
         auto res = new char16_t[s.size() + 1];
 
         memcpy(res, s.c_str(), (s.size() + 1) * sizeof(char16_t));
@@ -31,7 +31,7 @@ namespace indexer_common {
         return res;
     }
 
-    wstring HelperCommon::StringToWstring(const string& str) {
+    wstring Helper::StringToWstring(const string& str) {
         wstring wstr(str.size(), L'\0');
 
         for (size_t i = 0; i < str.size(); ++i) {
@@ -41,7 +41,7 @@ namespace indexer_common {
         return wstr;
     }
 
-    string HelperCommon::WStringToString(const wstring& w_str) {
+    string Helper::WStringToString(const wstring& w_str) {
         string str(w_str.size(), '\0');
 
         for (size_t i = 0; i < w_str.size(); ++i) {
@@ -51,7 +51,7 @@ namespace indexer_common {
         return str;
     }
 
-    wstring HelperCommon::U16stringToWstring(const u16string& s) {
+    wstring Helper::U16stringToWstring(const u16string& s) {
         wstring wstr(s.size(), L'\0');
 
         for (size_t i = 0; i < s.size(); ++i) {
@@ -61,7 +61,7 @@ namespace indexer_common {
         return wstr;
     }
 
-    u16string HelperCommon::WstringToU16string(const wstring& s) {
+    u16string Helper::WstringToU16string(const wstring& s) {
         u16string res(s.size(), L'\0');
 
         for (size_t i = 0; i < s.size(); ++i) {
@@ -71,11 +71,11 @@ namespace indexer_common {
         return res;
     }
 
-    const wstring HelperCommon::Char16ToWstring(const char16_t* s) {
+    const wstring Helper::Char16ToWstring(const char16_t* s) {
         return wstring(reinterpret_cast<const wchar_t*>(s));
     }
 
-    bool HelperCommon::Utf16ToUtf8(const u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size) {
+    bool Helper::Utf16ToUtf8(const u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size) {
 
         int source_size = static_cast<int>(source_utf_16.size());
         if (source_size == 0) {
@@ -96,7 +96,7 @@ namespace indexer_common {
         return true;
     }
 
-    int HelperCommon::Str16Len(const char16_t* s) {
+    int Helper::Str16Len(const char16_t* s) {
         auto e = s;
 
         while (*e != '\0')
@@ -105,36 +105,36 @@ namespace indexer_common {
         return e - s;
     }
 
-    uint64 HelperCommon::PairDwordToInt64(DWORD high, DWORD low) {
+    uint64 Helper::PairDwordToInt64(DWORD high, DWORD low) {
         return (static_cast<uint64>(high) << 32) + low;
     }
 
-    uint64 HelperCommon::LargeIntegerToInt64(LARGE_INTEGER li) {
+    uint64 Helper::LargeIntegerToInt64(LARGE_INTEGER li) {
         return (static_cast<uint64>(li.HighPart) << 32) + li.LowPart;
     }
 
-    wstring HelperCommon::IntToHex(DWORD x) {
+    wstring Helper::IntToHex(DWORD x) {
         wstringstream sstream;
         sstream << hex << x;
         wstring result = sstream.str();
         return result;
     }
 
-    u16string HelperCommon::ToUpper(u16string& s) {
+    u16string Helper::ToUpper(u16string& s) {
         wcout.imbue(locale());
         auto& f = use_facet<ctype<char16_t>>(locale());
         f.toupper(&s[0], &s[0] + s.size());
         return s;
     }
 
-    wstring HelperCommon::ToUpper(wstring& s) {
+    wstring Helper::ToUpper(wstring& s) {
         wcout.imbue(locale());
         auto& f = use_facet<ctype<wchar_t>>(locale());
         f.toupper(&s[0], &s[0] + s.size());
         return s;
     }
 
-    wstring HelperCommon::GetLastErrorString() {
+    wstring Helper::GetLastErrorString() {
 #ifdef WIN32
         DWORD error = GetLastError();
 
@@ -156,7 +156,7 @@ namespace indexer_common {
         return wstring();
     }
 
-    bool HelperCommon::DirExist(const wstring& path) {
+    bool Helper::DirExist(const wstring& path) {
 #ifdef WIN32  // TODO is it needed to implement on Linux?
         DWORD attr = GetFileAttributes(path.c_str());
 
@@ -166,7 +166,7 @@ namespace indexer_common {
 #endif
     }
 
-    char16_t* HelperCommon::GetFilename(const USN_RECORD& record, ushort* name_length) {
+    char16_t* Helper::GetFilename(const USN_RECORD& record, ushort* name_length) {
         *name_length = (ushort)(record.FileNameLength / 2);
 
         char16_t* filename = new char16_t[*name_length + 1];
@@ -190,7 +190,7 @@ namespace indexer_common {
 
 #pragma pack(pop)
 
-    void HelperCommon::SetThreadName(thread* thread, const char* thread_name) {
+    void Helper::SetThreadName(thread* thread, const char* thread_name) {
 #ifdef WIN32
         THREADNAME_INFO info;
         info.dwType = 0x1000;
@@ -207,14 +207,14 @@ namespace indexer_common {
 #endif
     }
 
-    bool HelperCommon::IsAsciiString(const wchar_t* s) {
+    bool Helper::IsAsciiString(const wchar_t* s) {
         for (; *s != '\0'; ++s)
             if (*s > 127) return false;
 
         return true;
     }
 
-    char16_t* HelperCommon::GetDriveName(char16_t drive_letter) {
+    char16_t* Helper::GetDriveName(char16_t drive_letter) {
         auto drive_name = new char16_t[3];
         drive_name[0] = drive_letter;
         drive_name[1] = ':';
@@ -222,7 +222,7 @@ namespace indexer_common {
         return drive_name;
     }
 
-    uint HelperCommon::GetNumberOfProcessors() {
+    uint Helper::GetNumberOfProcessors() {
 #ifdef WIN32
         // May return 0 when not able to detect.
         auto num = thread::hardware_concurrency();
@@ -243,7 +243,7 @@ namespace indexer_common {
 #endif
     }
 
-    int HelperCommon::SizeFromBytesToKiloBytes(uint64 size_in_bytes) {
+    int Helper::SizeFromBytesToKiloBytes(uint64 size_in_bytes) {
         return static_cast<int>((size_in_bytes + 1023) >> 10);
     }
 

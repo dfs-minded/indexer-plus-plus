@@ -50,7 +50,7 @@ namespace ntfs_reader {
                                        : WinApiCommon::GetNtfsVolumeData(volume_.get(), volume_data_buff);
 
         if (!ok) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
             return false;
         }
 
@@ -73,7 +73,7 @@ namespace ntfs_reader {
                                        : WinApiCommon::ReadBytes(volume_.get(), buff, volume_data_.MFTRecordSize);
 
         if (!res) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
             return nullptr;
         }
 
@@ -144,7 +144,7 @@ namespace ntfs_reader {
             if (!fi) continue;
 
             if (fi->ID == fi->ParentID) {
-                fi->SetName(HelperCommon::GetDriveName(drive_letter), 2);
+                fi->SetName(Helper::GetDriveName(drive_letter), 2);
                 fi->Parent = fi;
                 result->Root = fi;
                 break;

@@ -69,7 +69,7 @@ namespace ntfs_reader {
         FILE* records_in = _wfopen(records_filename.c_str(), L"r");
         _setmode(_fileno(records_in), _O_U8TEXT);
 #else
-        FILE* records_in = fopen(HelperCommon::WStringToString(records_filename).c_str(), "r");
+        FILE* records_in = fopen(Helper::WStringToString(records_filename).c_str(), "r");
 #endif
 
         wchar_t buffer[1001];

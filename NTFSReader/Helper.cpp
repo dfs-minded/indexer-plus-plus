@@ -68,7 +68,7 @@ namespace ntfs_reader {
         res += to_wstring(record.FileNameOffset) + kDelim;  // 15
 
         ushort length;
-        res += reinterpret_cast<const wchar_t*>(HelperCommon::GetFilename(record, &length));  // 16
+        res += reinterpret_cast<const wchar_t*>(Helper::GetFilename(record, &length));  // 16
         res += kDelim;
 
         return move(res);
@@ -76,15 +76,15 @@ namespace ntfs_reader {
 
     pair<unique_ptr<USN_RECORD, function<void(USN_RECORD*)>>, char> Helper::DeserializeRecord(const wstring& s) {
 
-        auto parts = HelperCommon::Split(s, kDelim);
-        auto filename_length = HelperCommon::ParseNumber<int>(parts[14]);
+        auto parts = Helper::Split(s, kDelim);
+        auto filename_length = Helper::ParseNumber<int>(parts[14]);
 
         if (filename_length != 2 * parts[16].size()) {
             auto size = parts[16].size();
             WriteToOutput(string("Incorrect filename size: ") + to_string(size));
         }
 
-        auto record_size = HelperCommon::ParseNumber<int>(parts[1]);
+        auto record_size = Helper::ParseNumber<int>(parts[1]);
 
         // Malloc is needed to hold record in one memory block, not to split it. This made for the convenience to put
         // everything in one buffer (not to have separate buffer for other memory piece for FileName property).
@@ -92,22 +92,22 @@ namespace ntfs_reader {
                                                                    [](USN_RECORD* r) { free(r); });
 
         record->RecordLength              = record_size;
-        record->MajorVersion              = HelperCommon::ParseNumber<WORD>(parts[2]);
-        record->MinorVersion              = HelperCommon::ParseNumber<WORD>(parts[3]);
-        record->FileReferenceNumber       = HelperCommon::ParseNumber<DWORDLONG>(parts[4]);
-        record->ParentFileReferenceNumber = HelperCommon::ParseNumber<DWORDLONG>(parts[5]);
-        record->Usn                       = HelperCommon::ParseNumber<USN>(parts[6]);
+        record->MajorVersion              = Helper::ParseNumber<WORD>(parts[2]);
+        record->MinorVersion              = Helper::ParseNumber<WORD>(parts[3]);
+        record->FileReferenceNumber       = Helper::ParseNumber<DWORDLONG>(parts[4]);
+        record->ParentFileReferenceNumber = Helper::ParseNumber<DWORDLONG>(parts[5]);
+        record->Usn                       = Helper::ParseNumber<USN>(parts[6]);
 
-        record->TimeStamp.HighPart = HelperCommon::ParseNumber<LONG>(parts[7]);
-        record->TimeStamp.LowPart = HelperCommon::ParseNumber<DWORD>(parts[8]);
+        record->TimeStamp.HighPart = Helper::ParseNumber<LONG>(parts[7]);
+        record->TimeStamp.LowPart = Helper::ParseNumber<DWORD>(parts[8]);
 
-        record->Reason = HelperCommon::ParseNumber<DWORD>(parts[9]);
-        record->SourceInfo = HelperCommon::ParseNumber<DWORD>(parts[11]);
-        record->SecurityId = HelperCommon::ParseNumber<DWORD>(parts[12]);
+        record->Reason = Helper::ParseNumber<DWORD>(parts[9]);
+        record->SourceInfo = Helper::ParseNumber<DWORD>(parts[11]);
+        record->SecurityId = Helper::ParseNumber<DWORD>(parts[12]);
 
-        record->FileAttributes = HelperCommon::ParseNumber<DWORD>(parts[13]);
+        record->FileAttributes = Helper::ParseNumber<DWORD>(parts[13]);
         record->FileNameLength = filename_length;
-        record->FileNameOffset = HelperCommon::ParseNumber<int>(parts[15]);
+        record->FileNameOffset = Helper::ParseNumber<int>(parts[15]);
 
 
         memcpy(record->FileName, parts[16].c_str(), filename_length);

@@ -95,7 +95,7 @@ namespace ntfs_reader {
         auto journal_query = GetReadJournalQuery(low_usn);
 
         if (!ReadJournalRecords(journal_query.get(), buffer, byte_count)) {
-            WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
             return low_usn;
         }
 
@@ -240,7 +240,7 @@ namespace ntfs_reader {
 #endif
         }
 
-        if (!ok) WriteToOutput(METHOD_METADATA + HelperCommon::GetLastErrorString());
+        if (!ok) WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
 
         return ok;
     }
