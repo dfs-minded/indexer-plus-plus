@@ -2,7 +2,7 @@
 
 !define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 1
+!define VERSIONMINOR 2
 
 VIProductVersion "${VERSIONMAJOR}.${VERSIONMINOR}.0.0"
 

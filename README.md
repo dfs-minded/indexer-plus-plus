@@ -18,7 +18,7 @@ Do not upgrade VC++ Compiler and libraries in Visual Studio dialog box.
 
 IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be installed using NuGet package manager in Visual Studio.
 
-Indexer++ uses <a href="https://github.com/google/re2" target="_blank">RE2 regular expression engine</a>.
+Indexer++ regex feature powered by <a href="https://github.com/google/re2" target="_blank">RE2 regular expression engine</a>.
 
 ###Links
 See the <a href="http://indexer-plus-plus.com" target="_blank">Indexer++ official site</a> for more information.

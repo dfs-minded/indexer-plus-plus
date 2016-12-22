@@ -69,6 +69,6 @@ def insertLicence():
 
 getFilesToLicence()
 #printFilenames()
-insertLicence()
+#insertLicence()
 #deleteLicence(4)
 
