@@ -9,31 +9,34 @@
 #include <string>
 #include <vector>
 
-
 #include "IndexerDateTime.h"
 #include "Macros.h"
 #include "SearchQuery.h"
 
-class QueryFactory {
+namespace ifind {
 
-   public:
-    QueryFactory() = default;
+	class QueryFactory {
 
-    NO_COPY(QueryFactory)
+	   public:
+		QueryFactory() = default;
 
-    ~QueryFactory() = default;
+		NO_COPY(QueryFactory)
 
-    uSearchQuery ParseInput(const std::vector<std::wstring>& args, std::wstring* format, std::wstring* outputPath);
+		~QueryFactory() = default;
 
-   private:
-    void SetType(const std::wstring& type, bool* excludeFiles, bool* excludeFolders);
+		indexer_common::uSearchQuery ParseInput(const std::vector<std::wstring>& args, std::wstring* format, std::wstring* outputPath);
 
-    void SetSize(const std::wstring& sizeText, int* sizeFrom, int* sizeTo);
+	   private:
+		void SetType(const std::wstring& type, bool* excludeFiles, bool* excludeFolders);
 
-    int TryParseSize(const std::wstring& text);
+		void SetSize(const std::wstring& sizeText, int* sizeFrom, int* sizeTo);
 
-    void SetTime(const std::wstring& timeText, uint* timeFrom, uint* timeTo, IndexerDateTimeEnum timeType);
+		int TryParseSize(const std::wstring& text);
 
-    // TODO: remove std::map at right-hand side after stopping supporing VS 2013.
-    std::map<wchar_t, int> multipliers = std::map<wchar_t, int>({{L'k', 1}, {L'M', 1024}, {L'G', 1024 * 1024}});
-};
+		void SetTime(const std::wstring& timeText, indexer_common::uint* timeFrom, indexer_common::uint* timeTo, indexer_common::DateTimeEnum timeType);
+
+		// TODO: remove std::map at right-hand side after stopping supporing VS 2013.
+		std::map<wchar_t, int> multipliers = std::map<wchar_t, int>({{L'k', 1}, {L'M', 1024}, {L'G', 1024 * 1024}});
+	};
+
+} // namespace ifind

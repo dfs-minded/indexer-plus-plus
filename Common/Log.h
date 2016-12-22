@@ -25,7 +25,7 @@ namespace indexer_common {
 #define METHOD_METADATA Helper::StringToWstring(string(__FUNCTION__) + ":" + to_string(__LINE__) + " ")
 
 #define TIK auto start_time = GetTickCount64();
-#define TOK(msg)                                                                                          \
+#define TOK(msg)																							  \
         {                                                                                                     \
             auto elapsed_time = GetTickCount64() - start_time;                                                \
             logger_->Debug(wstring(L"PERF | ") + (msg) + wstring(L" | Elapsed ") + to_wstring(elapsed_time)); \

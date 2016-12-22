@@ -13,7 +13,7 @@
 
 namespace indexer_common {
 
-    enum class IndexerDateTimeEnum { Seconds, Minutes, Days };
+    enum class DateTimeEnum { Seconds, Minutes, Days };
 
     class IndexerDateTime {
        public:
@@ -24,7 +24,7 @@ namespace indexer_common {
         IndexerDateTime* AddSeconds(double value);
         IndexerDateTime* AddMinutes(double value);
         IndexerDateTime* AddDays(double value);
-        IndexerDateTime* Add(double value, IndexerDateTimeEnum timeType);
+        IndexerDateTime* Add(double value, DateTimeEnum timeType);
 
         uint64 Ticks() const;
         uint UnixSeconds() const;

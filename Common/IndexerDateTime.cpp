@@ -52,13 +52,13 @@ namespace indexer_common {
         return AddMinutes(value * 60 * 24);
     }
 
-    IndexerDateTime* IndexerDateTime::Add(double value, IndexerDateTimeEnum timeType) {
+    IndexerDateTime* IndexerDateTime::Add(double value, DateTimeEnum timeType) {
         switch (timeType) {
-            case IndexerDateTimeEnum::Seconds:
+            case DateTimeEnum::Seconds:
                 return AddSeconds(value);
-            case IndexerDateTimeEnum::Minutes:
+            case DateTimeEnum::Minutes:
                 return AddMinutes(value);
-            case IndexerDateTimeEnum::Days:
+            case DateTimeEnum::Days:
                 return AddDays(value);
             default:
                 return nullptr;
