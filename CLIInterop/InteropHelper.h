@@ -4,40 +4,38 @@
 
 #pragma once
 
-#include <vcclr.h>
 #include <string>
-
-#include "WindowsWrapper.h"
 
 #include "typedefs.h"
 // clang-format off
 
 namespace CLIInterop
 {
-	ref class InteropHelper
+	namespace Helper
 	{
-	public:
-		static void ToUnmanagedString(System::String^ from, std::string& to);
+		void ToUnmanagedString(System::String^ from, std::string& to);
 
 
-		static const char16_t* ToChar16(const System::String^ from);
+		const char16_t* ToChar16(const System::String^ from);
 
-		static const std::u16string ToU16string(System::String^ from);
-
-
-		static const wchar_t* ToWCharT(const System::String^ from);
-
-		static const std::wstring ToWstring(System::String^ from);
+		const std::u16string ToU16string(System::String^ from);
 
 
-		static System::String^ ToSystemString(const std::wstring from);
+		const wchar_t* ToWCharT(const System::String^ from);
 
-		static System::String^ ToSystemString(const char16_t* from);
+		const std::wstring ToWstring(System::String^ from);
 
-		static System::String^ ToSystemString(const wchar_t* from);
 
-		static System::DateTime^ UnixTimeSecondsToDateTime(uint seconds);
+		System::String^ ToSystemString(const std::wstring from);
 
-		static uint DateTimeToUnixTimeSeconds(System::DateTime^ dt);
-	};
-}
+		System::String^ ToSystemString(const char16_t* from);
+
+		System::String^ ToSystemString(const wchar_t* from);
+
+		System::DateTime^ UnixTimeSecondsToDateTime(indexer_common::uint seconds);
+
+		indexer_common::uint DateTimeToUnixTimeSeconds(System::DateTime^ dt);
+
+	} // namespace Helper
+
+} // namespace CLIInterop

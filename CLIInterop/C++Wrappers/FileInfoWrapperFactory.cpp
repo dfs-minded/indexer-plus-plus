@@ -9,24 +9,21 @@
 #include <vector>
 // clang-format off
 
-using namespace System;
-using namespace System::Collections::Generic;
-
 namespace CLIInterop
 {
-	FileInfoWrapperFactory::FileInfoWrapperFactory(int max_elements, IIconProvider^ icons_provider, IThumbnailProvider^ thumbnails_provider) :
-		max_elements_(max_elements),
-		next_time_(0)
+	FileInfoWrapperFactory::FileInfoWrapperFactory(
+		int max_elements, IIconProvider^ icons_provider, IThumbnailProvider^ thumbnails_provider) 
+		: max_elements_(max_elements), next_time_(0)
 	{
-		cache_ = gcnew Dictionary<Int64, FileInfoWrapper^>();
+		cache_ = gcnew System::Collections::Generic::Dictionary<System::UInt32, FileInfoWrapper^>();
 		FileInfoWrapper::IconProvider = icons_provider;
 		FileInfoWrapper::ThumbnailProvider = thumbnails_provider;
 	}
 
-	FileInfoWrapper^ FileInfoWrapperFactory::GetFileInfoWrapper(const FileInfo* fi, int index)
+	FileInfoWrapper^ FileInfoWrapperFactory::GetFileInfoWrapper(const indexer_common::FileInfo* fi, int index)
 	{
 		FileInfoWrapper^ res;
-		if (cache_->TryGetValue((Int64)fi, res))
+		if (cache_->TryGetValue((System::Int64)fi, res))
 		{
 			res->LastTimeUsed = next_time_++;
 			return res;
@@ -37,7 +34,7 @@ namespace CLIInterop
 
 		res = gcnew FileInfoWrapper(fi, index);
 		res->LastTimeUsed = next_time_++;
-		cache_->Add((Int64)fi, res);
+		cache_->Add((System::Int64)fi, res);
 		return res;
 	}
 
@@ -56,7 +53,7 @@ namespace CLIInterop
 	void FileInfoWrapperFactory::RemoveOldElements()
 	{
 		// Copy |LastTimeUsed| and IDs to |tmp| array.
-		std::vector<std::pair<uint, uint>> tmp(cache_->Count);
+		std::vector<std::pair<indexer_common::uint, indexer_common::uint>> tmp(cache_->Count);
 		int i = 0;
 		for each (auto& kv in cache_)
 		{

@@ -32,6 +32,6 @@ namespace CLIInterop
 		System::DateTime^ CreatedTimeFrom;
 		System::DateTime^ CreatedTimeTo;
 
-		SearchQuery* ToUnmanagedQuery();
+		indexer_common::SearchQuery* ToUnmanagedQuery();
 	};
 }

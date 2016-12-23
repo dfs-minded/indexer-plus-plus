@@ -7,15 +7,13 @@
 #include "AsyncLog.h"
 #include "DebugLogModel.h"
 #include "OneThreadLog.h"
-
-using namespace std;
-using namespace System;
 // clang-format off
 
 namespace CLIInterop
 {
 	SearchEngineLogListener::SearchEngineLogListener(DebugLogModel^ mdl) 
 	{
+		using indexer_common::AsyncLog;
 		GET_LOGGER
 
 		model = mdl;
@@ -24,7 +22,7 @@ namespace CLIInterop
 
 	void SearchEngineLogListener::OnNewMessage(const std::wstring& msg) const 
 	{
-		String^ logMessage = gcnew String(msg.c_str());
+		System::String^ logMessage = gcnew System::String(msg.c_str());
 		model->OnNewMessage(logMessage);
 	}
 

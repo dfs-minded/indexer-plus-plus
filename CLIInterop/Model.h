@@ -4,7 +4,7 @@
 
 #pragma once
 
-#using < WindowsBase.dll >
+#using <WindowsBase.dll>
 
 #include "CompilerSymb.h"
 #include "ConnectionManager.h"
@@ -70,15 +70,15 @@ namespace CLIInterop
 		ModelEnumerator^ enumerator;
 		System::Windows::Threading::Dispatcher^ dispatcher;
 
-		pSearchResult* searchResult;
-		SearchEngine* engine;
+		indexer::pSearchResult* searchResult;
+		indexer::SearchEngine* engine;
 
 		ModelUpdater* modelUpdater;
-		ConnectionManager* connectionMgr;
+		indexer_common::ConnectionManager* connectionMgr;
 
 		size_t count;
 		System::String^ status;
-		Log* logger_;
+		indexer_common::Log* logger_;
 
 		FileInfoWrapperFactory^ fileInfoFactory;
 
@@ -138,7 +138,7 @@ namespace CLIInterop
 			{
 				virtual FileInfoWrapper^ get(int index)
 				{		
-					const FileInfo* fi = nullptr;
+					const indexer_common::FileInfo* fi = nullptr;
 					if (index < static_cast<int>((*(*searchResult)->Files).size()))
 						fi = (*(*searchResult)->Files)[index]; 
 					return fileInfoFactory->GetFileInfoWrapper(fi, index);
@@ -189,4 +189,5 @@ namespace CLIInterop
 		#pragma endregion
 	
 	};
-}
+
+} // namespace CLIInterop 

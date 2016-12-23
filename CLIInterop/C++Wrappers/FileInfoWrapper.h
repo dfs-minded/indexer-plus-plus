@@ -60,7 +60,7 @@ namespace CLIInterop
 
 		FileInfoWrapper() {}
 
-		FileInfoWrapper(const FileInfo* const fi, int index);
+		FileInfoWrapper(const indexer_common::FileInfo* const fi, int index);
 
 
 		virtual event System::ComponentModel::PropertyChangedEventHandler^ PropertyChanged;
@@ -69,7 +69,7 @@ namespace CLIInterop
 
 	private:
 
-		const FileInfo* fi;
+		const indexer_common::FileInfo* fi;
 
 		System::String^ mimeType;
 

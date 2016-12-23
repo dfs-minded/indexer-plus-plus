@@ -9,8 +9,7 @@ using namespace System::Threading;
 
 namespace CLIInterop 
 {
-
-	ModelUpdater::ModelUpdater(Model ^ modelToCall)
+	ModelUpdater::ModelUpdater(Model^ modelToCall)
 	{
 		model = modelToCall;
 		lockObj = gcnew System::Object();
@@ -22,7 +21,7 @@ namespace CLIInterop
 	}
 
 	// Called from SE thread.
-	void ModelUpdater::OnNewSearchResult(pSearchResult searchResult, bool isNewQuery) 
+	void ModelUpdater::OnNewSearchResult(indexer::pSearchResult searchResult, bool isNewQuery)
 	{
 		Monitor::Enter(lockObj);
 		searchResults.push_back(searchResult);
@@ -33,14 +32,14 @@ namespace CLIInterop
 
 	void ModelUpdater::StatusChanged(const std::string& newStatus) 
 	{
-		System::String ^ status = gcnew System::String(newStatus.c_str());
+		System::String^ status = gcnew System::String(newStatus.c_str());
 		model->OnNewStatus(status);
 	}
 
 	// Called from UI thread.
-	pSearchResult ModelUpdater::GetSearchResult() 
+	indexer::pSearchResult ModelUpdater::GetSearchResult() 
 	{
-		pSearchResult res = nullptr;
+		indexer::pSearchResult res = nullptr;
 		Monitor::Enter(lockObj);
 
 		if (!searchResults.empty()) 

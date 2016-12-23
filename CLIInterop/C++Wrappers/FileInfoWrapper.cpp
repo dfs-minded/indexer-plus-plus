@@ -11,31 +11,29 @@
 
 #include "InteropHelper.h"
 
-using namespace std;
-
-using namespace System;
 using namespace System::Threading;
 using namespace System::Threading::Tasks;
 using namespace System::ComponentModel;
+
+using namespace indexer_common;
 // clang-format off
 
 namespace CLIInterop
 {
-	FileInfoWrapper::FileInfoWrapper(const FileInfo* const fi, int index) :
-		thumbnail(nullptr),
-		mimeType(String::Empty)
+	FileInfoWrapper::FileInfoWrapper(const FileInfo* const fi, int index) 
+		: thumbnail(nullptr), mimeType(System::String::Empty)
 	{
 		this->fi = fi;
 		ID		 = fi->ID;
-		Name	 = InteropHelper::ToSystemString(fi->GetName());
+		Name	 = Helper::ToSystemString(fi->GetName());
 	
 		auto path = FileInfoHelper::GetPath(*fi, false);
-		Path = InteropHelper::ToSystemString(path.get());
+		Path = Helper::ToSystemString(path.get());
 
 		auto fullName = FileInfoHelper::GetPath(*fi, true);
-		FullName	  = InteropHelper::ToSystemString(fullName.get());
+		FullName = Helper::ToSystemString(fullName.get());
 		
-		Extension = InteropHelper::ToSystemString(FileInfoHelper::GetExtension(*fi));		
+		Extension = Helper::ToSystemString(FileInfoHelper::GetExtension(*fi));		
 
 		// TODO starting too many threads via Task::Factory slows down performance.
 		// Task^ typeLoadingTask = Task::Factory->StartNew(gcnew Action(this, &FileInfoWrapper::LoadType));
@@ -52,47 +50,47 @@ namespace CLIInterop
 
 		Size = fi->SizeReal;
 
-		DateCreated	 = InteropHelper::UnixTimeSecondsToDateTime(fi->CreationTime);
-		DateModified = InteropHelper::UnixTimeSecondsToDateTime(fi->LastWriteTime);
-		DateAccessed = InteropHelper::UnixTimeSecondsToDateTime(fi->LastAccessTime);
+		DateCreated	 = Helper::UnixTimeSecondsToDateTime(fi->CreationTime);
+		DateModified = Helper::UnixTimeSecondsToDateTime(fi->LastWriteTime);
+		DateAccessed = Helper::UnixTimeSecondsToDateTime(fi->LastAccessTime);
 
-		Index		 = index;
+		Index = index;
 		LastTimeUsed = 0;
 	}
 
 	void FileInfoWrapper::Update()
 	{
-		Name = InteropHelper::ToSystemString(fi->GetName());
+		Name = Helper::ToSystemString(fi->GetName());
 
 		auto path = FileInfoHelper::GetPath(*fi, false);
-		Path = InteropHelper::ToSystemString(path.get());
+		Path = Helper::ToSystemString(path.get());
 
 		auto fullName = FileInfoHelper::GetPath(*fi, true);
-		FullName = InteropHelper::ToSystemString(fullName.get());
+		FullName = Helper::ToSystemString(fullName.get());
 
-		Extension = InteropHelper::ToSystemString(FileInfoHelper::GetExtension(*fi));
+		Extension = Helper::ToSystemString(FileInfoHelper::GetExtension(*fi));
 
-		Type = String::Empty;
-		Task^ typeLoadingTask = Task::Factory->StartNew(gcnew Action(this, &FileInfoWrapper::LoadType));
+		Type = System::String::Empty;
+		Task^ typeLoadingTask = Task::Factory->StartNew(gcnew System::Action(this, &FileInfoWrapper::LoadType));
 
 		Size = fi->SizeReal;
 
-		DateModified = InteropHelper::UnixTimeSecondsToDateTime(fi->LastWriteTime);
-		DateAccessed = InteropHelper::UnixTimeSecondsToDateTime(fi->LastAccessTime);
+		DateModified = Helper::UnixTimeSecondsToDateTime(fi->LastWriteTime);
+		DateAccessed = Helper::UnixTimeSecondsToDateTime(fi->LastAccessTime);
 
 		OnPropertyChanged("");
 	}
 
-	void FileInfoWrapper::OnPropertyChanged(String^ propertyName)
+	void FileInfoWrapper::OnPropertyChanged(System::String^ propertyName)
 	{
 		PropertyChanged(this, gcnew PropertyChangedEventArgs(propertyName));
 	}
 
 	void FileInfoWrapper::LoadType()
 	{
-		if (Type != String::Empty) return;
+		if (Type != System::String::Empty) return;
 
-		Type = InteropHelper::ToSystemString(FileInfoHelper::GetType(*fi));
+		Type = Helper::ToSystemString(FileInfoHelper::GetType(*fi));
 
 		//auto state = Thread::CurrentThread->ApartmentState;
 		//WriteToOutput(METHOD_METADATA + wstring(L"LoadType ApartmentState = ") + (state == ApartmentState::STA ? L"STA" : L"MTA"));

@@ -10,25 +10,26 @@
 #include "Model.h"
 #include "SearchResultObserver.h"
 #include "StatusObserver.h"
+// clang-format off
 
 namespace CLIInterop {
 
-class ModelUpdater : public SearchResultObserver, public StatusObserver {
+	class ModelUpdater : public indexer::SearchResultObserver, public indexer::StatusObserver {
 
-   public:
-    ModelUpdater(Model ^ model);
+	  public:
+		ModelUpdater(Model^ model);
 
-    virtual ~ModelUpdater();
+		virtual ~ModelUpdater();
 
-    virtual void OnNewSearchResult(pSearchResult searchResult, bool isNewQuery) override;
+		virtual void OnNewSearchResult(indexer::pSearchResult searchResult, bool isNewQuery) override;
 
-    virtual void StatusChanged(const std::string& newStatus) override;
+		virtual void StatusChanged(const std::string& newStatus) override;
 
-    pSearchResult GetSearchResult();
+		indexer::pSearchResult GetSearchResult();
 
-   private:
-    gcroot<Model ^> model;
-    std::vector<pSearchResult> searchResults;
-    gcroot<System::Object ^> lockObj;
-};
+	  private:
+		gcroot<Model^> model;
+		std::vector<indexer::pSearchResult> searchResults;
+		gcroot<System::Object^> lockObj;
+	};
 }

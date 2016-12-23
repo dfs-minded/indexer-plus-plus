@@ -14,7 +14,7 @@
 #include "AsyncLog.h"
 #include "ConnectionManager.h"
 #include "FileInfoComparatorFactory.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "IndexManagersContainer.h"
 #include "OneThreadLog.h"
 #include "OutputFormatter.h"
@@ -25,6 +25,9 @@
 #include "SystemConfigFlagsWrapper.h"
 
 using namespace std;
+
+using namespace indexer_common;
+using namespace indexer;
 
 using namespace System;
 using namespace ComponentModel;
@@ -88,13 +91,13 @@ namespace CLIInterop
 
 	List<String^>^ Model::Format(String^ format)
 	{
-		OutputFormatter fmt((*searchResult)->Files.get(), InteropHelper::ToWstring(format));
+		OutputFormatter fmt((*searchResult)->Files.get(), Helper::ToWstring(format));
 		auto output = fmt.Format();
 
 		auto res = gcnew List<String^>();
 		for (size_t i = 0; i < output.size(); ++i)
 		{
-			res->Add(InteropHelper::ToSystemString(output[i]));
+			res->Add(Helper::ToSystemString(output[i]));
 		}
 		return res;
 	}
@@ -163,7 +166,7 @@ namespace CLIInterop
 	void Model::Sort(String^ propName, int direction)
 	{
 		string str;
-		InteropHelper::ToUnmanagedString(propName, str);
+		Helper::ToUnmanagedString(propName, str);
 		engine->Sort(str, direction);
 		OnCollectionChanged(NotifyCollectionChangedAction::Reset);
 	}
@@ -205,7 +208,7 @@ namespace CLIInterop
 
 	FileInfoWrapper^ Model::GetFileInfoByPath(System::String^ path)
 	{
-		auto unmanaged_path = InteropHelper::ToU16string(path);
+		auto unmanaged_path = Helper::ToU16string(path);
 		return gcnew FileInfoWrapper(IndexManagersContainer::Instance().GetFileInfoByPath(unmanaged_path), -1);
 	}
 
@@ -213,5 +216,5 @@ namespace CLIInterop
 	{
 		fileInfoFactory->Clear();
 	}
-}
 
+} // namespace CLIInterop

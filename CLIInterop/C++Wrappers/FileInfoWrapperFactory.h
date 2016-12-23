@@ -14,7 +14,7 @@ namespace CLIInterop
 		public:
             explicit FileInfoWrapperFactory(int max_elements, IIconProvider^ icons_provider, IThumbnailProvider^ thumbs_provider);
 
-            FileInfoWrapper^ GetFileInfoWrapper(const FileInfo* fi, int index);
+            FileInfoWrapper^ GetFileInfoWrapper(const indexer_common::FileInfo* fi, int index);
 
 			void UpdateCachedItems();
 
@@ -29,6 +29,6 @@ namespace CLIInterop
 			int next_time_;
 
 			// From FileInfo object address to corresponding wrapper.
-			System::Collections::Generic::Dictionary<System::Int64, FileInfoWrapper^>^ cache_;
+			System::Collections::Generic::Dictionary<System::UInt32, FileInfoWrapper^>^ cache_;
 	};
 }

@@ -10,23 +10,24 @@
 #include "DebugLogModel.h"
 #include "LogMessagesListener.h"
 #include "Macros.h"
+// clang-format off
 
-class Log;
+namespace indexer_common { class Log; }
 
 namespace CLIInterop {
-class SearchEngineLogListener : public LogMessagesListener {
-   public:
-    explicit SearchEngineLogListener(DebugLogModel ^ mdl);
+	class SearchEngineLogListener : public indexer_common::LogMessagesListener {
+	  public:
+		explicit SearchEngineLogListener(DebugLogModel^ mdl);
 
-    NO_COPY(SearchEngineLogListener)
+		NO_COPY(SearchEngineLogListener)
 
-    virtual ~SearchEngineLogListener();
+		virtual ~SearchEngineLogListener();
 
-    virtual void OnNewMessage(const std::wstring &msg) const override;
+		virtual void OnNewMessage(const std::wstring& msg) const override;
 
-   private:
-    gcroot<DebugLogModel ^> model;
+	  private:
+		gcroot<DebugLogModel^> model;
 
-    Log *logger_;
-};
+		indexer_common::Log* logger_;
+	};
 }

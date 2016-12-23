@@ -3,6 +3,7 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 #pragma once
+
 #include "SystemConfigFlags.h"
 // clang-format off
 
@@ -14,10 +15,8 @@ namespace CLIInterop
 	public:
 		static SystemConfigFlagsWrapper^ Instance()
 		{
-			if (instance == nullptr)
-			{
+			if (!instance)
 				instance = gcnew SystemConfigFlagsWrapper();
-			}
 			return instance;
 		}
 
@@ -32,7 +31,7 @@ namespace CLIInterop
 
 		SystemConfigFlagsWrapper()
 		{
-			auto& flags = SystemConfigFlags::Instance();
+			auto& flags = indexer_common::SystemConfigFlags::Instance();
 			TrayIcon = flags.TrayIcon;
 			PipeManager = flags.PipeManager;
 			CallWatchChanges = flags.CallWatchChanges;

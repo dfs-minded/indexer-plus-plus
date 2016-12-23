@@ -17,6 +17,7 @@ namespace CLIInterop
 	// Parses arguments in format similar to:
 	// rawMFTPath="e:\+++\RawMFT.txt"  replayUSNRecPath="e:\+++\USNRecordsDB.txt"
 	// For the correct keywords see their declaration in CommandlineArguments class.
+
 	void CmdArgumentsParser::Init(System::Windows::StartupEventArgs ^ e) 
 	{
 		std::vector<std::wstring> args;
@@ -27,9 +28,10 @@ namespace CLIInterop
 			if (arg->Contains(FilterDirPathArgName))
 				FilterDirPath = arg->Split('=')[1];
 			else
-				args.push_back(InteropHelper::ToWstring(arg));
+				args.push_back(Helper::ToWstring(arg));
 		}
 
-		CommandlineArguments::Instance().Parse(args);
+		indexer_common::CommandlineArguments::Instance().Parse(args);
 	}
+
 }

@@ -5,19 +5,19 @@
 #pragma once
 
 #using <PresentationFramework.dll>
+// clang-format off
 
 namespace CLIInterop
 {
 	public ref class CmdArgumentsParser
 	{
-	public:
-
+	  public:
 		static void Init(System::Windows::StartupEventArgs^ e);
 
 		// On the right click in windows explorer context menu on the folder, run Indexer++ with this directory filter.
-                static System::String ^ FilterDirPath = System::String::Empty;
+        static System::String^ FilterDirPath = System::String::Empty;
 
-               private:
-                literal System::String ^ FilterDirPathArgName = "filterDirPath";
-         };
+	  private:
+		literal System::String^ FilterDirPathArgName = "filterDirPath";
+	};
 }
