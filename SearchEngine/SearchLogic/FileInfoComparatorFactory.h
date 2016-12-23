@@ -9,13 +9,13 @@
 #include "LetterCaseMatching.h"
 #include "SortingProperty.h"
 
+namespace indexer_common { class FileInfo; }
+
 namespace indexer {
 
-    class FileInfo;
+	typedef std::function<bool(const indexer_common::FileInfo* first, const indexer_common::FileInfo* second)> PropertyComparatorFunc;
 
-    typedef std::function<bool(const FileInfo* first, const FileInfo* second)> PropertyComparatorFunc;
-
-    typedef const std::pair<int, const FileInfo*> sort_pair;
+	typedef const std::pair<int, const indexer_common::FileInfo*> sort_pair;
     typedef std::function<bool(sort_pair first, sort_pair second)> PairComparatorFunc;
 
     class FileInfoComparatorFactory {

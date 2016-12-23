@@ -11,6 +11,8 @@
 #include "Macros.h"
 #include "OldFileInfosDeleter.h"
 
+namespace indexer_common { class FileInfo; }
+
 namespace indexer {
 
     struct SearchResult {
@@ -23,7 +25,7 @@ namespace indexer {
         ~SearchResult() = default;
 
         // Files which are the result of the search.
-        std::unique_ptr<std::vector<const FileInfo*>> Files;
+		std::unique_ptr<std::vector<const indexer_common::FileInfo*>> Files;
 
        private:
         std::unique_ptr<OldFileInfosDeleter> old_file_infos_;

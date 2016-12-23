@@ -10,16 +10,19 @@
 
 namespace indexer {
 
-    using namespace std;
+    using std::wstring;
 
-    vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
-        std::unique_ptr<SearchEngine> engine(make_unique<SearchEngine>(nullptr, true));
+	using namespace indexer_common;
 
-        uSearchQuery query = DeserializeQuery(query_string);
+    std::vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
+        std::unique_ptr<SearchEngine> engine(std::make_unique<SearchEngine>(nullptr, true));
+
+		uSearchQuery query = DeserializeQuery(query_string);
 
         auto search_res = engine->Search(query.release());
 
-        OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
+		OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
         return fmt.Format();
     }
+
 } // namespace indexer

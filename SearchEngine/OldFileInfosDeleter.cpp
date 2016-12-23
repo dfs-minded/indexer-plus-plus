@@ -9,7 +9,7 @@
 
 namespace indexer {
 
-    using namespace std;
+	using namespace  indexer_common;
 
     OldFileInfosDeleter::~OldFileInfosDeleter() {
 
@@ -27,7 +27,7 @@ namespace indexer {
         }
     }
 
-    void OldFileInfosDeleter::AddItemsToDelete(vector<const FileInfo*>&& u_file_infos) {
+    void OldFileInfosDeleter::AddItemsToDelete(std::vector<const FileInfo*>&& u_file_infos) {
         file_infos_to_delete_.push_back(move(u_file_infos));
     }
 

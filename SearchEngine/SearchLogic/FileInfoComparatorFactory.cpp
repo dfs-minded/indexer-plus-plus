@@ -14,11 +14,11 @@
 
 namespace indexer {
 
-    using namespace std;
+    using namespace indexer_common;
 
-#define SORT_DIRS_FIRST                   \
-        bool is_dir1 = first->IsDirectory();  \
-        bool is_dir2 = second->IsDirectory(); \
+	#define SORT_DIRS_FIRST							\
+        bool is_dir1 = first->IsDirectory();	\
+        bool is_dir2 = second->IsDirectory();	\
         if (is_dir1 != is_dir2) return is_dir1 > is_dir2;
 
     PropertyComparatorFunc FileInfoComparatorFactory::CreatePropertyComparator(SortingProperty sort_prop, int direction,

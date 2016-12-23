@@ -10,7 +10,7 @@
 #include "AsyncLog.h"
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Log.h"
 #include "Merger.h"
 #include "OneThreadLog.h"
@@ -18,7 +18,11 @@
 
 namespace indexer {
 
-    using namespace std;
+	using std::wstring;
+	using std::to_wstring;
+	using std::vector;
+
+    using namespace indexer_common;
 
     Sorter::Sorter(SortingProperty prop, int direction) : prop_(prop), direction_(direction) {
         GET_LOGGER
@@ -81,7 +85,7 @@ namespace indexer {
         }
         TOK(L"Sorting: parallel sort");
 
-        unordered_set<const FileInfo*> empty_do_not_include;
+        std::unordered_set<const FileInfo*> empty_do_not_include;
 
         for (int step = 1; step < sub_vectors_count; step += step) {
 
@@ -105,7 +109,7 @@ namespace indexer {
     }
 
 
-    typedef const pair<int, const FileInfo*> sort_pair;
+    typedef const std::pair<int, const FileInfo*> sort_pair;
 
     struct PairIntComparator {
 
@@ -129,7 +133,7 @@ namespace indexer {
 
         auto input_size = file_infos->size();
 
-        vector<pair<int, const FileInfo*>> sort_prop_to_fi_pairs(input_size);
+        vector<std::pair<int, const FileInfo*>> sort_prop_to_fi_pairs(input_size);
         // Form pairs to sort <int sorting_property, const FileInfo* fi>.
 
         if (prop_ == SortingProperty::SORT_EXTENSION) {

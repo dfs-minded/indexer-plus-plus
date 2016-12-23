@@ -10,7 +10,11 @@
 
 namespace indexer {
 
-    using namespace std;
+	using std::unique_ptr;
+	using std::make_unique;
+	using std::vector;
+
+	using namespace indexer_common;
 
     FileInfosFilter::FileInfosFilter() : match_case_table_(nullptr), buffer_(new char[kBufferSize]) {
     }

@@ -8,15 +8,16 @@
 
 #include "FileInfoComparatorFactory.h"
 
-namespace indexer {
+namespace indexer_common { class FileInfo; }
 
-    class FileInfo;
+namespace indexer {
 
     class Merger {
        public:
-        static std::unique_ptr<std::vector<const FileInfo*>> MergeWithMainCollection(
-            const std::vector<const FileInfo*>& source_collection,
-            const std::unordered_set<const FileInfo*>& do_not_include, const std::vector<const FileInfo*>& items_to_include,
+		static std::unique_ptr<std::vector<const indexer_common::FileInfo*>> MergeWithMainCollection(
+			const std::vector<const indexer_common::FileInfo*>& source_collection,
+			const std::unordered_set<const indexer_common::FileInfo*>& do_not_include,
+			const std::vector<const indexer_common::FileInfo*>& items_to_include,
             const PropertyComparatorFunc cmp);
     };
 

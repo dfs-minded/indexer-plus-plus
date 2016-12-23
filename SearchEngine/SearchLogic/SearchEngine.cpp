@@ -4,16 +4,20 @@
 
 #include "SearchEngine.h"
 
+#include "SearchQuery.h"
+
 #include "SearchEngineImpl.h"
 
 namespace indexer {
+
+	using namespace indexer_common;
 
     SearchEngine::SearchEngine(SearchResultObserver* resultObserver, bool search_mode_only /*= false by default*/) {
 
         p_impl_ = std::make_unique<SearchEngineImpl>(static_cast<SearchEngine*>(this), resultObserver, search_mode_only);
     }
 
-// If there is no explicit destructor implementation, C++/CLI treats SearchEngine as an incomplete type.
+	// If there is no explicit destructor implementation, C++/CLI treats SearchEngine as an incomplete type.
     SearchEngine::~SearchEngine() {
     }
 
@@ -32,4 +36,5 @@ namespace indexer {
     void SearchEngine::OnIndexChanged(pNotifyIndexChangedEventArgs p_args) {
         p_impl_->OnIndexChanged(p_args);
     }
+
 } // namespace indexer

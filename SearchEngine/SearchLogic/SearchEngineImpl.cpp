@@ -8,9 +8,10 @@
 #include <cassert>
 #include <iterator>
 
+#include "re2.h"
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Log.h"
 #include "OneThreadLog.h"
 #include "SearchQuery.h"
@@ -21,7 +22,14 @@
 
 namespace indexer {
 
-    using namespace std;
+	using std::string;
+	using std::to_wstring;
+	using std::vector;
+	using std::make_unique;
+	using std::make_shared;
+
+
+    using namespace indexer_common;
 
     SearchEngineImpl::SearchEngineImpl(SearchEngine* interface_backlink, SearchResultObserver* result_observer,
                                        bool search_mode_only)
@@ -55,10 +63,10 @@ namespace indexer {
         if (!search_mode_only_) {
             logger_->Debug(METHOD_METADATA + L"SearchEngine. Constructor called, starting new worker thread.");
 
-            locker_ = new mutex();
-            conditional_var_ = new condition_variable();
+			NEW_MUTEX
+            conditional_var_ = new std::condition_variable();
 
-            worker_thread_ = new thread(&SearchEngineImpl::SearchWorker, this);
+            worker_thread_ = new std::thread(&SearchEngineImpl::SearchWorker, this);
             Helper::SetThreadName(worker_thread_, "SearchWorker ");
             worker_thread_->detach();
         }
@@ -88,7 +96,7 @@ namespace indexer {
         return p_search_result_;
     }
 
-// Called from other then SearchWorker thread (UI thread).
+	// Called from other then SearchWorker thread (UI thread).
     void SearchEngineImpl::SearchAsync(uSearchQuery query) {
         logger_->Debug(METHOD_METADATA + L"New search query arrived:" + move(SerializeQuery(*query)));
 
@@ -267,8 +275,8 @@ namespace indexer {
         index->UnlockData();
     }
 
-// Do not need to lock here, this function must be called when indices are locked.
-    unique_ptr<OldFileInfosDeleter> SearchEngineImpl::ClearIndexChangedArgs() {
+	// Do not need to lock here, this function must be called when indices are locked.
+    std::unique_ptr<OldFileInfosDeleter> SearchEngineImpl::ClearIndexChangedArgs() {
 
         auto fi_deleter = make_unique<OldFileInfosDeleter>();
 
@@ -295,7 +303,7 @@ namespace indexer {
         auto changed_args = move(index_changed_args_);
 
         // Old and changed items for quick lookup by address, to skip them in merging from the main list.
-        unordered_set<const FileInfo*> do_not_include;
+        std::unordered_set<const FileInfo*> do_not_include;
 
         // Old items for adding to OldFileInfosDeleter.
         vector<const FileInfo*> to_destroy;
@@ -318,10 +326,10 @@ namespace indexer {
         }
 
         // Remove from |items_to_include| duplicates and old items from |to_destroy| collection.
-        sort(items_to_include.begin(), items_to_include.end());
+        std::sort(items_to_include.begin(), items_to_include.end());
         items_to_include.erase(unique(items_to_include.begin(), items_to_include.end()), items_to_include.end());
 
-        sort(to_destroy.begin(), to_destroy.end());
+        std::sort(to_destroy.begin(), to_destroy.end());
 
         items_to_include.erase(remove_if(items_to_include.begin(), items_to_include.end(),
                                          [&to_destroy](const FileInfo* fi) {

@@ -24,19 +24,21 @@
 #include "SearchResultObserver.h"
 #include "Sorter.h"
 
+namespace indexer_common {
+	class FileInfo;
+	class Log;
+}
+
 namespace indexer {
 
     class SearchEngine;
-    class FileInfo;
-    class Log;
 
-
-// Implements search logic, listens index changes, volume status changes and produces search results based on user
-// queries.
-// When new volume added - merges from index changed arguments all it's files (marked as new) with current search res.
-// When a volume removed - merges from index changed arguments all it's files (marked as old) with current search res.
-//
-// All its work SE performs in one thread
+	// Implements search logic, listens index changes, volume status changes and produces search results based on user
+	// queries.
+	// When new volume added - merges from index changed arguments all it's files (marked as new) with current search res.
+	// When a volume removed - merges from index changed arguments all it's files (marked as old) with current search res.
+	//
+	// All its work SE performs in one thread
     class SearchEngineImpl {
 
        public:
@@ -49,12 +51,12 @@ namespace indexer {
 
         // Called from other then SearchWorker thread (UI, CMD thread). Synchronous version of SearchAsync function.
 
-        pSearchResult Search(uSearchQuery query);
+		pSearchResult Search(indexer_common::uSearchQuery query);
 
 
         // Called from other then SearchWorker thread (UI thread).
 
-        void SearchAsync(uSearchQuery query);
+		void SearchAsync(indexer_common::uSearchQuery query);
 
 
         // Called from other then SearchWorker thread (UI thread).
@@ -102,12 +104,12 @@ namespace indexer {
 
         // The function that does sorting.
 
-        void Sort(std::vector<const FileInfo*>* file_infos);
+		void Sort(std::vector<const indexer_common::FileInfo*>* file_infos);
 
 
         // Traverses files index tree and forms |tmp_search_result_| from filtered files.
 
-        void SearchInTree(const FileInfo& start_dir, std::vector<const FileInfo*>* result) const;
+		void SearchInTree(const indexer_common::FileInfo& start_dir, std::vector<const indexer_common::FileInfo*>* result) const;
 
 
         // Sends newly created search result back to a User.
@@ -151,7 +153,7 @@ namespace indexer {
 
 
         // Query received from Client (GUI, CMD, etc). Need to synchronize access via |locker_|.
-        std::unique_ptr<SearchQuery> last_query_;
+		std::unique_ptr<indexer_common::SearchQuery> last_query_;
 
         // Filter based on the value of |last_query_|.
         std::unique_ptr<FileInfosFilter> file_infos_filter_;
@@ -174,7 +176,7 @@ namespace indexer {
 
         bool search_mode_only_;
 
-        Log* logger_;
+		indexer_common::Log* logger_;
 
         std::mutex* locker_;
 

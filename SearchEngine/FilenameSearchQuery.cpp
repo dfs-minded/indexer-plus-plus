@@ -4,11 +4,15 @@
 
 #include "FilenameSearchQuery.h"
 
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 
 namespace indexer {
 
-    using namespace std;
+	using std::u16string;
+	using std::unique_ptr;
+	using std::make_unique;
+
+	using namespace indexer_common;
 
     FilenameSearchQuery::FilenameSearchQuery() : NStrs(0), MinLength(0) {
     }

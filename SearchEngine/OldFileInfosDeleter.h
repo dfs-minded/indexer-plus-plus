@@ -10,13 +10,14 @@
 
 #include "Log.h"
 
+namespace indexer_common {
+	class FileInfo;
+}
+
 namespace indexer {
 
-    class FileInfo;
-
-
-// This class is used for destruction obsolete FileInfo objects when they are not needed anymore.
-// It works like a smart pointer for FileInfos.
+	// This class is used for destruction obsolete FileInfo objects when they are not needed anymore.
+	// It works like a smart pointer for FileInfos.
 
     class OldFileInfosDeleter {
        public:
@@ -26,12 +27,12 @@ namespace indexer {
 
         ~OldFileInfosDeleter();
 
-        void AddItemsToDelete(std::vector<const FileInfo*>&& file_infos);
+		void AddItemsToDelete(std::vector<const indexer_common::FileInfo*>&& file_infos);
 
        private:
-        static Log& Logger();
+		   static indexer_common::Log& Logger();
 
-        std::vector<std::vector<const FileInfo*>> file_infos_to_delete_;
+		   std::vector<std::vector<const indexer_common::FileInfo*>> file_infos_to_delete_;
     };
 
 } // namespace indexer

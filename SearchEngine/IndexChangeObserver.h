@@ -10,10 +10,10 @@
 
 #include "NotifyIndexChangedEventArgs.h"
 
-// Provides an interface for listening index changes.
-// Each of its methods will be called when corresponding event occurs.
-
 namespace indexer {
+
+	// Provides an interface for listening index changes.
+	// Each of its methods will be called when corresponding event occurs.
 
     class IndexChangeObserver {
 
@@ -34,4 +34,5 @@ namespace indexer {
 
         virtual void OnVolumeStatusChanged(char drive_letter){};
     };
+
 } // namespace indexer

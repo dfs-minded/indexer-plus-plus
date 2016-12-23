@@ -3,12 +3,13 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 #include "SearchResult.h"
+#include "FileInfo.h"
 
 namespace indexer {
 
-    using namespace std;
-
-    SearchResult::SearchResult(unique_ptr<OldFileInfosDeleter> u_old_file_infos /*= nullptr*/)
-        : Files(make_unique<vector<const FileInfo*>>()), old_file_infos_(move(u_old_file_infos)) {
+	SearchResult::SearchResult(std::unique_ptr<OldFileInfosDeleter> u_old_file_infos /*= nullptr*/)
+		: Files(std::make_unique<std::vector<const indexer_common::FileInfo*>>()), 
+		  old_file_infos_(std::move(u_old_file_infos)) {
     }
+
 } // namespace indexer

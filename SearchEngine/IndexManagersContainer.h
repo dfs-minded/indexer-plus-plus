@@ -13,20 +13,24 @@
 #include "IndexChangeObserver.h"
 #include "IndexManager.h"
 
+// This is needed for compatibility with C++/CLI classes.
+// <mutex> is not supported when compiling with /clr or /clr:pure. (for Model.cpp class).
+namespace std {
+	class mutex;
+}
+
+namespace indexer_common {
+	class FileInfo;
+	class Log;
+}
+
 namespace indexer {
 
     class Index;
-    class FileInfo;
     class StatusObserver;
 
-// This is needed for compatibility with C++/CLI classes.
-// <mutex> is not supported when compiling with /clr or /clr:pure. (for Model.cpp class).
-    namespace std {
-    class mutex;
-    }
 
-
-// Container class for index managers. A layer between index managers (and corresponding indices) and search engine.
+	// Container class for index managers. A layer between index managers (and corresponding indices) and search engine.
 
     class IndexManagersContainer : public IndexChangeObserver {
 
@@ -52,7 +56,7 @@ namespace indexer {
         // This is the helper function which is needed in the Model and in the SearchEngine.
         // If the number of FileInfo or file system helper functions will increase - extract them in the separate class.
 
-        const FileInfo* GetFileInfoByPath(const std::u16string& path) const;
+        const indexer_common::FileInfo* GetFileInfoByPath(const std::u16string& path) const;
 
 
 #ifdef SINGLE_THREAD
@@ -78,7 +82,7 @@ namespace indexer {
         void UnregisterStatusChangeObserver(StatusObserver* observer);
 
 
-        uint GetIndexRootID(char index_drive_letter) const;
+		indexer_common::uint GetIndexRootID(char index_drive_letter) const;
 
 
        private:
@@ -98,8 +102,9 @@ namespace indexer {
 
         std::list<StatusObserver*> status_observers_;
 
-        Log* logger_;
+		indexer_common::Log* logger_;
 
         std::mutex* locker_;
     };
+
 } // namespace indexer

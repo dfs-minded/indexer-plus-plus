@@ -10,13 +10,18 @@
 
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Macros.h"
 #include "OneThreadLog.h"
 
 namespace indexer {
 
-    using namespace std;
+	using std::wstring;
+	using std::to_wstring;
+    using std::vector;
+	using std::unique_ptr;
+
+	using namespace indexer_common;
 
     Index::Index(char drive_letter)
         : drive_letter_(drive_letter), drive_letter_w_(1, drive_letter), root_id_(-1), start_time_(-1) {

@@ -130,4 +130,5 @@ namespace indexer_common {
     };
 
 #pragma pack(pop)
+
 } // namespace indexer_common

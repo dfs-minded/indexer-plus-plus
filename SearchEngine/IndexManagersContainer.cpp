@@ -8,7 +8,7 @@
 
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Log.h"
 #include "OneThreadLog.h"
 
@@ -19,7 +19,13 @@
 
 namespace indexer {
 
-    using namespace std;
+	using std::string;
+	using std::wstring;
+	using std::u16string;
+	using std::vector;
+
+	using namespace indexer_common;
+
 
     IndexManagersContainer::IndexManagersContainer() {
 
@@ -55,13 +61,13 @@ namespace indexer {
 
         logger_->Debug(METHOD_METADATA + L"Adding new drive: " + drive_letter_w);
 
-        auto new_index_mgr = make_unique<IndexManager>(drive_letter, this);
+        auto new_index_mgr = std::make_unique<IndexManager>(drive_letter, this);
 
         logger_->Debug(METHOD_METADATA + L"Starting IndexManager for drive: " + drive_letter_w);
         new_index_mgr->RunAsync();
 
         PLOCK
-        index_managers_.push_back(move(new_index_mgr));
+        index_managers_.push_back(std::move(new_index_mgr));
         PUNLOCK
 
         OnVolumeStatusChanged(drive_letter);
@@ -78,7 +84,7 @@ namespace indexer {
         }
     }
 
-// Called from SE thread.
+	// Called from SE thread.
     uint IndexManagersContainer::GetIndexRootID(char index_drive_letter) const {
         PLOCK_GUARD
         for (const auto& mgr : index_managers_) {
@@ -89,7 +95,7 @@ namespace indexer {
         return -1;
     }
 
-// Called form IndexManager and from UI threads.
+	// Called form IndexManager and from UI threads.
     void IndexManagersContainer::OnIndexChanged(pNotifyIndexChangedEventArgs p_args) {
 
         for (auto& observer : index_change_observers_) {
@@ -105,7 +111,7 @@ namespace indexer {
     }
 #endif
 
-// Called form IndexManager and from UI threads.
+	// Called form IndexManager and from UI threads.
     void IndexManagersContainer::OnVolumeStatusChanged(char drive_letter) {
 
         logger_->Debug(METHOD_METADATA + L"Loading finished for drive " + wstring(1, drive_letter));
@@ -127,7 +133,7 @@ namespace indexer {
         index_change_observers_.remove(observer);
     }
 
-// Called form IndexManager and from UI threads.
+	// Called form IndexManager and from UI threads.
     string IndexManagersContainer::GetStatus() const {
 
         string res("   ");
@@ -149,7 +155,7 @@ namespace indexer {
         return res;
     }
 
-// Called from UI and SE thread.
+	// Called from UI and SE thread.
     vector<const IndexManager*> IndexManagersContainer::GetAllIndexManagers() const {
 
         vector<const IndexManager*> res;
@@ -162,7 +168,7 @@ namespace indexer {
         return res;
     }
 
-// Called from SE thread.
+	// Called from SE thread.
     const IndexManager* IndexManagersContainer::GetIndexManager(char drive_letter) const {
         PLOCK_GUARD
         for (auto& mgr : index_managers_) {
@@ -172,7 +178,7 @@ namespace indexer {
         return nullptr;
     }
 
-// Called from UI and SE threads.
+	// Called from UI and SE threads.
     const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path) const {
 
         u16string delim(reinterpret_cast<const char16_t*>(L"/\\"));
@@ -220,4 +226,5 @@ namespace indexer {
     void IndexManagersContainer::UnregisterStatusChangeObserver(StatusObserver* observer) {
         status_observers_.remove(observer);
     }
+
 } // namespace indexer

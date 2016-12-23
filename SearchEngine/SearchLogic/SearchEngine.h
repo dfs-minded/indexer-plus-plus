@@ -7,11 +7,12 @@
 #include <string>
 
 #include "Macros.h"
-#include "SearchQuery.h"
 
 #include "IndexChangeObserver.h"
 #include "NotifyIndexChangedEventArgs.h"
 #include "SearchResult.h"
+
+namespace indexer_common { struct SearchQuery; }
 
 namespace indexer {
 
@@ -32,12 +33,12 @@ namespace indexer {
         // It's not possible to use unique_ptr for the |query|, since C++/CLI can't correctly process them.
         // This function takes ownership of |query|.
 
-        pSearchResult Search(SearchQuery* query) const;
+        pSearchResult Search(indexer_common::SearchQuery* query) const;
 
 
         // This function takes ownership of |query|.
 
-        void SearchAsync(SearchQuery* query) const;
+		void SearchAsync(indexer_common::SearchQuery* query) const;
 
 
         void Sort(const std::string& prop_name, int direction) const;

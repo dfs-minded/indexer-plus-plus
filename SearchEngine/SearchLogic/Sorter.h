@@ -10,11 +10,14 @@
 
 #include "FileInfoComparatorFactory.h"
 
+namespace indexer_common {
+	class FileInfo;
+	class Log;
+}
+
 namespace indexer {
 
     enum class SortingProperty;
-    class FileInfo;
-    class Log;
 
     class Sorter {
 
@@ -26,14 +29,14 @@ namespace indexer {
         void ResetSortingProperties(SortingProperty prop, int direction);
 
         // Parameter: |file_info| - a collection of FileInfos to sort.
-        void Sort(std::vector<const FileInfo*>* file_info) const;
+        void Sort(std::vector<const indexer_common::FileInfo*>* file_info) const;
 
         PropertyComparatorFunc GetCurrentPropertyComparator() const;
 
        private:
-        void SortByExtensionOrType(std::vector<const FileInfo*>* file_infos) const;
+        void SortByExtensionOrType(std::vector<const indexer_common::FileInfo*>* file_infos) const;
 
-        void SortParallel(std::vector<const FileInfo*>* file_infos, PropertyComparatorFunc cmp) const;
+        void SortParallel(std::vector<const indexer_common::FileInfo*>* file_infos, PropertyComparatorFunc cmp) const;
 
         static const int kMaxFilesCanSortByPath = 50000;
 
@@ -43,7 +46,7 @@ namespace indexer {
 
         int direction_;
 
-        Log* logger_;
+		indexer_common::Log* logger_;
     };
 
 } // namespace indexer

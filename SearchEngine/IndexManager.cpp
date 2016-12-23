@@ -14,7 +14,7 @@
 #include "CompilerSymb.h"
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Macros.h"
 #include "OneThreadLog.h"
 
@@ -29,7 +29,16 @@
 
 namespace indexer {
 
-    using namespace std;
+	using std::string;
+	using std::wstring;
+	using std::to_wstring;
+	using std::vector;
+	using std::unique_ptr;
+	using std::make_unique;
+	using std::make_shared;
+	using std::move;
+
+    using namespace indexer_common;
 
     IndexManager::IndexManager(char drive_letter, IndexChangeObserver* index_change_observer)
         : reading_mft_finished_(make_unique<BoolAtomicWrapper>(false)),
@@ -47,7 +56,7 @@ namespace indexer {
 
 #ifndef SINGLE_THREAD
 
-        thread worker_thread(&IndexManager::Run, this);
+        std::thread worker_thread(&IndexManager::Run, this);
 
         Helper::SetThreadName(&worker_thread, (string("ReaderAndWatcher ") + DriveLetter()).c_str());
 
@@ -106,7 +115,7 @@ namespace indexer {
 
         reading_mft_finished_->store(false);
 
-        vector<const FileInfo *> new_items, old_items, changed_items;
+        vector<const FileInfo*> new_items, old_items, changed_items;
         old_items.reserve(data->size());
         for (auto* fi : *data) {
             if (!fi) continue;
@@ -132,7 +141,7 @@ namespace indexer {
 
         if (ReadingMFTFinished() || DisableIndexRequested()) return;
 
-        auto u_reader = MFTReaderFactory::CreateReader(DriveLetter());
+        auto u_reader = ntfs_reader::MFTReaderFactory::CreateReader(DriveLetter());
 
         logger_->Debug(METHOD_METADATA + L"Started for drive " + DriveLetterW());
         TIK
@@ -199,13 +208,13 @@ namespace indexer {
 
 #if defined(WATCH_CHANGES) && !defined(SINGLE_THREAD)
 
-        ntfs_changes_watcher_ = make_unique<NTFSChangesWatcher>(DriveLetter(), this);
+        ntfs_changes_watcher_ = make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), this);
         ntfs_changes_watcher_->WatchChanges();
 
 #endif
     }
 
-    void IndexManager::OnNTFSChanged(unique_ptr<NotifyNTFSChangedEventArgs> u_args) {
+	void IndexManager::OnNTFSChanged(unique_ptr<ntfs_reader::NotifyNTFSChangedEventArgs> u_args) {
 
         logger_->Debug(METHOD_METADATA + L" drive " + DriveLetterW() + u_args->ToWString());
 
@@ -270,7 +279,7 @@ namespace indexer {
 
             if (index_->InsertNode(new_fi)) {
                 auto u_full_name = FileInfoHelper::GetPath(*new_fi, true);
-                WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), new_fi);  // TODO Use from USN record serializer
+                ntfs_reader::WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), new_fi);  // TODO Use from USN record serializer
                 index_->UpdateParentDirsSize(new_fi, new_fi->SizeReal);
 
                 new_items.push_back(new_fi);
@@ -320,7 +329,7 @@ namespace indexer {
             if (fi_to_update_is_in_index) {
 
                 auto u_path = FileInfoHelper::GetPath(*fi_to_update, true);
-                WinApiCommon::GetSizeAndTimestamps(u_path.get(), fi_to_update);
+				ntfs_reader::WinApiCommon::GetSizeAndTimestamps(u_path.get(), fi_to_update);
 
                 size_delta += fi_to_update->SizeReal;
 
@@ -362,7 +371,7 @@ namespace indexer {
     void IndexManager::CheckReaderResult(const MFTReadResult* raw_result) const {
 
         // Get data from WinAPI MFT reader.
-        WinApiMFTReader win_api_reader(DriveLetter());
+		ntfs_reader::WinApiMFTReader win_api_reader(DriveLetter());
         auto win_api_reader_result = win_api_reader.ReadAllRecords();
         auto win_api_index = make_unique<Index>(DriveLetter());
 
@@ -377,12 +386,12 @@ namespace indexer {
             if (!fi) continue;
 
             auto u_full_name = FileInfoHelper::GetPath(*fi, true);
-            WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), fi);
+			ntfs_reader::WinApiCommon::GetSizeAndTimestamps(u_full_name.get(), fi);
         }
 
         win_api_index->UnlockData();
 
-        ReaderDataComparator comparator;
+		ntfs_reader::ReaderDataComparator comparator;
         comparator.Compare(*raw_result->Data, *raw_result->Root, L"RawReader", *win_api_data, *win_api_index->Root(),
                            L"WinAPIReader");
     }

@@ -10,7 +10,11 @@
 
 namespace indexer {
 
-    using namespace std;
+	using std::wstring;
+	using std::to_wstring;
+	using std::vector;
+
+	using indexer_common::FileInfo;
 
     NotifyIndexChangedEventArgs::NotifyIndexChangedEventArgs(vector<const FileInfo*>&& new_items,
                                                              vector<const FileInfo*>&& old_items,

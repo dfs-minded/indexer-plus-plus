@@ -9,9 +9,9 @@
 
 #include "Macros.h"
 
-namespace indexer {
+namespace indexer_common { class FileInfo; }
 
-    class FileInfo;
+namespace indexer {
 
 	// Event arguments which used when index changed event fired, to pass them to the search engine.
 	// Search engine must delete old items from search result and merge new and changed items with search result.
@@ -19,25 +19,26 @@ namespace indexer {
     class NotifyIndexChangedEventArgs {
 
        public:
-        NotifyIndexChangedEventArgs(std::vector<const FileInfo*>&& new_items, std::vector<const FileInfo*>&& old_items,
-                                    std::vector<const FileInfo*>&& changed_items);
+		NotifyIndexChangedEventArgs(std::vector<const indexer_common::FileInfo*>&& new_items, 
+									std::vector<const indexer_common::FileInfo*>&& old_items,
+									std::vector<const indexer_common::FileInfo*>&& changed_items);
 
         NO_COPY(NotifyIndexChangedEventArgs)
 
 
         // Items newly added to a volume Index.
 
-        std::vector<const FileInfo*> NewItems;
+        std::vector<const indexer_common::FileInfo*> NewItems;
 
 
         // Items removed from a volume Index.
 
-        std::vector<const FileInfo*> OldItems;
+        std::vector<const indexer_common::FileInfo*> OldItems;
 
 
         // Items, which have changed some their properties (name, timestamps, parentID etc.).
 
-        std::vector<const FileInfo*> ChangedItems;
+        std::vector<const indexer_common::FileInfo*> ChangedItems;
 
 
         // String representation of the arguments.

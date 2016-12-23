@@ -4,11 +4,18 @@
 
 #include "Merger.h"
 
+#include "FileInfo.h"
+
 namespace indexer {
 
-    using namespace std;
+	using std::unique_ptr;
+	using std::make_unique;
+	using std::vector;
+	using std::unordered_set;
 
-// TODO think about interface and correct args naming.
+    using namespace indexer_common;
+
+	// TODO think about interface and correct args naming.
 
     unique_ptr<vector<const FileInfo*>> Merger::MergeWithMainCollection(
         const vector<const FileInfo*>& from, const unordered_set<const FileInfo*>& do_not_include,
@@ -47,4 +54,5 @@ namespace indexer {
 
         return merged;
     }
+
 } // namespace indexer

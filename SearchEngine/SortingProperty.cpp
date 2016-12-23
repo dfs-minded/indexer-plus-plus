@@ -6,9 +6,7 @@
 
 namespace indexer {
 
-    using namespace std;
-
-    SortingProperty PropertyNameToSortingPropertyEnum(string prop_name) {
+    SortingProperty PropertyNameToSortingPropertyEnum(std::string prop_name) {
 
         if (prop_name == "Name") return SortingProperty::SORT_NAME;
         if (prop_name == "Path") return SortingProperty::SORT_PATH;
@@ -22,7 +20,7 @@ namespace indexer {
         return SortingProperty::SORT_NOTSUPPORTED_COLUMNS;
     }
 
-    wstring SortingPropertyEnumToPropertyName(SortingProperty prop) {
+    std::wstring SortingPropertyEnumToPropertyName(SortingProperty prop) {
 
         if (prop == SortingProperty::SORT_NAME) return L"Name";
         if (prop == SortingProperty::SORT_PATH) return L"Path";

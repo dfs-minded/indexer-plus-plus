@@ -14,7 +14,7 @@ namespace indexer {
 
     class SearchEngine;
 
-    class QueryProcessor : public IQueryProcessor {
+	class QueryProcessor : public indexer_common::IQueryProcessor {
 
        public:
         QueryProcessor() {}

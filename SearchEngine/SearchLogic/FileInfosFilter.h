@@ -9,10 +9,9 @@
 // I did not figure out why, but because of "Windows.h" header and related definitions of min and max template
 // functions, RE2 fails to compile StringPiece class.
 // TODO: write a wrapper for re2 to avoid writing #undef.
+#ifdef min
 #undef min
-#undef max
-#undef std::min
-#undef std::max
+#endif
 #include "re2.h"
 
 #include "FileInfo.h"
@@ -24,7 +23,7 @@ namespace indexer {
 
     class FileInfosFilterTest;
 
-// Provides all FileInfo objects filtering logic with the given search query.
+	// Provides all FileInfo objects filtering logic with the given search query.
 
     class FileInfosFilter {
         friend class FileInfosFilterTest;
@@ -44,30 +43,30 @@ namespace indexer {
 
         // Used during the files tree traversal. Checks if the file |fi| passes all |query_| filters.
 
-        bool PassesAllQueryFilters(const FileInfo& fi);
+		bool PassesAllQueryFilters(const indexer_common::FileInfo& fi);
 
 
         // Used during the files tree traversal. We do not want to traverse hidden directories (because their content
         // is also hidden files) if |query_| contains exclude hidden filter set to true.
 
-        bool TraverseCurrentDir(const FileInfo& dir) const;
+		bool TraverseCurrentDir(const indexer_common::FileInfo& dir) const;
 
 
         // Returns true if the FileInfo |fi| passes |query_| search in particular directory restriction.
         // Used for checking one single file.
 
-        bool FilePassesSearchDirPathFilter(const FileInfo& fi) const;
+		bool FilePassesSearchDirPathFilter(const indexer_common::FileInfo& fi) const;
 
 
         // Returns true if the FileInfo |fi| passes |query_| exclude hidden files and directories restriction.
         // Used for checking one single file.
 
-        bool FilePassesExcludeHiddenAndSystemFilter(const FileInfo& fi) const;
+		bool FilePassesExcludeHiddenAndSystemFilter(const indexer_common::FileInfo& fi) const;
 
 
         // Returns filtered items collection.
 
-        std::vector<const FileInfo*> FilterFiles(const std::vector<const FileInfo*>& input);
+		std::vector<const indexer_common::FileInfo*> FilterFiles(const std::vector<const indexer_common::FileInfo*>& input);
 
 
         bool SearchInDirectorySpecified() const;
@@ -75,14 +74,14 @@ namespace indexer {
 
         // Returns FileInfo object, which represents search directory, specified in |query_| filter.
 
-        const FileInfo* GetSearchDirectory() const;
+		const indexer_common::FileInfo* GetSearchDirectory() const;
 
        private:
-        bool PassesFilterByFilename(const FileInfo& fi) const;
+		bool PassesFilterByFilename(const indexer_common::FileInfo& fi) const;
 
-        bool PassesSizeDatesFilter(const FileInfo& fi) const;
+		bool PassesSizeDatesFilter(const indexer_common::FileInfo& fi) const;
 
-        bool PassesAttributesFilter(const FileInfo& fi) const;
+		bool PassesAttributesFilter(const indexer_common::FileInfo& fi) const;
 
 
         // Copy of the query received from SE client for using in the SearchEngine worker thread.
