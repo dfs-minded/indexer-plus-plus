@@ -22,6 +22,7 @@ namespace ntfs_reader {
         // Reads all MFT records for current volume and returns MFTReadResult
         // with root directory and, constructed for each MFT record, FileInfo objects list.
 
-        virtual std::unique_ptr<MFTReadResult> ReadAllRecords() = 0;
+		virtual std::unique_ptr<indexer_common::MFTReadResult> ReadAllRecords() = 0;
     };
+
 } // namespace ntfs_reader

@@ -6,11 +6,11 @@
 
 #include <string.h>
 
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
     USNJournalRecordsProvider::USNJournalRecordsProvider(char drive_letter)
         : drive_letter_(drive_letter), next_record_(0), last_group_record_(-1) {
@@ -53,8 +53,8 @@ namespace ntfs_reader {
         return true;
     }
 
-    void USNJournalRecordsProvider::AddRecord(unique_ptr<USN_RECORD, function<void(USN_RECORD*)>> record) {
-        records_.push_back(move(record));
+	void USNJournalRecordsProvider::AddRecord(std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>> record) {
+		records_.push_back(std::move(record));
     }
 
     char USNJournalRecordsProvider::DriveLetter() const {

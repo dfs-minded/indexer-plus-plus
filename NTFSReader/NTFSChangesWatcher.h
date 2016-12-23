@@ -18,11 +18,10 @@ namespace ntfs_reader {
     class USNJournalRecordsProvider;
     class USNJournalRecordsSerializer;
     class NTFSChangeObserver;
-    class FileInfo;
 
 
-// This class watches a NTFS volume changes. It uses a USN (Update Sequence Number) journal to get information about
-// files creation, modification or deletion.
+	// This class watches a NTFS volume changes. It uses a USN (Update Sequence Number) journal to get information about
+	// files creation, modification or deletion.
 
     class NTFSChangesWatcher {
        public:
@@ -80,7 +79,7 @@ namespace ntfs_reader {
         bool ReadJournalRecords(PREAD_USN_JOURNAL_DATA journal_query, LPVOID buffer, DWORD& byte_count) const;
 
 
-        static void DeleteFromCreatedAndChangedIfPresent(NotifyNTFSChangedEventArgs* args, uint ID);
+		static void DeleteFromCreatedAndChangedIfPresent(NotifyNTFSChangedEventArgs* args, indexer_common::uint ID);
 
 
         // The reference to the class, that consumes NTFS change event. When volume changes, NTFSChangesWatcher calls its
@@ -111,8 +110,8 @@ namespace ntfs_reader {
 
         USNJournalRecordsProvider* usn_records_provider_;
 
-        uint last_read_{0};
-        const uint kMinTimeBetweenRead{1000};
+		indexer_common::uint last_read_{ 0 };
+		const indexer_common::uint kMinTimeBetweenRead{ 1000 };
     };
 
 } // namespace ntfs_reader

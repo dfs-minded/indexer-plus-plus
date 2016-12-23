@@ -6,10 +6,14 @@
 
 #include "SearchResult.h"
 
-class SearchResultObserver {
+namespace indexer {
 
-   public:
-    virtual void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) = 0;
+    class SearchResultObserver {
 
-    virtual ~SearchResultObserver(){};
-};
+       public:
+        virtual void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) = 0;
+
+        virtual ~SearchResultObserver(){};
+    };
+
+} // namespace indexer

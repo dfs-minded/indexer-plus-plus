@@ -11,10 +11,10 @@
 
 namespace ntfs_reader {
 
-    std::unique_ptr<MFTReadResult> MockMFTReader::ReadAllRecords() {
-        auto res = std::make_unique<MFTReadResult>();
+    std::unique_ptr<indexer_common::MFTReadResult> MockMFTReader::ReadAllRecords() {
+		auto res = std::make_unique<indexer_common::MFTReadResult>();
 
-        auto filename = CommandlineArguments::Instance().ReplayFileInfosPath;
+		auto filename = indexer_common::CommandlineArguments::Instance().ReplayFileInfosPath;
 
         auto u_deserialized = FileInfoObjectsSerializer::Instance().DeserializeAllFileInfos(filename);
         res->Data.swap(u_deserialized);

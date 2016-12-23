@@ -10,16 +10,19 @@
 #include "ConnectionManager.h"
 #include "Macros.h"
 
-class SearchEngine;
+namespace indexer {
 
-class QueryProcessor : public IQueryProcessor {
+    class SearchEngine;
 
-   public:
-    QueryProcessor() {
-    }
+    class QueryProcessor : public IQueryProcessor {
 
-    NO_COPY(QueryProcessor)
+       public:
+        QueryProcessor() {}
 
-    virtual std::vector<std::wstring> Process(const std::wstring& query_string, const std::wstring& format_string,
-                                              int max_files) override;
-};
+        NO_COPY(QueryProcessor)
+
+        virtual std::vector<std::wstring> Process(const std::wstring& query_string, const std::wstring& format_string,
+                                                  int max_files) override;
+    };
+
+} // namespace indexer

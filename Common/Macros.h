@@ -27,14 +27,14 @@ namespace indexer_common {
 
 #else
 
-#define NEW_MUTEX locker_ = new mutex();
+#define NEW_MUTEX locker_ = new std::mutex();
 #define DELETE_MUTEX delete locker_;
 
 #define LOCK locker_.lock();
 #define PLOCK locker_->lock();
-#define PLOCK_GUARD lock_guard<mutex> lock(*locker_);
+#define PLOCK_GUARD std::lock_guard<std::mutex> lock(*locker_);
 
-#define UNIQUE_LOCK unique_lock<mutex> locker_(*locker_);
+#define UNIQUE_LOCK std::unique_lock<std::mutex> locker_(*locker_);
 
 #define UNLOCK locker_.unlock();
 #define PUNLOCK locker_->unlock();

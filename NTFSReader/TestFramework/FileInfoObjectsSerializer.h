@@ -16,9 +16,9 @@ namespace ntfs_reader {
 
         static FileInfoObjectsSerializer& Instance();
 
-        void SerializeFileInfoToFile(const FileInfo& fi) const;
+		void SerializeFileInfoToFile(const indexer_common::FileInfo& fi) const;
 
-        std::unique_ptr<std::vector<FileInfo*>> DeserializeAllFileInfos(const std::wstring& filename) const;
+		std::unique_ptr<std::vector<indexer_common::FileInfo*>> DeserializeAllFileInfos(const std::wstring& filename) const;
 
        private:
         FileInfoObjectsSerializer();

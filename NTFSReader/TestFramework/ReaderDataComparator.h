@@ -12,15 +12,15 @@ namespace ntfs_reader {
 
     class ReaderDataComparator {
        public:
-        void Compare(const std::vector<FileInfo*>& lhs, const FileInfo& lhs_root, const std::wstring& lhs_name,
-                     const std::vector<FileInfo*>& rhs, const FileInfo& rhs_root, const std::wstring& rhs_name);
+		void Compare(const std::vector<indexer_common::FileInfo*>& lhs, const indexer_common::FileInfo& lhs_root, const std::wstring& lhs_name,
+		const std::vector<indexer_common::FileInfo*>& rhs, const indexer_common::FileInfo& rhs_root, const std::wstring& rhs_name);
 
        private:
-        void Compare(const std::vector<FileInfo*>& lhs, const std::vector<FileInfo*>& rhs);
+		void Compare(const std::vector<indexer_common::FileInfo*>& lhs, const std::vector<indexer_common::FileInfo*>& rhs);
 
-        static bool Compare(const FileInfo& lhs, const FileInfo& rhs);
+		static bool Compare(const indexer_common::FileInfo& lhs, const indexer_common::FileInfo& rhs);
 
-        static std::wstring SerializeOnlyWhatIsDiffer(const FileInfo& lhs, const FileInfo& rhs);
+		static std::wstring SerializeOnlyWhatIsDiffer(const indexer_common::FileInfo& lhs, const indexer_common::FileInfo& rhs);
 
         std::wstring result_;
         std::wstring lhs_name_;

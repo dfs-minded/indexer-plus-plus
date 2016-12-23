@@ -5,8 +5,8 @@
 #pragma once
 
 #include <string>
-#include "WindowsWrapper.h"
 
+#include "WindowsWrapper.h"
 #include "Macros.h"
 #include "typedefs.h"
 
@@ -26,7 +26,7 @@ namespace ntfs_reader {
 
         const Serializer* Serialize(const std::wstring& data);
 
-        const Serializer* Serialize(uint64 data);
+		const Serializer* Serialize(indexer_common::uint64 data);
 
         const Serializer* Endl();
 

@@ -13,90 +13,93 @@
 #include "IndexChangeObserver.h"
 #include "IndexManager.h"
 
-class Index;
-class FileInfo;
-class StatusObserver;
+namespace indexer {
+
+    class Index;
+    class FileInfo;
+    class StatusObserver;
 
 // This is needed for compatibility with C++/CLI classes.
 // <mutex> is not supported when compiling with /clr or /clr:pure. (for Model.cpp class).
-namespace std {
-class mutex;
-}
+    namespace std {
+    class mutex;
+    }
 
 
 // Container class for index managers. A layer between index managers (and corresponding indices) and search engine.
 
-class IndexManagersContainer : public IndexChangeObserver {
+    class IndexManagersContainer : public IndexChangeObserver {
 
-   public:
-    NO_COPY(IndexManagersContainer)
-
-
-    static IndexManagersContainer& Instance();
+       public:
+        NO_COPY(IndexManagersContainer)
 
 
-    void AddDrive(char drive_letter);
+        static IndexManagersContainer& Instance();
 
 
-    void RemoveDrive(char drive_letter);
+        void AddDrive(char drive_letter);
 
 
-    std::vector<const IndexManager*> GetAllIndexManagers() const;
+        void RemoveDrive(char drive_letter);
 
 
-    const IndexManager* GetIndexManager(char drive_letter) const;
+        std::vector<const IndexManager*> GetAllIndexManagers() const;
 
 
-    // This is the helper function which is needed in the Model and in the SearchEngine.
-    // If the number of FileInfo or file system helper functions will increase - extract them in the separate class.
+        const IndexManager* GetIndexManager(char drive_letter) const;
 
-    const FileInfo* GetFileInfoByPath(const std::u16string& path) const;
+
+        // This is the helper function which is needed in the Model and in the SearchEngine.
+        // If the number of FileInfo or file system helper functions will increase - extract them in the separate class.
+
+        const FileInfo* GetFileInfoByPath(const std::u16string& path) const;
 
 
 #ifdef SINGLE_THREAD
-    void CheckUpdates();
+        void CheckUpdates();
 #endif
 
 
-    virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override;
+        virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override;
 
 
-    virtual void OnVolumeStatusChanged(char drive_letter) override;
+        virtual void OnVolumeStatusChanged(char drive_letter) override;
 
 
-    void RegisterIndexChangeObserver(IndexChangeObserver* observer);
+        void RegisterIndexChangeObserver(IndexChangeObserver* observer);
 
 
-    void UnregisterIndexChangeObserver(IndexChangeObserver* observer);
+        void UnregisterIndexChangeObserver(IndexChangeObserver* observer);
 
 
-    void RegisterStatusChangeObserver(StatusObserver* observer);
+        void RegisterStatusChangeObserver(StatusObserver* observer);
 
 
-    void UnregisterStatusChangeObserver(StatusObserver* observer);
+        void UnregisterStatusChangeObserver(StatusObserver* observer);
 
 
-    uint GetIndexRootID(char index_drive_letter) const;
+        uint GetIndexRootID(char index_drive_letter) const;
 
 
-   private:
-    IndexManagersContainer();
+       private:
+        IndexManagersContainer();
 
-    ~IndexManagersContainer();
-
-
-    // Creates a status string, which describes which volumes loaded and which are still in read MFT state.
-
-    std::string GetStatus() const;
+        ~IndexManagersContainer();
 
 
-    std::vector<uIndexManager> index_managers_;
+        // Creates a status string, which describes which volumes loaded and which are still in read MFT state.
 
-    std::list<IndexChangeObserver*> index_change_observers_;
+        std::string GetStatus() const;
 
-    std::list<StatusObserver*> status_observers_;
 
-    Log* logger_;
+        std::vector<uIndexManager> index_managers_;
 
-    std::mutex* locker_;
-};
+        std::list<IndexChangeObserver*> index_change_observers_;
+
+        std::list<StatusObserver*> status_observers_;
+
+        Log* logger_;
+
+        std::mutex* locker_;
+    };
+} // namespace indexer

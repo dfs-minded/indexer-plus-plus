@@ -8,7 +8,7 @@
 
 #include "CommandlineArguments.h"
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Log.h"
 
 #include "RawMFTRecordsParser.h"
@@ -18,21 +18,25 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using std::unique_ptr;
+	using std::make_unique;
+	using std::vector;
 
-    const uint RawMFTReader::kBufferSize = 1024 * 1024;
+	using namespace indexer_common;
+
+	const uint RawMFTReader::kBufferSize = 1024 * 1024;
 
     RawMFTReader::RawMFTReader(char drive_letter)
         : volume_(nullptr),
           u_records_parser_(nullptr),
           read_serialized_mft_(false),
-          save_raw_mft_(CommandlineArguments::Instance().SaveRawMFT) {
+		  save_raw_mft_(CommandlineArguments::Instance().SaveRawMFT) {
 
-        auto serialiezed_mft_path = CommandlineArguments::Instance().RawMFTPath;
+		auto serialiezed_mft_path = CommandlineArguments::Instance().RawMFTPath;
         read_serialized_mft_ = !serialiezed_mft_path.empty();
 #ifdef WIN32
         if (!read_serialized_mft_) {
-            volume_ = unique_ptr<void, function<void(HANDLE)>>(WinApiCommon::OpenVolume(drive_letter),
+            volume_ = unique_ptr<void, std::function<void(HANDLE)>>(WinApiCommon::OpenVolume(drive_letter),
                                                                [](HANDLE volume) { CloseHandle(volume); });
         }
 #endif
@@ -50,7 +54,7 @@ namespace ntfs_reader {
                                        : WinApiCommon::GetNtfsVolumeData(volume_.get(), volume_data_buff);
 
         if (!ok) {
-            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
+			WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
             return false;
         }
 
@@ -61,19 +65,21 @@ namespace ntfs_reader {
         return true;
     }
 
-    void RawMFTReader::SetVolumePointerFromVolumeBegin(uint64 bytes_to_move) const {
+	void RawMFTReader::SetVolumePointerFromVolumeBegin(uint64 bytes_to_move) const {
         if (read_serialized_mft_) return;
 
         WinApiCommon::SetFilePointerFromFileBegin(volume_.get(), bytes_to_move);
     }
 
-    unique_ptr<vector<pair<int64, int64>>> RawMFTReader::GetMFTRetrievalPointers(char* buff) const {
+	using std::pair;
+
+	unique_ptr<vector<pair<int64, int64>>> RawMFTReader::GetMFTRetrievalPointers(char* buff) const {
 
         int res = read_serialized_mft_ ? RawMFTSerializer::Instance().ReadMFTFromFile(buff, volume_data_.MFTRecordSize)
                                        : WinApiCommon::ReadBytes(volume_.get(), buff, volume_data_.MFTRecordSize);
 
         if (!res) {
-            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
+			WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
             return nullptr;
         }
 
@@ -85,9 +91,9 @@ namespace ntfs_reader {
         return poiners;
     }
 
-    unique_ptr<MFTReadResult> RawMFTReader::ReadAllRecords() {
+	unique_ptr<MFTReadResult> RawMFTReader::ReadAllRecords() {
 
-        auto u_result = make_unique<MFTReadResult>();
+		auto u_result = make_unique<MFTReadResult>();
 
         auto u_buff = make_unique<char[]>(kBufferSize);
 
@@ -99,14 +105,14 @@ namespace ntfs_reader {
         // Main loop via MFT pointers (for fragmented MFT data). If the MFT located in one piece of memory this loop will
         // iterate only once. pair<run_offset, run_length>
         for (const auto& pair : *u_retr_pointers) {
-            uint64 reading_offset = 0;
+			uint64 reading_offset = 0;
 
-            uint64 run_offset = pair.first, run_length = pair.second;
+			uint64 run_offset = pair.first, run_length = pair.second;
 
             SetVolumePointerFromVolumeBegin(run_offset);
 
             while (reading_offset < run_length) {
-                auto bytes_count = static_cast<uint>(min((uint64)kBufferSize, volume_data_.MFTSize - reading_offset));
+				auto bytes_count = static_cast<uint>(min((uint64)kBufferSize, volume_data_.MFTSize - reading_offset));
 
                 int res = read_serialized_mft_ ? RawMFTSerializer::Instance().ReadMFTFromFile(u_buff.get(), bytes_count)
                                                : WinApiCommon::ReadBytes(volume_.get(), u_buff.get(), bytes_count);
@@ -128,7 +134,7 @@ namespace ntfs_reader {
 
         FindAndSetRoot(*u_accumulated_file_infos, u_result.get(), volume_data_.DriveLetter);
 
-        if (CommandlineArguments::Instance().SaveFileInfos) {
+		if (CommandlineArguments::Instance().SaveFileInfos) {
             for (auto* fi : *u_accumulated_file_infos) {
                 if (fi) FileInfoObjectsSerializer::Instance().SerializeFileInfoToFile(*fi);
             }
@@ -138,13 +144,13 @@ namespace ntfs_reader {
         return u_result;
     }
 
-    void RawMFTReader::FindAndSetRoot(const vector<FileInfo*>& file_infos, MFTReadResult* result, char drive_letter) {
+	void RawMFTReader::FindAndSetRoot(const vector<FileInfo*>& file_infos, MFTReadResult* result, char drive_letter) {
 
         for (auto* fi : file_infos) {
             if (!fi) continue;
 
             if (fi->ID == fi->ParentID) {
-                fi->SetName(Helper::GetDriveName(drive_letter), 2);
+				fi->SetName(Helper::GetDriveName(drive_letter), 2);
                 fi->Parent = fi;
                 result->Root = fi;
                 break;

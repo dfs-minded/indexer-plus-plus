@@ -10,36 +10,40 @@
 
 #include "FileInfoComparatorFactory.h"
 
-enum class SortingProperty;
-class FileInfo;
-class Log;
+namespace indexer {
 
-class Sorter {
+    enum class SortingProperty;
+    class FileInfo;
+    class Log;
 
-   public:
-    Sorter(SortingProperty prop, int direction);
+    class Sorter {
 
-    NO_COPY(Sorter);
+       public:
+        Sorter(SortingProperty prop, int direction);
 
-    void ResetSortingProperties(SortingProperty prop, int direction);
+        NO_COPY(Sorter);
 
-    // Parameter: |file_info| - a collection of FileInfos to sort.
-    void Sort(std::vector<const FileInfo*>* file_info) const;
+        void ResetSortingProperties(SortingProperty prop, int direction);
 
-    PropertyComparatorFunc GetCurrentPropertyComparator() const;
+        // Parameter: |file_info| - a collection of FileInfos to sort.
+        void Sort(std::vector<const FileInfo*>* file_info) const;
 
-   private:
-    void SortByExtensionOrType(std::vector<const FileInfo*>* file_infos) const;
+        PropertyComparatorFunc GetCurrentPropertyComparator() const;
 
-    void SortParallel(std::vector<const FileInfo*>* file_infos, PropertyComparatorFunc cmp) const;
+       private:
+        void SortByExtensionOrType(std::vector<const FileInfo*>* file_infos) const;
 
-    static const int kMaxFilesCanSortByPath = 50000;
+        void SortParallel(std::vector<const FileInfo*>* file_infos, PropertyComparatorFunc cmp) const;
 
-    static const int kMinNumberOfFileInfosToSortParallel = 10000;
+        static const int kMaxFilesCanSortByPath = 50000;
 
-    SortingProperty prop_;
+        static const int kMinNumberOfFileInfosToSortParallel = 10000;
 
-    int direction_;
+        SortingProperty prop_;
 
-    Log* logger_;
-};
+        int direction_;
+
+        Log* logger_;
+    };
+
+} // namespace indexer

@@ -9,16 +9,20 @@
 #include "LetterCaseMatching.h"
 #include "SortingProperty.h"
 
-class FileInfo;
+namespace indexer {
 
-typedef std::function<bool(const FileInfo* first, const FileInfo* second)> PropertyComparatorFunc;
+    class FileInfo;
 
-typedef const std::pair<int, const FileInfo*> sort_pair;
-typedef std::function<bool(sort_pair first, sort_pair second)> PairComparatorFunc;
+    typedef std::function<bool(const FileInfo* first, const FileInfo* second)> PropertyComparatorFunc;
 
-class FileInfoComparatorFactory {
-   public:
-    static PropertyComparatorFunc CreatePropertyComparator(SortingProperty sort_prop, int direction, bool match_case);
+    typedef const std::pair<int, const FileInfo*> sort_pair;
+    typedef std::function<bool(sort_pair first, sort_pair second)> PairComparatorFunc;
 
-    static PairComparatorFunc CreatePairsFirstDefaultComparator(int direction);
-};
+    class FileInfoComparatorFactory {
+       public:
+        static PropertyComparatorFunc CreatePropertyComparator(SortingProperty sort_prop, int direction, bool match_case);
+
+        static PairComparatorFunc CreatePairsFirstDefaultComparator(int direction);
+    };
+
+} // namespace indexer

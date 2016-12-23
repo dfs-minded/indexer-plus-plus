@@ -11,18 +11,18 @@
 
 #include "NTFSDataStructures.h"
 
-// During the MFT parsing intermediate USN records parsing result stored in AccumulatedFileInfo objects.
 namespace ntfs_reader {
 
+	// During the MFT parsing intermediate USN records parsing result stored in AccumulatedFileInfo objects.
     class AccumulatedFileInfo {
        public:
-        AccumulatedFileInfo(char drive_letter, uint id);
+		AccumulatedFileInfo(char drive_letter, indexer_common::uint id);
 
         NO_COPY(AccumulatedFileInfo)
 
         ~AccumulatedFileInfo();
 
-        uint ID() const {
+		indexer_common::uint ID() const {
             return fi_->ID;
         }
 
@@ -31,7 +31,7 @@ namespace ntfs_reader {
         // Not used right now and no logic was implemented to deal with hard links. TODO.
         // ushort HardLinksCount;
 
-        uint64 SizeReal;
+		indexer_common::uint64 SizeReal;
 
         // Not used right now.
         // uint64 SizeAllocated;
@@ -41,25 +41,25 @@ namespace ntfs_reader {
 
 
         // |parent_id| parsed from FILENAME attribute and corresponding attribute flags.
-        bool SetParentID(uint64 parent_id, FilenameFlagsEnum flags) const;
+		bool SetParentID(indexer_common::uint64 parent_id, FilenameFlagsEnum flags) const;
 
 
         bool NewFlagsBetterThanUsed(FilenameFlagsEnum new_flags) const;
 
 
-        bool SetName(const char16_t* name, ushort name_length, FilenameFlagsEnum flags) const;
+		bool SetName(const char16_t* name, indexer_common::ushort name_length, FilenameFlagsEnum flags) const;
 
 
-        void SetFileAttributes(ulong file_attributes) const;
+		void SetFileAttributes(indexer_common::ulong file_attributes) const;
 
 
         bool SetFilenameFlags(FilenameFlagsEnum new_flags);
 
 
-        std::unique_ptr<FileInfo> GetFinalResult();
+		std::unique_ptr<indexer_common::FileInfo> GetFinalResult();
 
        private:
-        std::unique_ptr<FileInfo> fi_;
+		std::unique_ptr<indexer_common::FileInfo> fi_;
     };
 
 } // namespace ntfs_reader

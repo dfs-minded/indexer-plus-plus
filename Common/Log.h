@@ -20,15 +20,15 @@ namespace indexer_common {
 #endif
 
 #define COMPOSE_MSG(logLevel) \
-        wstring msg = GetTime() + L" | " + wstring(logLevel) + L" | " + GetThreadID() + L" | " + message;
+        std::wstring msg = GetTime() + L" | " + std::wstring(logLevel) + L" | " + GetThreadID() + L" | " + message;
 
-#define METHOD_METADATA Helper::StringToWstring(string(__FUNCTION__) + ":" + to_string(__LINE__) + " ")
+#define METHOD_METADATA indexer_common::Helper::StringToWstring(std::string(__FUNCTION__) + ":" + std::to_string(__LINE__) + " ")
 
 #define TIK auto start_time = GetTickCount64();
 #define TOK(msg)																							  \
         {                                                                                                     \
             auto elapsed_time = GetTickCount64() - start_time;                                                \
-            logger_->Debug(wstring(L"PERF | ") + (msg) + wstring(L" | Elapsed ") + to_wstring(elapsed_time)); \
+            logger_->Debug(std::wstring(L"PERF | ") + (msg) + std::wstring(L" | Elapsed ") + std::to_wstring(elapsed_time)); \
         }
 
     class Log {

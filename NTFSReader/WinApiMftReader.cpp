@@ -5,7 +5,7 @@
 #include "WinApiMftReader.h"
 
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "typedefs.h"
 
 #include "VolumeData.h"
@@ -13,7 +13,7 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
     const int WinApiMFTReader::kBufferSize = 1024 * 1024 / 2;
 
@@ -21,9 +21,9 @@ namespace ntfs_reader {
         : drive_letter_(drive_letter), volume_(WinApiCommon::OpenVolume(drive_letter)) {
     }
 
-    unique_ptr<MFTReadResult> WinApiMFTReader::ReadAllRecords() {
+    std::unique_ptr<MFTReadResult> WinApiMFTReader::ReadAllRecords() {
 
-        auto u_result = make_unique<MFTReadResult>();
+        auto u_result = std::make_unique<MFTReadResult>();
 
         auto mft_enum_data = GetMFTEnumData();
         if (!mft_enum_data) return u_result;
@@ -33,8 +33,8 @@ namespace ntfs_reader {
         auto volume_data = VolumeData(drive_letter_, volume_data_buff);
 
         DWORD bytecount = 0;
-        auto data = make_unique<vector<FileInfo*>>(static_cast<size_t>(volume_data.MFTRecordsNum));
-        auto buffer = make_unique<char[]>(kBufferSize);
+        auto data = std::make_unique<std::vector<FileInfo*>>(static_cast<size_t>(volume_data.MFTRecordsNum));
+        auto buffer = std::make_unique<char[]>(kBufferSize);
 
         while (ReadUSNRecords(mft_enum_data.get(), buffer.get(), bytecount)) {
 
@@ -68,12 +68,12 @@ namespace ntfs_reader {
         return u_result;
     }
 
-    unique_ptr<MFT_ENUM_DATA> WinApiMFTReader::GetMFTEnumData() const {
+    std::unique_ptr<MFT_ENUM_DATA> WinApiMFTReader::GetMFTEnumData() const {
 
-        auto u_journal = make_unique<USN_JOURNAL_DATA>();
+        auto u_journal = std::make_unique<USN_JOURNAL_DATA>();
         WinApiCommon::LoadJournal(volume_, u_journal.get());
 
-        auto mft_enum_data = make_unique<MFT_ENUM_DATA>();
+        auto mft_enum_data = std::make_unique<MFT_ENUM_DATA>();
 
         mft_enum_data->StartFileReferenceNumber = 0;
         mft_enum_data->LowUsn = 0;
@@ -109,7 +109,7 @@ namespace ntfs_reader {
 // We take for investigation only not hidden files (user created files), because hidden system files
 // most likely have other system file as a parent.
 
-    uint WinApiMFTReader::FindRootID(const vector<FileInfo*>& data) {
+    uint WinApiMFTReader::FindRootID(const std::vector<FileInfo*>& data) {
 
         for (const auto* fi : data) {
             if (!fi) continue;

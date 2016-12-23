@@ -13,22 +13,25 @@
 // Provides an interface for listening index changes.
 // Each of its methods will be called when corresponding event occurs.
 
-class IndexChangeObserver {
+namespace indexer {
 
-   public:
-    IndexChangeObserver() = default;
+    class IndexChangeObserver {
 
-    NO_COPY(IndexChangeObserver)
+       public:
+        IndexChangeObserver() = default;
 
-    virtual ~IndexChangeObserver() = default;
+        NO_COPY(IndexChangeObserver)
 
-
-    // Fired when index files changed. |p_args| provide the information what exactly has changed.
-
-    virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args){};
+        virtual ~IndexChangeObserver() = default;
 
 
-    // Fired when the volume has been added or removed by user.
+        // Fired when index files changed. |p_args| provide the information what exactly has changed.
 
-    virtual void OnVolumeStatusChanged(char drive_letter){};
-};
+        virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args){};
+
+
+        // Fired when the volume has been added or removed by user.
+
+        virtual void OnVolumeStatusChanged(char drive_letter){};
+    };
+} // namespace indexer

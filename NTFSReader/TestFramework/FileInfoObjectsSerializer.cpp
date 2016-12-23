@@ -8,13 +8,13 @@
 #include <string>
 
 #include "FileInfoHelper.h"
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "IndexerDateTime.h"
 #include "WindowsWrapper.h"
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
     FileInfoObjectsSerializer& FileInfoObjectsSerializer::Instance() {
         static FileInfoObjectsSerializer instance_;
@@ -22,7 +22,7 @@ namespace ntfs_reader {
     }
 
     FileInfoObjectsSerializer::FileInfoObjectsSerializer() {
-        auto filename = "FileInfosDB_" + to_string(IndexerDateTime::TicksNow()) + ".txt";
+		auto filename = "FileInfosDB_" + std::to_string(IndexerDateTime::TicksNow()) + ".txt";
 
         file_infos_db_ = fopen(filename.c_str(), "w");
 #ifdef WIN32
@@ -39,7 +39,7 @@ namespace ntfs_reader {
         fflush(file_infos_db_);
     }
 
-    unique_ptr<vector<FileInfo*>> FileInfoObjectsSerializer::DeserializeAllFileInfos(const wstring& filename) const {
+	std::unique_ptr<std::vector<FileInfo*>> FileInfoObjectsSerializer::DeserializeAllFileInfos(const std::wstring& filename) const {
 #ifdef WIN32
         FILE* file_infos_in = _wfopen(filename.c_str(), L"r");
         _setmode(_fileno(file_infos_in), _O_U8TEXT);
@@ -50,7 +50,7 @@ namespace ntfs_reader {
         wchar_t buffer[1001];
 
         // Starting from size 1, but will double quickly as the number of parsed records increases.
-        auto data = make_unique<vector<FileInfo*>>(1);
+        auto data = std::make_unique<std::vector<FileInfo*>>(1);
 
         while (fgetws(buffer, 1000, file_infos_in)) {
             FileInfo* fi = DeserializeFileInfo(buffer).release();

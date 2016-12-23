@@ -10,6 +10,8 @@
 
 namespace ntfs_reader {
 
+	// Holds main properties of a volume.
+
     struct VolumeData {
        public:
         VolumeData();
@@ -20,18 +22,18 @@ namespace ntfs_reader {
 
         char DriveLetter;
 
-        uint BytesPerCluster;
+		indexer_common::uint BytesPerCluster;
 
-        uint BytesPerSector;
+		indexer_common::uint BytesPerSector;
 
         // Logical cluster number where the MFT begins.
-        uint64 MFTStartLCN;
+		indexer_common::uint64 MFTStartLCN;
 
-        uint MFTRecordSize;
+		indexer_common::uint MFTRecordSize;
 
-        uint64 MFTSize;
+		indexer_common::uint64 MFTSize;
 
-        uint64 MFTRecordsNum;
+		indexer_common::uint64 MFTRecordsNum;
     };
 
 } // namespace ntfs_reader

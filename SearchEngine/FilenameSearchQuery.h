@@ -9,23 +9,27 @@
 
 #include "Macros.h"
 
-struct FilenameSearchQuery {
-   public:
-    FilenameSearchQuery();
+namespace indexer {
 
-    NO_COPY(FilenameSearchQuery)
+    struct FilenameSearchQuery {
+       public:
+        FilenameSearchQuery();
 
-    ~FilenameSearchQuery();
+        NO_COPY(FilenameSearchQuery)
 
-    std::vector<int> NChars;
+        ~FilenameSearchQuery();
 
-    std::vector<char16_t*> Strs;
+        std::vector<int> NChars;
 
-    std::vector<int> StrLengths;
+        std::vector<char16_t*> Strs;
 
-    int NStrs;
+        std::vector<int> StrLengths;
 
-    int MinLength;
-};
+        int NStrs;
 
-std::unique_ptr<FilenameSearchQuery> ParseFilenameQuery(const std::u16string& text);
+        int MinLength;
+    };
+
+    std::unique_ptr<FilenameSearchQuery> ParseFilenameQuery(const std::u16string& text);
+
+} // namespace indexer

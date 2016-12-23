@@ -8,7 +8,8 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using std::wstring;
+	using std::to_wstring;
 
     wstring NotifyNTFSChangedEventArgs::ToWString() const {
         return wstring(L" NTFSChangedEventArgs: ") + L"Created = " + to_wstring(CreatedItems.size()) + L"; Deleted = " +

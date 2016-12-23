@@ -6,69 +6,73 @@
 
 #include "HelperCommon.h"
 
-using namespace std;
+namespace indexer {
 
-FilenameSearchQuery::FilenameSearchQuery() : NStrs(0), MinLength(0) {
-}
+    using namespace std;
 
-FilenameSearchQuery::~FilenameSearchQuery() {
-    for (size_t i = 0; i < Strs.size(); ++i)
-        delete Strs[i];
-}
+    FilenameSearchQuery::FilenameSearchQuery() : NStrs(0), MinLength(0) {
+    }
 
-unique_ptr<FilenameSearchQuery> ParseFilenameQuery(const u16string& text) {
+    FilenameSearchQuery::~FilenameSearchQuery() {
+        for (size_t i = 0; i < Strs.size(); ++i)
+            delete Strs[i];
+    }
 
-    auto result = make_unique<FilenameSearchQuery>();
+    unique_ptr<FilenameSearchQuery> ParseFilenameQuery(const u16string& text) {
 
-    auto parts = Helper::Split(text, u16string(reinterpret_cast<const char16_t*>(L"*?")),
-                                     Helper::SplitOptions::INCLUDE_SPLITTERS);
+        auto result = make_unique<FilenameSearchQuery>();
 
-    if (parts.size() == 0) return result;
+        auto parts = Helper::Split(text, u16string(reinterpret_cast<const char16_t*>(L"*?")),
+                                         Helper::SplitOptions::INCLUDE_SPLITTERS);
 
-    if (parts.size() == 1) {
+        if (parts.size() == 0) return result;
 
-        if (parts[0][0] == L'?')
-            result->NChars.push_back(parts[0].size());
-        else if (parts[0][0] != L'*')
-            result->Strs.push_back(Helper::CopyU16StringToChar16(parts[0]));
+        if (parts.size() == 1) {
 
-    } else {
+            if (parts[0][0] == L'?')
+                result->NChars.push_back(parts[0].size());
+            else if (parts[0][0] != L'*')
+                result->Strs.push_back(Helper::CopyU16StringToChar16(parts[0]));
 
-        size_t i = 1;
-        if (parts[0][0] == '?')
-            result->NChars.push_back(parts[0].size());
-        else if (parts[0][0] == '*')
-            result->NChars.push_back(-1);
-        else {
-            i = 0;
-            result->NChars.push_back(0);
-        }
+        } else {
 
-        for (; i < parts.size(); ++i) {
+            size_t i = 1;
+            if (parts[0][0] == '?')
+                result->NChars.push_back(parts[0].size());
+            else if (parts[0][0] == '*')
+                result->NChars.push_back(-1);
+            else {
+                i = 0;
+                result->NChars.push_back(0);
+            }
 
-            if (parts[i][0] == L'*') {
-                if (result->NChars.size() == result->Strs.size())
-                    result->NChars.push_back(-1);
-                else
-                    result->NChars.back() = -1;  // todo process cases ??*
-            } else if (parts[i][0] == L'?') {
-                if (result->NChars.size() == result->Strs.size()) result->NChars.push_back(parts[i].size());
-            } else  // no wildcards
-            {
-                result->Strs.push_back(Helper::CopyU16StringToChar16(parts[i]));
+            for (; i < parts.size(); ++i) {
+
+                if (parts[i][0] == L'*') {
+                    if (result->NChars.size() == result->Strs.size())
+                        result->NChars.push_back(-1);
+                    else
+                        result->NChars.back() = -1;  // todo process cases ??*
+                } else if (parts[i][0] == L'?') {
+                    if (result->NChars.size() == result->Strs.size()) result->NChars.push_back(parts[i].size());
+                } else  // no wildcards
+                {
+                    result->Strs.push_back(Helper::CopyU16StringToChar16(parts[i]));
+                }
             }
         }
+
+        result->NStrs = result->Strs.size();
+
+        // Calculate minimum length of string that satisfied current query.
+        result->MinLength = 0;
+
+        for (auto i = 0; i < result->NStrs; ++i) {
+            result->StrLengths.push_back(Helper::Str16Len(result->Strs[i]));
+            result->MinLength += result->StrLengths[i];
+        }
+
+        return result;
     }
 
-    result->NStrs = result->Strs.size();
-
-    // Calculate minimum length of string that satisfied current query.
-    result->MinLength = 0;
-
-    for (auto i = 0; i < result->NStrs; ++i) {
-        result->StrLengths.push_back(Helper::Str16Len(result->Strs[i]));
-        result->MinLength += result->StrLengths[i];
-    }
-
-    return result;
-}
+} // namespace indexer

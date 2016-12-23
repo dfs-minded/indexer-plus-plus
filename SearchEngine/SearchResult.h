@@ -11,20 +11,24 @@
 #include "Macros.h"
 #include "OldFileInfosDeleter.h"
 
-struct SearchResult {
+namespace indexer {
 
-   public:
-    explicit SearchResult(std::unique_ptr<OldFileInfosDeleter> u_old_file_infos = nullptr);
+    struct SearchResult {
 
-    NO_COPY(SearchResult)
+       public:
+        explicit SearchResult(std::unique_ptr<OldFileInfosDeleter> u_old_file_infos = nullptr);
 
-    ~SearchResult() = default;
+        NO_COPY(SearchResult)
 
-    // Files which are the result of the search.
-    std::unique_ptr<std::vector<const FileInfo*>> Files;
+        ~SearchResult() = default;
 
-   private:
-    std::unique_ptr<OldFileInfosDeleter> old_file_infos_;
-};
+        // Files which are the result of the search.
+        std::unique_ptr<std::vector<const FileInfo*>> Files;
 
-typedef std::shared_ptr<const SearchResult> pSearchResult;
+       private:
+        std::unique_ptr<OldFileInfosDeleter> old_file_infos_;
+    };
+
+    typedef std::shared_ptr<const SearchResult> pSearchResult;
+
+} // namespace indexer

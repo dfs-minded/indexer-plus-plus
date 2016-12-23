@@ -9,7 +9,7 @@
 #include "CommandlineArguments.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "Log.h"
 #include "WindowsWrapper.h"
 #include "typedefs.h"
@@ -22,7 +22,9 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using std::unique_ptr;
+	using std::make_unique;
+	using namespace indexer_common;
 
     const int NTFSChangesWatcher::kBufferSize = 1024 * 1024 / 2;
 

@@ -15,23 +15,19 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
-    unique_ptr<MFTReader> MFTReaderFactory::CreateReader(char drive_letter) {
-        unique_ptr<MFTReader> reader;
+    std::unique_ptr<MFTReader> MFTReaderFactory::CreateReader(char drive_letter) {
+        std::unique_ptr<MFTReader> reader;
 
 #ifdef WIN_API_MFT_READ
         reader = make_unique<WinApiMFTReader>(drive_letter);
-
 #else
-
         if (!CommandlineArguments::Instance().ReplayFileInfosPath.empty())
-            reader = make_unique<MockMFTReader>();
+            reader = std::make_unique<MockMFTReader>();
         else
-            reader = make_unique<RawMFTReader>(drive_letter);
-
+            reader = std::make_unique<RawMFTReader>(drive_letter);
 #endif
-
         return reader;
     }
 

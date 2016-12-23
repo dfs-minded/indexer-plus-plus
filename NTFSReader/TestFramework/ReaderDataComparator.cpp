@@ -11,14 +11,17 @@
 
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
-#include "HelperCommon.h"
+#include "Helper.h"
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using std::vector;
+	using std::wstring;
+	using std::to_wstring;
+	using namespace indexer_common;
 
-    void ReaderDataComparator::Compare(const vector<FileInfo*>& lhs, const FileInfo& lhs_root, const wstring& lhs_name,
-                                       const vector<FileInfo*>& rhs, const FileInfo& rhs_root, const wstring& rhs_name) {
+	void ReaderDataComparator::Compare(const vector<FileInfo*>& lhs, const FileInfo& lhs_root, const wstring& lhs_name,
+									   const vector<FileInfo*>& rhs, const FileInfo& rhs_root, const wstring& rhs_name) {
         lhs_name_ = lhs_name;
         rhs_name_ = rhs_name;
         result_ = L"ReaderDataComparator::Compare\n";
@@ -27,13 +30,14 @@ namespace ntfs_reader {
 
         Compare(lhs, rhs);
 
-        WriteToOutput(result_);
+		WriteToOutput(result_);
     }
 
-    void ReaderDataComparator::Compare(const vector<FileInfo*>& lhs, const vector<FileInfo*>& rhs) {
+	void ReaderDataComparator::Compare(const vector<FileInfo*>& lhs, 
+									   const vector<FileInfo*>& rhs) {
 
-        unordered_set<uint> seen_ids;
-        vector<uint> only_in_lhs_ids, only_in_rhs_ids, different_fi_ids;
+		std::unordered_set<uint> seen_ids;
+		vector<uint> only_in_lhs_ids, only_in_rhs_ids, different_fi_ids;
 
         for (const auto* fi_lhs : lhs) {
             if (!fi_lhs) continue;
@@ -63,18 +67,18 @@ namespace ntfs_reader {
 
         result_ += L" Only in " + lhs_name_ + L" result\n;";
         for (size_t i = 0; i < min((size_t)100, only_in_lhs_ids.size()); ++i)
-            result_ += SerializeFileInfoHumanReadable(*lhs.at(only_in_lhs_ids[i])) + L"\n";
+			result_ += SerializeFileInfoHumanReadable(*lhs.at(only_in_lhs_ids[i])) + L"\n";
 
         result_ += L" Only in " + rhs_name_ + L" result\n";
         for (size_t i = 0; i < min((size_t)100, only_in_rhs_ids.size()); ++i)
-            result_ += SerializeFileInfoHumanReadable(*rhs.at(only_in_rhs_ids[i])) + L"\n";
+			result_ += SerializeFileInfoHumanReadable(*rhs.at(only_in_rhs_ids[i])) + L"\n";
 
         result_ += L"Different:\n";
 
         for (size_t i = 0; i < min((size_t)1000, different_fi_ids.size()); ++i) {
 
-            FileInfo* lhs_fi = lhs.at(different_fi_ids[i]);
-            FileInfo* rhs_fi = rhs.at(different_fi_ids[i]);
+			FileInfo* lhs_fi = lhs.at(different_fi_ids[i]);
+			FileInfo* rhs_fi = rhs.at(different_fi_ids[i]);
 
             result_ += L"ID = " + to_wstring(rhs_fi->ID);
 
@@ -85,12 +89,12 @@ namespace ntfs_reader {
             result_ += L"\n";
         }
 
-        WriteToOutput(result_);
+		WriteToOutput(result_);
     }
 
 
 // Timestamps, SizeAllocated and SizeReal that we receive from RawMFTReader are more accurate than in WinAPI.
-    wstring ReaderDataComparator::SerializeOnlyWhatIsDiffer(const FileInfo& lhs, const FileInfo& rhs) {
+	wstring ReaderDataComparator::SerializeOnlyWhatIsDiffer(const FileInfo& lhs, const FileInfo& rhs) {
         wstring res;
 
         if (lhs.ParentID != rhs.ParentID) res += L"; ParentID = " + to_wstring(lhs.ParentID);
@@ -118,7 +122,7 @@ namespace ntfs_reader {
         return move(res);
     }
 
-    bool ReaderDataComparator::Compare(const FileInfo& lhs, const FileInfo& rhs) {
+	bool ReaderDataComparator::Compare(const FileInfo& lhs, const FileInfo& rhs) {
         // bool equal_result = lhs == rhs;
         if (lhs.ParentID != rhs.ParentID) return false;
 

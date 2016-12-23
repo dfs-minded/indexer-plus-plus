@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "Macros.h"
 #include "WindowsWrapper.h"
 
@@ -17,7 +17,7 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
     USNJournalRecordsSerializer& USNJournalRecordsSerializer::Instance() {
         static USNJournalRecordsSerializer instance_;
@@ -27,7 +27,7 @@ namespace ntfs_reader {
     USNJournalRecordsSerializer::USNJournalRecordsSerializer() : records_db_(nullptr) {
         if (!CommandlineArguments::Instance().SaveUSNJournalRecords) return;
 
-        auto filename = "USNRecordsDB_" + to_string(IndexerDateTime::TicksNow()) + ".txt";
+		auto filename = "USNRecordsDB_" + std::to_string(IndexerDateTime::TicksNow()) + ".txt";
 
         records_db_ = fopen(filename.c_str(), "w");
 #ifdef WIN32
@@ -37,7 +37,7 @@ namespace ntfs_reader {
         NEW_MUTEX
 
 #ifndef SINGLE_THREAD_LOG
-        worker_ = new thread(&USNJournalRecordsSerializer::WriteToFileAsync, this);
+		worker_ = new std::thread(&USNJournalRecordsSerializer::WriteToFileAsync, this);
 #endif
     }
 
@@ -59,11 +59,11 @@ namespace ntfs_reader {
 #endif  // SINGLE_THREAD_LOG
     }
 
-    void USNJournalRecordsSerializer::DeserializeAllRecords(const wstring& records_filename) {
-        vector<unique_ptr<USNJournalRecordsProvider>> providers;
+	void USNJournalRecordsSerializer::DeserializeAllRecords(const std::wstring& records_filename) {
+		std::vector<std::unique_ptr<USNJournalRecordsProvider>> providers;
 
         for (auto i = 0; i < 26; ++i) {
-            providers.push_back(make_unique<USNJournalRecordsProvider>('A' + i));
+			providers.push_back(std::make_unique<USNJournalRecordsProvider>('A' + i));
         }
 #ifdef WIN32
         FILE* records_in = _wfopen(records_filename.c_str(), L"r");
@@ -83,7 +83,7 @@ namespace ntfs_reader {
 
         for (auto i = 0; i < 26; ++i) {
             if (!providers[i]->Empty()) {
-                records_providers_[providers[i]->DriveLetter()] = move(providers[i]);
+				records_providers_[providers[i]->DriveLetter()] = std::move(providers[i]);
             }
         }
     }
@@ -106,7 +106,7 @@ namespace ntfs_reader {
 
     void USNJournalRecordsSerializer::WriteToFileAsync() {
         while (true) {
-            this_thread::sleep_for(chrono::seconds(2));
+			std::this_thread::sleep_for(std::chrono::seconds(2));
 
             PLOCK
             swap(records_, tmp_records_storage_);

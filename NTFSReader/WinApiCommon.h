@@ -8,12 +8,13 @@
 
 #include "WindowsWrapper.h"
 
+namespace indexer_common {
+	class FileInfo;
+}
+
 namespace ntfs_reader {
 
-    class FileInfo;
-
-
-// Wraps common function calls to WinAPI.
+	// Wraps common function calls to WinAPI.
 
     class WinApiCommon {
        public:
@@ -56,9 +57,9 @@ namespace ntfs_reader {
         // This function can be called only when |file_info| full filename can be retrieved.
         // |path| is the path of the |file_info|.
 
-        static bool GetSizeAndTimestamps(const wchar_t& path, FileInfo* file_info);
+		static bool GetSizeAndTimestamps(const wchar_t& path, indexer_common::FileInfo* file_info);
 
-        static bool GetSizeAndTimestamps(const std::u16string& path, FileInfo* file_info);
+		static bool GetSizeAndTimestamps(const std::u16string& path, indexer_common::FileInfo* file_info);
 
        private:
         // Creates an update sequence number (USN) change journal stream on a target volume, or modifies

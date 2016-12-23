@@ -20,7 +20,7 @@ namespace ntfs_reader {
 
     class WinApiCommon;
 
-// Reads and parses raw disk data into FileInfo objects.
+	// Reads and parses raw disk data into FileInfo objects.
 
     class RawMFTReader : public MFTReader {
        public:
@@ -30,7 +30,7 @@ namespace ntfs_reader {
 
         ~RawMFTReader() = default;
 
-        virtual std::unique_ptr<MFTReadResult> ReadAllRecords() override;
+		virtual std::unique_ptr<indexer_common::MFTReadResult> ReadAllRecords() override;
 
        private:
         // Gets the basic volume info such as how many bytes per cluster, first MFT logical cluster number, MFT record size.
@@ -40,13 +40,13 @@ namespace ntfs_reader {
 
         // Sets the read location on the physical drive.
 
-        void SetVolumePointerFromVolumeBegin(uint64 bytes_to_move) const;
+		void SetVolumePointerFromVolumeBegin(indexer_common::uint64 bytes_to_move) const;
 
 
-        std::unique_ptr<std::vector<std::pair<int64, int64>>> GetMFTRetrievalPointers(char* buff) const;
+		std::unique_ptr<std::vector<std::pair<indexer_common::int64, indexer_common::int64>>> GetMFTRetrievalPointers(char* buff) const;
 
 
-        static void FindAndSetRoot(const std::vector<FileInfo*>& file_infos, MFTReadResult* result, char drive_letter);
+		static void FindAndSetRoot(const std::vector<indexer_common::FileInfo*>& file_infos, indexer_common::MFTReadResult* result, char drive_letter);
 
 
         // Handle of the volume with custom smart pointer deleter.
@@ -69,7 +69,7 @@ namespace ntfs_reader {
 
         bool save_raw_mft_;
 
-        static const uint kBufferSize;
+		static const indexer_common::uint kBufferSize;
     };
 
 } // namespace ntfs_reader

@@ -10,31 +10,31 @@
 #include "CommandlineArguments.h"
 #include "IndexerDateTime.h"
 
-#include "HelperCommon.h"
+#include "Helper.h"
 #include "WinApiCommon.h"
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
     RawMFTSerializer::RawMFTSerializer() {
 
-        if (CommandlineArguments::Instance().SaveRawMFT) {
-            auto filename = L"RawMFT_" + to_wstring(IndexerDateTime::TicksNow()) + L".txt";
+		if (CommandlineArguments::Instance().SaveRawMFT) {
+			auto filename = L"RawMFT_" + std::to_wstring(IndexerDateTime::TicksNow()) + L".txt";
 
             raw_mft_file_ = WinApiCommon::CreateFileForWrite(filename);
         }
 
-        auto serialiezed_mft_path = CommandlineArguments::Instance().RawMFTPath;
+		auto serialiezed_mft_path = CommandlineArguments::Instance().RawMFTPath;
 
         if (!serialiezed_mft_path.empty()) {
 
 #ifdef WIN32
             // raw_mft_file_ = WinApiCommon::OpenFileForRead(serialiezed_mft_path);
-            serialized_raw_mft_file_ = make_unique<ifstream>(serialiezed_mft_path, ifstream::binary);
+            serialized_raw_mft_file_ = std::make_unique<std::ifstream>(serialiezed_mft_path, std::ifstream::binary);
 #else
             //  string file_path = HelperCommon::WStringToString(serialiezed_mft_path);
-            //    WriteToOutput("*** " + file_path);
+            //  WriteToOutput("*** " + file_path);
             // ifstream* ifs = new ifstream(file_path.c_str(), ios::binary);
             // serialized_raw_mft_file_.reset(ifs);
             serialized_raw_mft_file_ =
@@ -61,7 +61,7 @@ namespace ntfs_reader {
     bool RawMFTSerializer::GetNtfsVolumeData(NTFS_VOLUME_DATA_BUFFER* volume_data_buff) {
 
         DWORD volume_data_size = sizeof(*volume_data_buff);
-        auto u_buff = make_unique<char[]>(volume_data_size);
+        auto u_buff = std::make_unique<char[]>(volume_data_size);
 
         // bool ok = WinApiCommon::ReadBytes(raw_mft_file_, u_buff.get(), volume_data_size);
         bool ok = serialized_raw_mft_file_->read((char*)u_buff.get(), volume_data_size) ? true : false;

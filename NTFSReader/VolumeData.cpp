@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 
 namespace ntfs_reader {
 
@@ -22,14 +22,14 @@ namespace ntfs_reader {
 
     VolumeData::VolumeData(char drive_letter, const NTFS_VOLUME_DATA_BUFFER& volume_data) : DriveLetter(drive_letter) {
 
-        BytesPerCluster = static_cast<uint>(volume_data.BytesPerCluster);
+		BytesPerCluster = static_cast<indexer_common::uint>(volume_data.BytesPerCluster);
         BytesPerSector  = volume_data.BytesPerSector;
         MFTStartLCN     = volume_data.MftStartLcn.QuadPart;
         MFTRecordSize   = volume_data.BytesPerFileRecordSegment;
         MFTSize         = volume_data.MftValidDataLength.QuadPart;
-        MFTRecordsNum   = static_cast<uint64>(volume_data.MftValidDataLength.QuadPart / MFTRecordSize);
+		MFTRecordsNum = static_cast<indexer_common::uint64>(volume_data.MftValidDataLength.QuadPart / MFTRecordSize);
 
-        WriteToOutput(L"MFTSize: " + std::to_wstring(MFTSize) + L" MFTRecordsNum: " + std::to_wstring(MFTRecordsNum));
+		indexer_common::WriteToOutput(L"MFTSize: " + std::to_wstring(MFTSize) + L" MFTRecordsNum: " + std::to_wstring(MFTRecordsNum));
     }
 
 } // namespace ntfs_reader

@@ -19,7 +19,7 @@ namespace ntfs_reader {
 
         MockMFTReader() = default;
 
-        virtual std::unique_ptr<MFTReadResult> ReadAllRecords() override;
+		virtual std::unique_ptr<indexer_common::MFTReadResult> ReadAllRecords() override;
     };
 
 } // namespace ntfs_reader

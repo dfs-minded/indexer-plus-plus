@@ -8,15 +8,18 @@
 #include "SearchEngine.h"
 #include "SearchQuery.h"
 
-using namespace std;
+namespace indexer {
 
-vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
-    std::unique_ptr<SearchEngine> engine(make_unique<SearchEngine>(nullptr, true));
+    using namespace std;
 
-    uSearchQuery query = DeserializeQuery(query_string);
+    vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
+        std::unique_ptr<SearchEngine> engine(make_unique<SearchEngine>(nullptr, true));
 
-    auto search_res = engine->Search(query.release());
+        uSearchQuery query = DeserializeQuery(query_string);
 
-    OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
-    return fmt.Format();
-}
+        auto search_res = engine->Search(query.release());
+
+        OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
+        return fmt.Format();
+    }
+} // namespace indexer

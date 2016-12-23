@@ -15,9 +15,9 @@
 #include "NTFSDataStructures.h"
 #include "VolumeData.h"
 
-// Parses raw MFT records and creates corresponding FileInfo objects.
-
 namespace ntfs_reader {
+
+	// Parses raw MFT records and creates corresponding FileInfo objects.
 
     class RawMFTRecordsParser {
        public:
@@ -29,13 +29,13 @@ namespace ntfs_reader {
         // Parses raw MFT entries from the buffer. For each entry creates and fills with parsed data FileInfoBuilder object.
         // |recordsNum| - the number of records in |buff| to parse.
 
-        void Parse(const char* buffer, uint records_num) const;
+		void Parse(const char* buffer, indexer_common::uint records_num) const;
 
 
         // For fragmented files we need to parse run list in order to get file clusters location.
         // Returns: pair<run_offset, run_length> - data location of the MFT file.
 
-        std::unique_ptr<std::vector<std::pair<int64, int64>>> GetMFTRetrievalPointers(char* buff) const;
+		std::unique_ptr<std::vector<std::pair<indexer_common::int64, indexer_common::int64>>> GetMFTRetrievalPointers(char* buff) const;
 
 
         // Returns the list of files, which data was accumulated during MFT parsing and have all its properties set.
@@ -45,7 +45,7 @@ namespace ntfs_reader {
         // Some of the FileInfos in the returned vector will be nullptr, since not for all indices in the allocated with the
         // MFT size vector existed corresponding MFT record.
 
-        std::unique_ptr<std::vector<FileInfo*>> GetCompleteFileInfos() const;
+		std::unique_ptr<std::vector<indexer_common::FileInfo*>> GetCompleteFileInfos() const;
 
         mutable int files_with_hardlinks_num_ = 0;
         mutable int not_in_use_for_debug_ = 0;
@@ -62,20 +62,20 @@ namespace ntfs_reader {
 
         // Reads object value from memory, which starts at |field_begin| and has size |field_size| bytes.
 
-        static int64 GetVariableLengthFieldValue(const char* field_begin, short field_size);
+		static indexer_common::int64 GetVariableLengthFieldValue(const char* field_begin, short field_size);
 
 
         // For NonResident Data attribute gets attribute size, considering that non-resident attributes have
         // runlist, which describes attribute location on the disk (so it could be separated in several parts
         // and each run in the runlist correspond to one part).
 
-        uint64 GetNonResidentDataAttrSize(const ATTRIBUTE_HEADER& attr_header) const;
+		indexer_common::uint64 GetNonResidentDataAttrSize(const ATTRIBUTE_HEADER& attr_header) const;
 
 
         // Returns a data structure (vector of <run_offset, run_length>) that describes the allocation and location
         // on disk of a specific attribute.
 
-        std::unique_ptr<std::vector<std::pair<int64, int64>>> ParseRunList(const ATTRIBUTE_HEADER& attr_header) const;
+		std::unique_ptr<std::vector<std::pair<indexer_common::int64, indexer_common::int64>>> ParseRunList(const ATTRIBUTE_HEADER& attr_header) const;
 
 
         // Gets the attribute offset related to the beginning of the attribute header.
@@ -92,7 +92,7 @@ namespace ntfs_reader {
 
         // Returns the unique file reference number by its record header.
 
-        static uint GetFRN(const FILE_RECORD_HEADER& record_header);
+		static indexer_common::uint GetFRN(const FILE_RECORD_HEADER& record_header);
 
 
         // Checks if the record |record_header| has "FILE" signature, if it is in use,

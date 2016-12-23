@@ -4,19 +4,19 @@
 
 #include "AccumulatedFileInfo.h"
 
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 #include "IndexerDateTime.h"
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using namespace indexer_common;
 
     AccumulatedFileInfo::AccumulatedFileInfo(char drive_letter, uint id)
         : UsedFilenameFlags(FilenameFlagsEnum::EMPTY),
           // HardLinksCount(0),
           SizeReal(0),
           // SizeAllocated(0),
-          fi_(make_unique<FileInfo>(drive_letter)) {
+		  fi_(std::make_unique<FileInfo>(drive_letter)) {
 
         fi_->ID = id;
     }
@@ -88,13 +88,13 @@ namespace ntfs_reader {
         return better;
     }
 
-    unique_ptr<FileInfo> AccumulatedFileInfo::GetFinalResult() {
+	std::unique_ptr<FileInfo> AccumulatedFileInfo::GetFinalResult() {
 
         if (fi_ && fi_->ParentID && fi_->GetName() != nullptr) {
 
             fi_->SizeReal = Helper::SizeFromBytesToKiloBytes(SizeReal);
             // fi_->SizeAllocated = SizeAllocated;
-            return move(fi_);
+			return std::move(fi_);
         }
 
         return nullptr;

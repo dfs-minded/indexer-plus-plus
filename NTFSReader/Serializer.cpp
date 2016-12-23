@@ -11,7 +11,12 @@
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using std::wstring;
+	using std::to_wstring;
+
+	using indexer_common::uint64;
+	using indexer_common::IndexerDateTime;
+
 
     const wstring Serializer::kDelim = L";";
 
@@ -19,13 +24,13 @@ namespace ntfs_reader {
 #ifdef WIN32
         // string fname = string("MFTSerialized") + to_string(IndexerDateTime::TicksNow()) + string(".csv");
 
-        ostringstream fname;
-        fname << "MFTSerialized" << IndexerDateTime::TicksNow() << ".csv";
+        std::ostringstream fname;
+		fname << "MFTSerialized" << IndexerDateTime::TicksNow() << ".csv";
 
         fopen_s(&mft_serialization_file_, fname.str().c_str(), "w");
         _setmode(_fileno(mft_serialization_file_), _O_U8TEXT);
 
-/*wstring header = L"Signature" + delim + L"Lsn" + delim + L"SequenceNumber" + delim +
+	/*wstring header = L"Signature" + delim + L"Lsn" + delim + L"SequenceNumber" + delim +
                                      L"ReferenceCount" + delim + L"Flags" + delim + L"FirstFreeByte" + delim +
                                      L"MFTRecordNumber" + delim + L"ParentID" + delim + L"SizeReal" + delim +
                                      L"SizeAllocated" + delim + L"Flags" + delim + L"FileName";
@@ -46,7 +51,7 @@ namespace ntfs_reader {
 
         auto sign = *record_header->MultiSectorHeader.Signature;
 
-        res += to_wstring((uchar)sign) + kDelim;
+		res += to_wstring((indexer_common::uchar)sign) + kDelim;
         res += to_wstring(record_header->LogSeqNumber) + kDelim;
         res += to_wstring(record_header->SequenceNumber) + kDelim;
         res += to_wstring(record_header->HardLinks) + kDelim;
@@ -63,7 +68,7 @@ namespace ntfs_reader {
         return this;
     }
 
-    const Serializer* Serializer::Serialize(const uint64 data) {
+	const Serializer* Serializer::Serialize(const indexer_common::uint64 data) {
         WriteToFile(to_wstring(data));
         return this;
     }

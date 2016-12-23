@@ -9,13 +9,18 @@
 #include <cassert>
 
 #include "FileInfo.h"
-#include "HelperCommon.h"
+#include "../Common/Helper.h"
 
 #include "NTFSDataStructures.h"
 
 namespace ntfs_reader {
 
-    using namespace std;
+	using std::unique_ptr;
+	using std::make_unique;
+	using std::vector;
+	using std::pair;
+
+	using namespace indexer_common;
 
     RawMFTRecordsParser::RawMFTRecordsParser(VolumeData volume_data)
         : volume_data_(volume_data),
@@ -40,7 +45,7 @@ namespace ntfs_reader {
         return nullptr;
     }
 
-// TODO: fix while constraint.
+	// TODO: fix while constraint.
     unique_ptr<vector<pair<int64, int64>>> RawMFTRecordsParser::ParseRunList(const ATTRIBUTE_HEADER& attr_header) const {
         auto current_run_data_offset = attr_header.Form.Nonresident.LowestVCN;
 
@@ -69,7 +74,7 @@ namespace ntfs_reader {
 
             current_run_data_offset += run_offset;
 
-            u_data_pointers->push_back(make_pair(current_run_data_offset * volume_data_.BytesPerCluster,
+            u_data_pointers->push_back(std::make_pair(current_run_data_offset * volume_data_.BytesPerCluster,
                                                  run_length * volume_data_.BytesPerCluster));
 
             runlist_first_byte += 1 + run_length_field_size + run_offset_field_size;
