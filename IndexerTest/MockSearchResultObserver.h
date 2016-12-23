@@ -6,12 +6,16 @@
 
 #include "SearchResultObserver.h"
 
-class MockSearchResultObserver : public SearchResultObserver {
+namespace indexer {
 
-   public:
-    void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) {
-        LastResult = search_result;
-    }
+    class MockSearchResultObserver : public SearchResultObserver {
 
-    pSearchResult LastResult;
-};
+       public:
+        void OnNewSearchResult(pSearchResult search_result, bool isNewQuery) {
+            LastResult = search_result;
+        }
+
+        pSearchResult LastResult;
+    };
+
+} // namespace indexer

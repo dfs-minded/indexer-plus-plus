@@ -14,7 +14,7 @@
 #include "CompilerSymb.h"
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Macros.h"
 #include "OneThreadLog.h"
 
@@ -58,7 +58,7 @@ namespace indexer {
 
         std::thread worker_thread(&IndexManager::Run, this);
 
-        Helper::SetThreadName(&worker_thread, (string("ReaderAndWatcher ") + DriveLetter()).c_str());
+        helpers::SetThreadName(&worker_thread, (string("ReaderAndWatcher ") + DriveLetter()).c_str());
 
         worker_thread.detach();
 
@@ -75,7 +75,8 @@ namespace indexer {
 
         logger_->Debug(METHOD_METADATA + L"Called for drive " + DriveLetterW());
 
-        if (!ntfs_changes_watcher_) ntfs_changes_watcher_ = make_unique<NTFSChangesWatcher>(DriveLetter(), this);
+        if (!ntfs_changes_watcher_) ntfs_changes_watcher_ = 
+			make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), this);
 
         ntfs_changes_watcher_->CheckUpdates();
     }
@@ -264,11 +265,11 @@ namespace indexer {
 
                 auto log_msg = METHOD_METADATA + L"Cannot insert new. File with such ID already exists in index. ID = " +
                                to_wstring(new_fi->ID) + wstring(L" Name = ") +
-                               Helper::Char16ToWstring(new_fi->GetName());
+                               helpers::Char16ToWstring(new_fi->GetName());
 
                 if (new_fi->NameLength != existing->NameLength ||
                     memcmp(new_fi->GetName(), existing->GetName(), existing->NameLength) != 0) {
-                    log_msg += wstring(L" OldName = ") + Helper::Char16ToWstring(existing->GetName());
+                    log_msg += wstring(L" OldName = ") + helpers::Char16ToWstring(existing->GetName());
                 }
 
                 logger_->Warning(log_msg);

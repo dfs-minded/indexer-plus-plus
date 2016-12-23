@@ -15,52 +15,59 @@
 #include "SearchEngine.h"
 #include "SearchQuery.h"
 
-using namespace std;
+namespace indexer {
 
-class IndexManagerTest : public testing::Test {
+	using std::unique_ptr;
+	using std::make_unique;
 
-   public:
-    void SetUp() override {
-        u_default_query = make_unique<SearchQuery>();
-        engine_ = make_unique<SearchEngine>(&mock_search_res_observer);
+    class IndexManagerTest : public testing::Test {
 
-        // Search engine can change NotifyIndexChangedEventArgs and cause side effects.
-        IndexManagersContainer::Instance().UnregisterIndexChangeObserver(engine_.get());
+       public:
+        void SetUp() override {
+            u_default_query = make_unique<indexer_common::SearchQuery>();
+			engine_ = make_unique<SearchEngine>(&mock_search_res_observer);
 
-        IndexManagersContainer::Instance().RegisterIndexChangeObserver(&mock_index_change_observer);
+            // Search engine can change NotifyIndexChangedEventArgs and cause side effects.
+            IndexManagersContainer::Instance().UnregisterIndexChangeObserver(engine_.get());
+
+            IndexManagersContainer::Instance().RegisterIndexChangeObserver(&mock_index_change_observer);
+        }
+
+        void TearDown() override {
+            IndexManagersContainer::Instance().UnregisterIndexChangeObserver(&mock_index_change_observer);
+        }
+
+        char drive_letter_ = 'Z';
+		indexer_common::uSearchQuery u_default_query;
+        unique_ptr<SearchEngine> engine_;
+        MockIndexChangeObserver mock_index_change_observer;
+        MockSearchResultObserver mock_search_res_observer;
+    };
+
+	// Test create
+    TEST_F(IndexManagerTest, SimpleFileCreate) {
+
+		using indexer_common::CommandlineArguments;
+
+        CommandlineArguments::Instance().RawMFTPath = L"SerializedRawMFT/Disk_Z_RawMFT_11_25_16.txt";
+        CommandlineArguments::Instance().ReplayUSNRecPath = L"SerializedUSNRecordsFiles/OneAction/Create.txt";
+
+        IndexManagersContainer::Instance().AddDrive(drive_letter_);
+
+        // The first call of CheckUpdates() loads MFT.
+        const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
+        EXPECT_EQ(107, mock_index_change_observer.IndexChangedArgs->NewItems.size());
+
+        // The second call loads USN journal messages from Create.txt.
+        const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
+        EXPECT_EQ(1, mock_index_change_observer.IndexChangedArgs->NewItems.size());  // New file must be marked as added.
+        EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->OldItems.size());
+        EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->ChangedItems.size());
+
+        auto actual = mock_index_change_observer.IndexChangedArgs->NewItems[0]->GetName();
+        // TODO: problem with VS unicode literals compilation.
+        // auto expected = __L__(L"Новый Text Document.txt");
+        // EXPECT_EQ(expected, actual);
     }
 
-    void TearDown() override {
-        IndexManagersContainer::Instance().UnregisterIndexChangeObserver(&mock_index_change_observer);
-    }
-
-    char drive_letter_ = 'Z';
-    uSearchQuery u_default_query;
-    unique_ptr<SearchEngine> engine_;
-    MockIndexChangeObserver mock_index_change_observer;
-    MockSearchResultObserver mock_search_res_observer;
-};
-
-// Test create
-TEST_F(IndexManagerTest, SimpleFileCreate) {
-
-    CommandlineArguments::Instance().RawMFTPath = L"SerializedRawMFT/Disk_Z_RawMFT_11_25_16.txt";
-    CommandlineArguments::Instance().ReplayUSNRecPath = L"SerializedUSNRecordsFiles/OneAction/Create.txt";
-
-    IndexManagersContainer::Instance().AddDrive(drive_letter_);
-
-    // The first call of CheckUpdates() loads MFT.
-    const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
-    EXPECT_EQ(107, mock_index_change_observer.IndexChangedArgs->NewItems.size());
-
-    // The second call loads USN journal messages from Create.txt.
-    const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
-    EXPECT_EQ(1, mock_index_change_observer.IndexChangedArgs->NewItems.size());  // New file must be marked as added.
-    EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->OldItems.size());
-    EXPECT_EQ(0, mock_index_change_observer.IndexChangedArgs->ChangedItems.size());
-
-    auto actual = mock_index_change_observer.IndexChangedArgs->NewItems[0]->GetName();
-    // TODO: problem with VS unicode literals compilation.
-    // auto expected = __L__(L"Новый Text Document.txt");
-    // EXPECT_EQ(expected, actual);
-}
+} // namespace indexer

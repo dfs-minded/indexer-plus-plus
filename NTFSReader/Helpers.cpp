@@ -2,24 +2,26 @@
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
-#include "Helper.h"
+#include "Helpers.h"
 
 #include <string.h>
 #include <vector>
 
 #include "WindowsWrapper.h"
 
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 
 namespace ntfs_reader {
+
+	namespace helpers {
 
     using std::make_pair;
 	using std::string;
 	using std::wstring;
 
-	const wstring Helper::kDelim = L":";
+	const wstring kDelim = L":";
 
-    const std::pair<wstring, DWORD> Helper::kUSNReasonsPairs[] = {
+    const std::pair<wstring, DWORD> kUSNReasonsPairs[] = {
 
         make_pair(wstring(L"USN_REASON_DATA_OVERWRITE"), 0x00000001),
         make_pair(wstring(L"USN_REASON_DATA_EXTEND"), 0x00000002),
@@ -46,7 +48,7 @@ namespace ntfs_reader {
         make_pair(wstring(L"USN_REASON_CLOSE"), 0x80000000)};
 
 
-    wstring Helper::SerializeRecord(const USN_RECORD& record, char drive) {
+    wstring SerializeRecord(const USN_RECORD& record, char drive) {
         wstring res;
         res += drive;  // 0
         res += kDelim;
@@ -73,48 +75,48 @@ namespace ntfs_reader {
         res += to_wstring(record.FileNameOffset) + kDelim;  // 15
 
 		indexer_common::ushort length;
-		res += reinterpret_cast<const wchar_t*>(indexer_common::Helper::GetFilename(record, &length));  // 16
+		res += reinterpret_cast<const wchar_t*>(indexer_common::helpers::GetFilename(record, &length));  // 16
         res += kDelim;
 
-        return move(res);
+        return std::move(res);
     }
 
-    std::pair<std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>>, char> Helper::DeserializeRecord(const wstring& s) {
+    std::pair<std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>>, char> DeserializeRecord(const wstring& s) {
 
-		auto parts = indexer_common::Helper::Split(s, kDelim);
-		auto filename_length = indexer_common::Helper::ParseNumber<int>(parts[14]);
+		auto parts = indexer_common::helpers::Split(s, kDelim);
+		auto filename_length = indexer_common::helpers::ParseNumber<int>(parts[14]);
 
         if (filename_length != 2 * parts[16].size()) {
             auto size = parts[16].size();
-			indexer_common::WriteToOutput(string("Incorrect filename size: ") + std::to_string(size));
+			indexer_common::helpers::WriteToOutput(string("Incorrect filename size: ") + std::to_string(size));
         }
 
-		auto record_size = indexer_common::Helper::ParseNumber<int>(parts[1]);
+		auto record_size = indexer_common::helpers::ParseNumber<int>(parts[1]);
 
         // Malloc is needed to hold record in one memory block, not to split it. This made for the convenience to put
         // everything in one buffer (not to have separate buffer for other memory piece for FileName property).
         std::unique_ptr<USN_RECORD, std::function<void(USN_RECORD*)>> record(static_cast<USN_RECORD*>(malloc(record_size)),
                                                                    [](USN_RECORD* r) { free(r); });
 
-		using indexer_common::Helper;
+		using indexer_common::helpers::ParseNumber;
 
         record->RecordLength              = record_size;
-        record->MajorVersion              = Helper::ParseNumber<WORD>(parts[2]);
-        record->MinorVersion              = Helper::ParseNumber<WORD>(parts[3]);
-        record->FileReferenceNumber       = Helper::ParseNumber<DWORDLONG>(parts[4]);
-        record->ParentFileReferenceNumber = Helper::ParseNumber<DWORDLONG>(parts[5]);
-        record->Usn                       = Helper::ParseNumber<USN>(parts[6]);
+        record->MajorVersion              = ParseNumber<WORD>(parts[2]);
+        record->MinorVersion              = ParseNumber<WORD>(parts[3]);
+        record->FileReferenceNumber       = ParseNumber<DWORDLONG>(parts[4]);
+        record->ParentFileReferenceNumber = ParseNumber<DWORDLONG>(parts[5]);
+        record->Usn                       = ParseNumber<USN>(parts[6]);
 
-        record->TimeStamp.HighPart = Helper::ParseNumber<LONG>(parts[7]);
-        record->TimeStamp.LowPart = Helper::ParseNumber<DWORD>(parts[8]);
+        record->TimeStamp.HighPart = ParseNumber<LONG>(parts[7]);
+        record->TimeStamp.LowPart = ParseNumber<DWORD>(parts[8]);
 
-        record->Reason = Helper::ParseNumber<DWORD>(parts[9]);
-        record->SourceInfo = Helper::ParseNumber<DWORD>(parts[11]);
-        record->SecurityId = Helper::ParseNumber<DWORD>(parts[12]);
+        record->Reason = ParseNumber<DWORD>(parts[9]);
+        record->SourceInfo = ParseNumber<DWORD>(parts[11]);
+        record->SecurityId = ParseNumber<DWORD>(parts[12]);
 
-        record->FileAttributes = Helper::ParseNumber<DWORD>(parts[13]);
+        record->FileAttributes = ParseNumber<DWORD>(parts[13]);
         record->FileNameLength = filename_length;
-        record->FileNameOffset = Helper::ParseNumber<int>(parts[15]);
+        record->FileNameOffset = ParseNumber<int>(parts[15]);
 
 
         memcpy(record->FileName, parts[16].c_str(), filename_length);
@@ -124,7 +126,7 @@ namespace ntfs_reader {
         return make_pair(std::move(record), drive);
     }
 
-    wstring Helper::GetReasonString(DWORD reason) {
+    wstring GetReasonString(DWORD reason) {
         wstring res;
         for (auto r : kUSNReasonsPairs) {
             if (r.second & reason) res += r.first + L" & ";
@@ -132,7 +134,7 @@ namespace ntfs_reader {
         return res == L"" ? L" " : res;
     }
 
-    wstring Helper::GetEncodingString(const wchar_t* text) {
+    wstring GetEncodingString(const wchar_t* text) {
         wstring res;
         while (*text != 0) {
             res += std::to_wstring((int)*text) + L", ";
@@ -140,5 +142,7 @@ namespace ntfs_reader {
         }
         return res;
     }
+
+	} // //namespace helpers
 
 } // namespace ntfs_reader

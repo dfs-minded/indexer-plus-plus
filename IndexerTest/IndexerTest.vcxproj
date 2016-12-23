@@ -91,10 +91,10 @@
     <ClCompile Include="FIleInfoSerializationTest.cpp" />
     <ClCompile Include="FileInfosFilterTest.cpp" />
     <ClCompile Include="HelperCommonTest.cpp" />
+    <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SearchComparisonTest.cpp" />
     <ClCompile Include="SearchQuerySerializationTest.cpp" />
-    <ClCompile Include="TestsHelperFunctions.cpp" />
     <ClCompile Include="TextComparisonTest.cpp" />
     <ClCompile Include="USNRecordSerializationTest.cpp" />
     <ClCompile Include="IndexManagerTest.cpp" />
@@ -120,7 +120,6 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="MockIndexChangeObserver.h" />
     <ClInclude Include="MockSearchResultObserver.h" />
-    <ClInclude Include="TestsHelperFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -11,7 +11,7 @@
 
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
-#include "Helper.h"
+#include "../Common/Helpers.h"
 
 namespace ntfs_reader {
 
@@ -30,7 +30,7 @@ namespace ntfs_reader {
 
         Compare(lhs, rhs);
 
-		WriteToOutput(result_);
+		helpers::WriteToOutput(result_);
     }
 
 	void ReaderDataComparator::Compare(const vector<FileInfo*>& lhs, 
@@ -89,11 +89,11 @@ namespace ntfs_reader {
             result_ += L"\n";
         }
 
-		WriteToOutput(result_);
+		helpers::WriteToOutput(result_);
     }
 
 
-// Timestamps, SizeAllocated and SizeReal that we receive from RawMFTReader are more accurate than in WinAPI.
+	// Timestamps, SizeAllocated and SizeReal that we receive from RawMFTReader are more accurate than in WinAPI.
 	wstring ReaderDataComparator::SerializeOnlyWhatIsDiffer(const FileInfo& lhs, const FileInfo& rhs) {
         wstring res;
 

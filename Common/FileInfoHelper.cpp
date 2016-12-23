@@ -8,7 +8,7 @@
 
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "Helper.h"
+#include "Helpers.h"
 #include "OneThreadLog.h"
 
 namespace indexer_common {
@@ -92,13 +92,16 @@ namespace indexer_common {
         auto file_attributes = FILE_ATTRIBUTE_NORMAL;
         auto flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
 
-        bool ok =
-            SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()), file_attributes, &info, sizeof(info), flags);
+        bool ok = SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()), 
+								file_attributes,
+								&info,
+								sizeof(info),
+								flags);
 
         if (!ok) Logger().Error(METHOD_METADATA + L"SHGetFileInfo failed.");
 
-        auto u_type_name = Helper::CopyToNewWchar(reinterpret_cast<char16_t*>(info.szTypeName));
-        auto u_ext = Helper::CopyToNewWchar(ext);
+        auto u_type_name = helpers::CopyToNewWchar(reinterpret_cast<char16_t*>(info.szTypeName));
+        auto u_ext = helpers::CopyToNewWchar(ext);
 
         extension_to_type_map_[u_ext.release()] = u_type_name.release();
         return extension_to_type_map_[ext];
@@ -124,7 +127,7 @@ namespace indexer_common {
             extensions->push_back(ext);
             if (extension_to_int_map_.find(ext) == extension_to_int_map_.end()) {
                 need_reindex = true;
-                auto new_ext = Helper::CopyToNewWchar(ext);
+                auto new_ext = helpers::CopyToNewWchar(ext);
                 extension_to_int_map_.emplace(new_ext.release(), 0);
             }
         }
@@ -199,7 +202,7 @@ namespace indexer_common {
         res += to_wstring(fi.ParentID) + g_delim;    // 2
         res += to_wstring(fi.NameLength) + g_delim;  // 3
 
-        res += Helper::Char16ToWstring(fi.GetName()) + g_delim;  // 4
+        res += helpers::Char16ToWstring(fi.GetName()) + g_delim;  // 4
 
         res += to_wstring(fi.FileAttributes) + g_delim;  // 5
 
@@ -218,7 +221,7 @@ namespace indexer_common {
 
         res += L"; ID = " + to_wstring(fi.ID);
         res += L"; ParentID = " + to_wstring(fi.ParentID);
-        res += L"; FileInfo: Name = " + Helper::Char16ToWstring(fi.GetName());
+        res += L"; FileInfo: Name = " + helpers::Char16ToWstring(fi.GetName());
         res += L"; NameLength = " + to_wstring(fi.NameLength);
         res += L"; FileAttributes = " + to_wstring(fi.FileAttributes);
 
@@ -233,25 +236,25 @@ namespace indexer_common {
     }
 
     unique_ptr<FileInfo> DeserializeFileInfo(const wstring& source) {
-        auto parts = Helper::Split(source, g_delim, Helper::SplitOptions::INCLUDE_EMPTY);
+        auto parts = helpers::Split(source, g_delim, helpers::SplitOptions::INCLUDE_EMPTY);
 
         char drive_letter = static_cast<char>(parts[0][0]);
 
         auto fi = make_unique<FileInfo>(drive_letter);
 
-        fi->ID = Helper::ParseNumber<uint>(parts[1]);
-        fi->ParentID = Helper::ParseNumber<uint>(parts[2]);
+        fi->ID = helpers::ParseNumber<uint>(parts[1]);
+        fi->ParentID = helpers::ParseNumber<uint>(parts[2]);
 
-        auto name_len = Helper::ParseNumber<ushort>(parts[3]);
+        auto name_len = helpers::ParseNumber<ushort>(parts[3]);
         fi->CopyAndSetName(reinterpret_cast<const char16_t*>(parts[4].c_str()), name_len);
-        fi->FileAttributes = Helper::ParseNumber<uint>(parts[5]);
+        fi->FileAttributes = helpers::ParseNumber<uint>(parts[5]);
 
-        fi->SizeReal = Helper::ParseNumber<int>(parts[6]);
+        fi->SizeReal = helpers::ParseNumber<int>(parts[6]);
         // fi->SizeAllocated = HelperCommon::ParseNumber<uint64>(parts[7]);
 
-        fi->CreationTime = Helper::ParseNumber<uint>(parts[7]);
-        fi->LastAccessTime = Helper::ParseNumber<uint>(parts[8]);
-        fi->LastWriteTime = Helper::ParseNumber<uint>(parts[9]);
+        fi->CreationTime = helpers::ParseNumber<uint>(parts[7]);
+        fi->LastAccessTime = helpers::ParseNumber<uint>(parts[8]);
+        fi->LastWriteTime = helpers::ParseNumber<uint>(parts[9]);
 
         return fi;
     }

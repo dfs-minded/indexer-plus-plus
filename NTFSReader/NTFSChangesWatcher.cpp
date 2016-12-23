@@ -9,7 +9,7 @@
 #include "CommandlineArguments.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Log.h"
 #include "WindowsWrapper.h"
 #include "typedefs.h"
@@ -97,7 +97,7 @@ namespace ntfs_reader {
         auto journal_query = GetReadJournalQuery(low_usn);
 
         if (!ReadJournalRecords(journal_query.get(), buffer, byte_count)) {
-            WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
+            indexer_common::helpers::WriteToOutput(METHOD_METADATA + helpers::GetLastErrorString());
             return low_usn;
         }
 
@@ -115,7 +115,7 @@ namespace ntfs_reader {
             auto reason = record->Reason;
             auto ID = static_cast<uint>(record->FileReferenceNumber & 0x00000000FFFFFFFF);
 
-            // WriteToOutput(wstring(L" ID = ") + to_wstring(ID) + L" " + Helper::GetReasonString(reason));
+            // WriteToOutput(wstring(L" ID = ") + to_wstring(ID) + L" " + helpers::GetReasonString(reason));
 
             // It is really strange, but some system files creating and deleting at the same time.
             if ((reason & USN_REASON_FILE_CREATE) && (reason & USN_REASON_FILE_DELETE)) {
@@ -242,7 +242,7 @@ namespace ntfs_reader {
 #endif
         }
 
-        if (!ok) WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
+		if (!ok) indexer_common::helpers::WriteToOutput(METHOD_METADATA + helpers::GetLastErrorString());
 
         return ok;
     }

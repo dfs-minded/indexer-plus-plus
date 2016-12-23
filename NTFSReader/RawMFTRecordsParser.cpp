@@ -9,7 +9,7 @@
 #include <cassert>
 
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 
 #include "NTFSDataStructures.h"
 

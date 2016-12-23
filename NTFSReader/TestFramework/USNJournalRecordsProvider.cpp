@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 
 namespace ntfs_reader {
 
@@ -75,12 +75,12 @@ namespace ntfs_reader {
             return;
         }
 
-        auto time = Helper::LargeIntegerToInt64(records_[next_record_]->TimeStamp);
+        auto time = helpers::LargeIntegerToInt64(records_[next_record_]->TimeStamp);
         auto min_end_to = time + g_min_group_time;
         auto irecord = next_record_ + 1;
 
         while (irecord < static_cast<int>(records_.size())) {
-            auto current_time = Helper::LargeIntegerToInt64(records_[irecord]->TimeStamp);
+            auto current_time = helpers::LargeIntegerToInt64(records_[irecord]->TimeStamp);
             auto diff = current_time - time;
 
             if (diff > g_max_dist_event_ms && current_time > min_end_to) {

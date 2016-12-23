@@ -24,7 +24,7 @@
     <ClCompile Include="FileInfoHelper.cpp" />
     <ClCompile Include="ConnectionManager.cpp" />
     <ClCompile Include="FileInfo.cpp" />
-    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="IndexerDateTime.cpp" />
     <ClCompile Include="IndexerTimeSpan.cpp" />
     <ClCompile Include="LetterCaseMatching.cpp" />
@@ -44,7 +44,7 @@
     <ClInclude Include="CompilerSymb.h" />
     <ClInclude Include="ConnectionManager.h" />
     <ClInclude Include="FileInfo.h" />
-    <ClInclude Include="Helper.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="IndexerDateTime.h" />
     <ClInclude Include="IndexerTimeSpan.h" />
     <ClInclude Include="LetterCaseMatching.h" />

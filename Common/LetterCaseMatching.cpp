@@ -195,4 +195,5 @@ namespace indexer_common {
     	static ushort* lowerMatchTable = GenerateIdentityTable();
     	return lowerMatchTable;
     }
+
 } // namespace indexer_common

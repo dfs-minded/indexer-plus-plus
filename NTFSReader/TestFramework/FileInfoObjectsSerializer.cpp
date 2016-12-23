@@ -8,7 +8,6 @@
 #include <string>
 
 #include "FileInfoHelper.h"
-#include "Helper.h"
 #include "IndexerDateTime.h"
 #include "WindowsWrapper.h"
 
@@ -44,7 +43,7 @@ namespace ntfs_reader {
         FILE* file_infos_in = _wfopen(filename.c_str(), L"r");
         _setmode(_fileno(file_infos_in), _O_U8TEXT);
 #else
-        FILE* file_infos_in = fopen(Helper::WStringToString(filename).c_str(), "r");
+        FILE* file_infos_in = fopen(helpers::WStringToString(filename).c_str(), "r");
 #endif
 
         wchar_t buffer[1001];

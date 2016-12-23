@@ -4,7 +4,7 @@
 
 #include "SearchQuery.h"
 
-#include "Helper.h"
+#include "Helpers.h"
 
 namespace indexer_common {
 
@@ -60,8 +60,8 @@ namespace indexer_common {
     wstring SerializeQuery(const SearchQuery& query) {
         wstring res;
 
-        res += Helper::U16stringToWstring(query.Text) + g_delim;           // 0
-        res += Helper::U16stringToWstring(query.SearchDirPath) + g_delim;  // 1
+        res += helpers::U16stringToWstring(query.Text) + g_delim;           // 0
+        res += helpers::U16stringToWstring(query.SearchDirPath) + g_delim;  // 1
         res += to_wstring(query.MatchCase) + g_delim;                            // 2
         res += to_wstring(query.UseRegex) + g_delim;                             // 3
 
@@ -83,26 +83,26 @@ namespace indexer_common {
     }
 
     uSearchQuery DeserializeQuery(const wstring& source) {
-        auto parts = Helper::Split(source, g_delim, Helper::SplitOptions::INCLUDE_EMPTY);
+        auto parts = helpers::Split(source, g_delim, helpers::SplitOptions::INCLUDE_EMPTY);
 
-        auto text = Helper::WstringToU16string(parts[0]);
-        auto search_dir_path = Helper::WstringToU16string(parts[1]);
-        auto match_case = Helper::ParseNumber<bool>(parts[2]);
-        auto use_regex = Helper::ParseNumber<bool>(parts[3]);
+        auto text = helpers::WstringToU16string(parts[0]);
+        auto search_dir_path = helpers::WstringToU16string(parts[1]);
+        auto match_case = helpers::ParseNumber<bool>(parts[2]);
+        auto use_regex = helpers::ParseNumber<bool>(parts[3]);
 
-        auto size_from = Helper::ParseNumber<int>(parts[4]);
-        auto size_to = Helper::ParseNumber<int>(parts[5]);
+        auto size_from = helpers::ParseNumber<int>(parts[4]);
+        auto size_to = helpers::ParseNumber<int>(parts[5]);
 
-        auto exclude_hidden_and_system = Helper::ParseNumber<bool>(parts[6]);
-        auto exclude_folders = Helper::ParseNumber<bool>(parts[7]);
-        auto exclude_files = Helper::ParseNumber<bool>(parts[8]);
+        auto exclude_hidden_and_system = helpers::ParseNumber<bool>(parts[6]);
+        auto exclude_folders = helpers::ParseNumber<bool>(parts[7]);
+        auto exclude_files = helpers::ParseNumber<bool>(parts[8]);
 
-        auto c_time_from = Helper::ParseNumber<uint>(parts[9]);
-        auto c_time_to = Helper::ParseNumber<uint>(parts[10]);
-        auto a_time_from = Helper::ParseNumber<uint>(parts[11]);
-        auto a_time_to = Helper::ParseNumber<uint>(parts[12]);
-        auto m_time_from = Helper::ParseNumber<uint>(parts[13]);
-        auto m_time_to = Helper::ParseNumber<uint>(parts[14]);
+        auto c_time_from = helpers::ParseNumber<uint>(parts[9]);
+        auto c_time_to = helpers::ParseNumber<uint>(parts[10]);
+        auto a_time_from = helpers::ParseNumber<uint>(parts[11]);
+        auto a_time_to = helpers::ParseNumber<uint>(parts[12]);
+        auto m_time_from = helpers::ParseNumber<uint>(parts[13]);
+        auto m_time_to = helpers::ParseNumber<uint>(parts[14]);
 
         auto query = make_unique<SearchQuery>(text, search_dir_path, match_case, use_regex, size_from, size_to,
                                               exclude_hidden_and_system, exclude_folders, exclude_files, c_time_from,

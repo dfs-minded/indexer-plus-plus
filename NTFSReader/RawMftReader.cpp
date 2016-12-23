@@ -8,7 +8,7 @@
 
 #include "CommandlineArguments.h"
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Log.h"
 
 #include "RawMFTRecordsParser.h"
@@ -54,7 +54,7 @@ namespace ntfs_reader {
                                        : WinApiCommon::GetNtfsVolumeData(volume_.get(), volume_data_buff);
 
         if (!ok) {
-			WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
+			helpers::WriteToOutput(METHOD_METADATA + helpers::GetLastErrorString());
             return false;
         }
 
@@ -79,7 +79,7 @@ namespace ntfs_reader {
                                        : WinApiCommon::ReadBytes(volume_.get(), buff, volume_data_.MFTRecordSize);
 
         if (!res) {
-			WriteToOutput(METHOD_METADATA + Helper::GetLastErrorString());
+			helpers::WriteToOutput(METHOD_METADATA + helpers::GetLastErrorString());
             return nullptr;
         }
 
@@ -150,7 +150,7 @@ namespace ntfs_reader {
             if (!fi) continue;
 
             if (fi->ID == fi->ParentID) {
-				fi->SetName(Helper::GetDriveName(drive_letter), 2);
+				fi->SetName(helpers::GetDriveName(drive_letter), 2);
                 fi->Parent = fi;
                 result->Root = fi;
                 break;

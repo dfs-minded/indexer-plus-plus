@@ -8,20 +8,17 @@
 #include "Log.h"
 #include "OneThreadLog.h"
 
-#include "Helper.h"
+#include "Helpers.h"
 #include "LetterCaseMatching.h"
 
 namespace indexer_common {
 
-    using namespace std;
-
-// TODO: I believe it's possible to speed up this function.
-
+	// TODO: I believe it's possible to speed up this function.
     char16_t* search(const char16_t* text, const char16_t* pattern, const ushort* case_match_table) {
         // Log* logger_;
         // GET_LOGGER
 
-        int m = Helper::Str16Len(pattern), n = Helper::Str16Len(text), diff = n - m;
+		int m = helpers::Str16Len(pattern), n = helpers::Str16Len(text), diff = n - m;
 
         for (int i = 0, j; i <= diff; ++i) {
 

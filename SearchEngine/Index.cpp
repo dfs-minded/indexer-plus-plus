@@ -10,7 +10,7 @@
 
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Macros.h"
 #include "OneThreadLog.h"
 
@@ -67,7 +67,7 @@ namespace indexer {
 
             if (parent == nullptr) {
                 logger_->Warning(METHOD_METADATA + L"Cannot find parent for file" +
-                                 Helper::Char16ToWstring(fi->GetName()) + L" with ParentID = " +
+                                 helpers::Char16ToWstring(fi->GetName()) + L" with ParentID = " +
                                  to_wstring(fi->ParentID) +
                                  L" Deleting this FileInfo and assigning nullptr to it in the Index.");
 
@@ -118,7 +118,7 @@ namespace indexer {
         if (!parent) {
             logger_->Warning(METHOD_METADATA + L"No parent dir found in the tree for item with ID: " + to_wstring(fi->ID) +
                              L" ParentID: " + to_wstring(fi->ParentID) + L", Name: " +
-                             Helper::Char16ToWstring(fi->GetName()));
+                             helpers::Char16ToWstring(fi->GetName()));
             return false;
         }
 
@@ -136,7 +136,7 @@ namespace indexer {
         (*data_)[fi->ID] = fi;
 
         logger_->Debug(METHOD_METADATA + L"Inserted node with ID: " + to_wstring(fi->ID) + L" Name: " +
-                       Helper::Char16ToWstring(fi->GetName()) + L" ParentID: " + to_wstring(fi->ParentID));
+                       helpers::Char16ToWstring(fi->GetName()) + L" ParentID: " + to_wstring(fi->ParentID));
 
         return true;
     }
@@ -220,10 +220,10 @@ namespace indexer {
         const FileInfo* current = first_child;
 
         while (current != nullptr) {
-            wstring message = indent + Helper::Char16ToWstring(current->GetName()) + kDelim +
+            wstring message = indent + helpers::Char16ToWstring(current->GetName()) + kDelim +
                               to_wstring(current->ID) + kDelim + to_wstring(current->ParentID);
 
-            WriteToOutput(message);
+			helpers::WriteToOutput(message);
 
             if (current->FirstChild != nullptr) SerializeToOutput(current->FirstChild, indent + L'\t');
 

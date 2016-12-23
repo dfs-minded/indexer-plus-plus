@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AccumulatedFileInfo.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="TestFramework\FileInfoObjectsSerializer.h" />
-    <ClInclude Include="Helper.h" />
     <ClInclude Include="MFTReader.h" />
     <ClInclude Include="MFTReaderFactory.h" />
     <ClInclude Include="NotifyNTFSChangedEventArgs.h" />
@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccumulatedFileInfo.cpp" />
+    <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="TestFramework\FileInfoObjectsSerializer.cpp" />
-    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="NotifyNTFSChangedEventArgs.cpp" />
     <ClCompile Include="NTFSChangesWatcher.cpp" />
     <ClCompile Include="MFTReaderFactory.cpp" />

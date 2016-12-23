@@ -4,7 +4,7 @@
 
 #include "FilenameSearchQuery.h"
 
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 
 namespace indexer {
 
@@ -26,8 +26,8 @@ namespace indexer {
 
         auto result = make_unique<FilenameSearchQuery>();
 
-        auto parts = Helper::Split(text, u16string(reinterpret_cast<const char16_t*>(L"*?")),
-                                         Helper::SplitOptions::INCLUDE_SPLITTERS);
+        auto parts = helpers::Split(text, u16string(reinterpret_cast<const char16_t*>(L"*?")),
+                                         helpers::SplitOptions::INCLUDE_SPLITTERS);
 
         if (parts.size() == 0) return result;
 
@@ -36,7 +36,7 @@ namespace indexer {
             if (parts[0][0] == L'?')
                 result->NChars.push_back(parts[0].size());
             else if (parts[0][0] != L'*')
-                result->Strs.push_back(Helper::CopyU16StringToChar16(parts[0]));
+                result->Strs.push_back(helpers::CopyU16StringToChar16(parts[0]));
 
         } else {
 
@@ -56,12 +56,12 @@ namespace indexer {
                     if (result->NChars.size() == result->Strs.size())
                         result->NChars.push_back(-1);
                     else
-                        result->NChars.back() = -1;  // todo process cases ??*
+                        result->NChars.back() = -1;  // TODO process cases ??*
                 } else if (parts[i][0] == L'?') {
                     if (result->NChars.size() == result->Strs.size()) result->NChars.push_back(parts[i].size());
                 } else  // no wildcards
                 {
-                    result->Strs.push_back(Helper::CopyU16StringToChar16(parts[i]));
+                    result->Strs.push_back(helpers::CopyU16StringToChar16(parts[i]));
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace indexer {
         result->MinLength = 0;
 
         for (auto i = 0; i < result->NStrs; ++i) {
-            result->StrLengths.push_back(Helper::Str16Len(result->Strs[i]));
+            result->StrLengths.push_back(helpers::Str16Len(result->Strs[i]));
             result->MinLength += result->StrLengths[i];
         }
 

@@ -4,7 +4,7 @@
 
 #include "QueryFactory.h"
 
-#include "Helper.h"
+#include "Helpers.h"
 
 #include <stdlib.h>
 #include <iostream>
@@ -42,7 +42,7 @@ namespace ifind {
 			--number_length;
 		}
 
-		auto size = indexer_common::Helper::ParseNumber<long>(text.substr(0, number_length));
+		auto size = indexer_common::helpers::ParseNumber<long>(text.substr(0, number_length));
 		return size * multiplier;
 	}
 
@@ -91,7 +91,7 @@ namespace ifind {
 				searchDirPath = path;
 			}
 			
-			if (pathSpecified && searchDirPath != L"" && !indexer_common::Helper::DirExist(searchDirPath)) {
+			if (pathSpecified && searchDirPath != L"" && !indexer_common::helpers::DirExist(searchDirPath)) {
 				std::wcout << L"'" << searchDirPath << L"': No such directory" << std::endl;
 			}
 
@@ -234,8 +234,8 @@ namespace ifind {
 			}
 		}
 
-		auto res = std::make_unique<indexer_common::SearchQuery>(indexer_common::Helper::WstringToU16string(searchText),
-			indexer_common::Helper::WstringToU16string(searchDirPath), matchCase, false, sizeFrom,
+		auto res = std::make_unique<indexer_common::SearchQuery>(indexer_common::helpers::WstringToU16string(searchText),
+			indexer_common::helpers::WstringToU16string(searchDirPath), matchCase, false, sizeFrom,
 			sizeTo, excludeHidden, excludeFolders, excludeFiles, cTimeFrom, cTimeTo,
 			aTimeFrom, aTimeTo, mTimeFrom, mTimeTo);
 		return res;
@@ -270,7 +270,7 @@ namespace ifind {
 			*excludeFolders = true;
 		}
 		else {
-			throw std::invalid_argument("invalid argument '" + indexer_common::Helper::WStringToString(type) + "' to -type");
+			throw std::invalid_argument("invalid argument '" + indexer_common::helpers::WStringToString(type) + "' to -type");
 		}
 	}
 
@@ -279,7 +279,7 @@ namespace ifind {
 		auto* dt_now = indexer_common::IndexerDateTime::Now();
 
 		if (timeText[0] == '+') {
-			double time = indexer_common::Helper::ParseNumber<double>(timeText.substr(1));
+			double time = indexer_common::helpers::ParseNumber<double>(timeText.substr(1));
 			if (time == 0) {
 				time = 1;  // zero means within the past 1 day, according to documentation
 			}
@@ -288,13 +288,13 @@ namespace ifind {
 
 		}
 		else if (timeText[0] == '-') {
-			double time = indexer_common::Helper::ParseNumber<double>(timeText.substr(1));
+			double time = indexer_common::helpers::ParseNumber<double>(timeText.substr(1));
 			dt_now->Add(-1 * time, timeType);
 			*timeFrom = max(*timeFrom, dt_now->UnixSeconds());
 
 		}
 		else {  // from |time - 1| to |time|
-			double time = indexer_common::Helper::ParseNumber<double>(timeText);
+			double time = indexer_common::helpers::ParseNumber<double>(timeText);
 
 			dt_now->Add(-1 * time, timeType);
 			*timeTo = min(*timeTo, dt_now->UnixSeconds());

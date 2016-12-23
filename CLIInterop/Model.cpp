@@ -14,7 +14,7 @@
 #include "AsyncLog.h"
 #include "ConnectionManager.h"
 #include "FileInfoComparatorFactory.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "IndexManagersContainer.h"
 #include "OneThreadLog.h"
 #include "OutputFormatter.h"

@@ -8,7 +8,7 @@
 
 #include "WindowsWrapper.h"
 
-#include "Helper.h"
+#include "Helpers.h"
 
 namespace indexer_common {
 
@@ -50,7 +50,7 @@ namespace indexer_common {
         FileAttributes = record.FileAttributes;
 
         ushort name_len;
-        auto name = Helper::GetFilename(record, &name_len);
+		auto name = helpers::GetFilename(record, &name_len);
 
         SetName(name, name_len);
     }

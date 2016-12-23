@@ -7,14 +7,12 @@
 #include <sstream>
 #include <thread>
 
-#include "Helper.h"
+#include "Helpers.h"
 #include "IndexerDateTime.h"
 
 namespace indexer_common {
 
-    using namespace std;
-
-    wstring Log::GetTime() const {
+	std::wstring Log::GetTime() const {
         SYSTEMTIME st = IndexerDateTime::SystemTimeNow();
 
         char output[30];
@@ -25,15 +23,15 @@ namespace indexer_common {
         sprintf(output, "%d-%d-%d.%d", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 #endif
 
-        string str(output);
+        std::string str(output);
 
-        return Helper::StringToWstring(move(str));
+		return helpers::StringToWstring(move(str));
     }
 
-    wstring Log::GetThreadID() const {
-        wstringstream ss;
-        ss << this_thread::get_id();
-        return wstring(L"Thread:") + ss.str();
+    std::wstring Log::GetThreadID() const {
+		std::wstringstream ss;
+		ss << std::this_thread::get_id();
+		return std::wstring(L"Thread:") + ss.str();
     }
 
     void Log::RegisterMessagesListener(const LogMessagesListener* listener) {

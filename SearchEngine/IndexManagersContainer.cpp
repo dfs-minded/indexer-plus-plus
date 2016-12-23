@@ -8,7 +8,7 @@
 
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Log.h"
 #include "OneThreadLog.h"
 
@@ -150,7 +150,7 @@ namespace indexer {
             res += string(";  ");
         }
 
-        logger_->Debug(METHOD_METADATA + Helper::StringToWstring(res));
+        logger_->Debug(METHOD_METADATA + helpers::StringToWstring(res));
 
         return res;
     }
@@ -182,7 +182,7 @@ namespace indexer {
     const FileInfo* IndexManagersContainer::GetFileInfoByPath(const u16string& path) const {
 
         u16string delim(reinterpret_cast<const char16_t*>(L"/\\"));
-        auto path_components = Helper::Split(path, delim);
+        auto path_components = helpers::Split(path, delim);
         const FileInfo* root = nullptr;
 
         auto table = GetLowerMatchTable();

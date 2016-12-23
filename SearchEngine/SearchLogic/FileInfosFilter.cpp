@@ -35,7 +35,7 @@ namespace indexer {
         unique_ptr<re2::RE2> empty_reg_exp = make_unique<re2::RE2>("");
         unique_ptr<re2::RE2> reg_exp;
 
-        bool ok = Helper::Utf16ToUtf8(query_->Text, buffer_, kBufferSize);
+        bool ok = helpers::Utf16ToUtf8(query_->Text, buffer_, kBufferSize);
 
         if (ok) {
             reg_exp = make_unique<re2::RE2>(buffer_);
@@ -55,7 +55,7 @@ namespace indexer {
 
         // Use regex engine:
         if (query_->UseRegex) {
-            if (!Helper::Utf16ToUtf8(fi.GetName(), buffer_, kBufferSize)) return false;
+            if (!helpers::Utf16ToUtf8(fi.GetName(), buffer_, kBufferSize)) return false;
 
             return re2::RE2::PartialMatch(buffer_, *re_);
         }

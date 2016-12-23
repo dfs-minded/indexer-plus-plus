@@ -8,7 +8,7 @@
 #include <mutex>
 #include <thread>
 
-#include "Helper.h"
+#include "Helpers.h"
 #include "LogMessagesListener.h"
 #include "Macros.h"
 #include "WindowsWrapper.h"
@@ -35,7 +35,7 @@ namespace indexer_common {
 
         worker_thread_ = new thread(&AsyncLog::WriteToFile, this);
 
-        Helper::SetThreadName(worker_thread_, "AsyncLog");
+        helpers::SetThreadName(worker_thread_, "AsyncLog");
 
 #endif
     }

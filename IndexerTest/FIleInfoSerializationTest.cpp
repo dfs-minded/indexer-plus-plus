@@ -8,24 +8,27 @@
 #include "FileInfoHelper.h"
 #include "Helpers.h"
 
-TEST(FIleInfoSerializationTest, DeserializedFileInfoEqToOrig) {
+namespace indexer {
 
-    FileInfo fi('X');
-    fi.ID       = 123455678;
-    fi.ParentID = 908765432;
+    TEST(FIleInfoSerializationTest, DeserializedFileInfoEqToOrig) {
 
-    fi.CopyAndSetName(__L__("lemon ~ tree"), 10);
-    fi.FileAttributes = 26;
+        indexer_common::FileInfo fi('X');
+        fi.ID       = 123455678;
+        fi.ParentID = 908765432;
 
-    fi.SizeReal = 1020;
-    // fi.SizeAllocated = 1024;
+        fi.CopyAndSetName(__L__("lemon ~ tree"), 10);
+        fi.FileAttributes = 26;
 
-    fi.CreationTime   = 134033334;
-    fi.LastAccessTime = 135022224;
-    fi.LastWriteTime  = 136066664;
+        fi.SizeReal = 1020;
+        // fi.SizeAllocated = 1024;
 
-    auto serialized = SerializeFileInfo(fi);
-    auto deserialized = DeserializeFileInfo(serialized);
+        fi.CreationTime   = 134033334;
+        fi.LastAccessTime = 135022224;
+        fi.LastWriteTime  = 136066664;
 
-    EXPECT_TRUE(fi == *deserialized.get());
-}
+		auto serialized = indexer_common::SerializeFileInfo(fi);
+		auto deserialized = indexer_common::DeserializeFileInfo(serialized);
+
+        EXPECT_TRUE(fi == *deserialized.get());
+    }
+} // namespace indexer

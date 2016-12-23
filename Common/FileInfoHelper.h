@@ -7,7 +7,7 @@
 #include <map>
 #include <memory>
 
-#include "Helper.h"
+#include "Helpers.h"
 #include "Log.h"
 #include "TextComparison.h"
 
@@ -19,7 +19,7 @@ namespace indexer_common {
     typedef std::map<const char16_t*, const char16_t*, WcharLessComparator> WcharToWcharMap;
 
 
-// Facilitates work with FileInfo objects, provides additional FileInfo functions.
+	// Facilitates work with FileInfo objects, provides additional FileInfo functions.
 
     class FileInfoHelper {
        public:
@@ -70,15 +70,16 @@ namespace indexer_common {
     bool operator==(const FileInfo& lhs, const FileInfo& rhs);
 
 
-// Serializes FileInfo for the test framework.
+	// Serializes FileInfo for the test framework.
 
     std::wstring SerializeFileInfo(const FileInfo& fi);
 
 
-// Serializes FileInfo in human readable format.
+	// Serializes FileInfo in human readable format.
 
     std::wstring SerializeFileInfoHumanReadable(const FileInfo& fi);
 
 
     std::unique_ptr<FileInfo> DeserializeFileInfo(const std::wstring& source);
+
 } // namespace indexer_common

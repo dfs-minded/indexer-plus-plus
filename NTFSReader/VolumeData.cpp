@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 
 namespace ntfs_reader {
 
@@ -29,7 +29,8 @@ namespace ntfs_reader {
         MFTSize         = volume_data.MftValidDataLength.QuadPart;
 		MFTRecordsNum = static_cast<indexer_common::uint64>(volume_data.MftValidDataLength.QuadPart / MFTRecordSize);
 
-		indexer_common::WriteToOutput(L"MFTSize: " + std::to_wstring(MFTSize) + L" MFTRecordsNum: " + std::to_wstring(MFTRecordsNum));
+		indexer_common::helpers::WriteToOutput(
+			L"MFTSize: " + std::to_wstring(MFTSize) + L" MFTRecordsNum: " + std::to_wstring(MFTRecordsNum));
     }
 
 } // namespace ntfs_reader

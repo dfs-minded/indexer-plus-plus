@@ -5,7 +5,7 @@
 #include "WinApiMftReader.h"
 
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "typedefs.h"
 
 #include "VolumeData.h"
@@ -55,7 +55,7 @@ namespace ntfs_reader {
 
         auto root = new FileInfo(drive_letter_);
 
-        root->SetName(Helper::GetDriveName(drive_letter_), 2);
+        root->SetName(helpers::GetDriveName(drive_letter_), 2);
         root->ID = FindRootID(*data);
 
         (*data)[root->ID] = root;

@@ -10,7 +10,7 @@
 #include "AsyncLog.h"
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Log.h"
 #include "Merger.h"
 #include "OneThreadLog.h"
@@ -63,7 +63,7 @@ namespace indexer {
         logger_->Debug(METHOD_METADATA + L" called");
         auto input_size = file_infos->size();
 
-        auto cores_num = Helper::GetNumberOfProcessors();
+        auto cores_num = helpers::GetNumberOfProcessors();
         auto num_files_to_sort_per_thread = input_size / cores_num + 1;
         const auto& begin_iter = file_infos->begin();
         vector<vector<const FileInfo*>> sub_vectors_to_sort;
@@ -138,15 +138,16 @@ namespace indexer {
 
         if (prop_ == SortingProperty::SORT_EXTENSION) {
 
-            vector<const char16_t*> ext_cache;  // To prevent retrieving |file_infos| extensions extra times.
-            auto& sort_prop_to_int = FileInfoHelper::GetDistinctOrderedExtensions(*file_infos, &ext_cache);
+			vector<const char16_t*> ext_cache;  // To prevent retrieving |file_infos| extensions extra times.
+			auto& sort_prop_to_int = FileInfoHelper::GetDistinctOrderedExtensions(*file_infos, &ext_cache);
 
-            for (size_t i = 0; i < input_size; ++i) {
-                if (sort_prop_to_int.find(ext_cache[i]) == sort_prop_to_int.end()) WriteToOutput("Fuck");
+			for (size_t i = 0; i < input_size; ++i) {
+				if (sort_prop_to_int.find(ext_cache[i]) == sort_prop_to_int.end())
+					helpers::WriteToOutput("SortByExtensionOrType: cannot find extantion in cache.");
 
-                sort_prop_to_fi_pairs[i].first = sort_prop_to_int.at(ext_cache[i]);
-                sort_prop_to_fi_pairs[i].second = (*file_infos)[i];
-            }
+				sort_prop_to_fi_pairs[i].first = sort_prop_to_int.at(ext_cache[i]);
+				sort_prop_to_fi_pairs[i].second = (*file_infos)[i];
+			}
 
         } else if (prop_ == SortingProperty::SORT_TYPE) {
 

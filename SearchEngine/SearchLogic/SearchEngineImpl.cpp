@@ -11,7 +11,7 @@
 #include "re2.h"
 #include "AsyncLog.h"
 #include "FileInfo.h"
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "Log.h"
 #include "OneThreadLog.h"
 #include "SearchQuery.h"
@@ -67,7 +67,7 @@ namespace indexer {
             conditional_var_ = new std::condition_variable();
 
             worker_thread_ = new std::thread(&SearchEngineImpl::SearchWorker, this);
-            Helper::SetThreadName(worker_thread_, "SearchWorker ");
+            helpers::SetThreadName(worker_thread_, "SearchWorker ");
             worker_thread_->detach();
         }
 #endif
@@ -124,7 +124,7 @@ namespace indexer {
         HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
         if (FAILED(hr))
             logger_->Error(METHOD_METADATA + L"Worker thread after FAIL CoInitializeEx. Res = " +
-                           Helper::GetLastErrorString());
+                           helpers::GetLastErrorString());
 #endif
 
 #ifdef SINGLE_THREAD

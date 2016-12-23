@@ -7,12 +7,12 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-#include "Helper.h"
+#include "../Common/Helpers.h"
 #include "Macros.h"
 #include "WindowsWrapper.h"
 
 #include "CommandlineArguments.h"
-#include "Helper.h"
+#include "Helpers.h"
 #include "IndexerDateTime.h"
 
 namespace ntfs_reader {
@@ -49,13 +49,13 @@ namespace ntfs_reader {
 
 
     void USNJournalRecordsSerializer::SerializeRecord(const USN_RECORD& record, char drive_letter) {
-        auto res = Helper::SerializeRecord(record, drive_letter);
+        auto res = helpers::SerializeRecord(record, drive_letter);
         PLOCK_GUARD
 
 #ifdef SINGLE_THREAD_LOG
         WriteToFile(move(res));
 #else
-        records_.push_back(move(res));
+        records_.push_back(std::move(res));
 #endif  // SINGLE_THREAD_LOG
     }
 
@@ -69,14 +69,14 @@ namespace ntfs_reader {
         FILE* records_in = _wfopen(records_filename.c_str(), L"r");
         _setmode(_fileno(records_in), _O_U8TEXT);
 #else
-        FILE* records_in = fopen(Helper::WStringToString(records_filename).c_str(), "r");
+        FILE* records_in = fopen(helpers::WStringToString(records_filename).c_str(), "r");
 #endif
 
         wchar_t buffer[1001];
 
         while (fgetws(buffer, 1000, records_in)) {
-            auto record_drive_pair = Helper::DeserializeRecord(buffer);
-            providers[record_drive_pair.second - 'A']->AddRecord(move(record_drive_pair.first));
+            auto record_drive_pair = helpers::DeserializeRecord(buffer);
+            providers[record_drive_pair.second - 'A']->AddRecord(std::move(record_drive_pair.first));
         }
 
         fclose(records_in);

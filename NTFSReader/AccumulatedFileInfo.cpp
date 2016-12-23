@@ -4,7 +4,7 @@
 
 #include "AccumulatedFileInfo.h"
 
-#include "../Common/Helper.h"
+#include "../Common/Helpers.h"
 #include "IndexerDateTime.h"
 
 namespace ntfs_reader {
@@ -92,7 +92,7 @@ namespace ntfs_reader {
 
         if (fi_ && fi_->ParentID && fi_->GetName() != nullptr) {
 
-            fi_->SizeReal = Helper::SizeFromBytesToKiloBytes(SizeReal);
+            fi_->SizeReal = helpers::SizeFromBytesToKiloBytes(SizeReal);
             // fi_->SizeAllocated = SizeAllocated;
 			return std::move(fi_);
         }
