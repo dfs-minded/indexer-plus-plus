@@ -16,7 +16,7 @@ namespace indexer {
 
 	using namespace indexer_common;
 
-    FileInfosFilter::FileInfosFilter() : match_case_table_(nullptr), buffer_(new char[kBufferSize]) {
+	FileInfosFilter::FileInfosFilter() : buffer_(make_unique<char[]>(kBufferSize)), match_case_table_(nullptr) {
     }
 
     void FileInfosFilter::ResetQuery(unique_ptr<SearchQuery> last_query) {
@@ -35,10 +35,10 @@ namespace indexer {
         unique_ptr<re2::RE2> empty_reg_exp = make_unique<re2::RE2>("");
         unique_ptr<re2::RE2> reg_exp;
 
-        bool ok = helpers::Utf16ToUtf8(query_->Text, buffer_, kBufferSize);
+        bool ok = helpers::Utf16ToUtf8(query_->Text, buffer_.get(), kBufferSize);
 
         if (ok) {
-            reg_exp = make_unique<re2::RE2>(buffer_);
+            reg_exp = make_unique<re2::RE2>(buffer_.get());
             ok = reg_exp->ok();  // compiled
         }
 
@@ -55,9 +55,9 @@ namespace indexer {
 
         // Use regex engine:
         if (query_->UseRegex) {
-            if (!helpers::Utf16ToUtf8(fi.GetName(), buffer_, kBufferSize)) return false;
+			if (!helpers::Utf16ToUtf8(fi.GetName(), buffer_.get(), kBufferSize)) return false;
 
-            return re2::RE2::PartialMatch(buffer_, *re_);
+			return re2::RE2::PartialMatch(buffer_.get(), *re_);
         }
 
         // Use Indexer++ implemented search (only with * ):

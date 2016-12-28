@@ -95,9 +95,9 @@ namespace indexer {
 
         std::unique_ptr<re2::RE2> re_;
 
-        const int kBufferSize = 1000;
+		static const int kBufferSize {1000};
 
-        char* buffer_;
+		std::unique_ptr<char[]> buffer_;
 
     	indexer_common::ushort* match_case_table_;  // TODO use from MFT.
     };

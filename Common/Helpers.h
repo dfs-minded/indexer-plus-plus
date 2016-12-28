@@ -34,7 +34,7 @@ namespace helpers {
 
 	const std::wstring Char16ToWstring(const char16_t* s);
 
-	bool Utf16ToUtf8(const std::u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size);
+	bool Utf16ToUtf8(const std::u16string& source_utf_16, char* dest_utf_8_buffer, const int buffer_size);
 
 	int Str16Len(const char16_t* s);
 

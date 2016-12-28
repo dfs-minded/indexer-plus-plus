@@ -77,7 +77,7 @@ namespace indexer_common {
 			return wstring(reinterpret_cast<const wchar_t*>(s));
 		}
 
-		bool Utf16ToUtf8(const u16string& source_utf_16, char* dest_utf_8_buffer, int buffer_size) {
+		bool Utf16ToUtf8(const u16string& source_utf_16, char* dest_utf_8_buffer, const int buffer_size) {
 
 			int source_size = static_cast<int>(source_utf_16.size());
 			if (source_size == 0) {
