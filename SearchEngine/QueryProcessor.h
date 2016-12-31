@@ -21,8 +21,9 @@ namespace indexer {
 
         NO_COPY(QueryProcessor)
 
-        virtual std::vector<std::wstring> Process(const std::wstring& query_string, const std::wstring& format_string,
-                                                  int max_files) override;
+        virtual std::unique_ptr<std::vector<std::wstring>> Process(const std::wstring& query_string,
+                                                                   const std::wstring& format_string,
+                                                                   int max_files) override;
     };
 
 } // namespace indexer

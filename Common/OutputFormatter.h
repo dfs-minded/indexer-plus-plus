@@ -14,21 +14,25 @@ namespace indexer_common {
 
     class FileInfo;
 
-// From the input FileInfo objects list and formatting string, creates serialized into strings (in a given format)
-// FileInfos output result.
+    // From the input FileInfo objects list and formatting string, creates serialized into strings (in a given format)
+    // FileInfos output result.
     class OutputFormatter {
        public:
         OutputFormatter(std::vector<const FileInfo*>* const input, std::wstring format_string = std::wstring(L""),
-                        int max_files = -1);
+                        size_t max_files = -1);
 
         NO_COPY(OutputFormatter)
 
-        std::vector<std::wstring> Format();
+        std::unique_ptr<std::vector<std::wstring>> Format();
 
        private:
+        void ReplaceSmallLettersInFormatToUppercase();
+
         bool DefaultFormat();
 
-        void WriteDefaultFormat();
+        void WriteDefaultFormat(std::vector<std::wstring>* output);
+
+        void WriteCustomUserFormat(std::vector<std::wstring>* output);
 
         bool DateTypeIsSet() const;
 
@@ -36,18 +40,18 @@ namespace indexer_common {
 
         bool DateTimeDirective() const;
 
-        void ParseDateTime();
+        void ParseDateTime(std::vector<std::wstring>* output);
 
         // Returns locale's and timezone specific time.
         std::wstring GetDateTimeStr(uint64 ticks) const;
 
-        bool ParseEscape();
+        bool ParseEscape(std::vector<std::wstring>* output);
 
-        void WriteCustomUserText();
+        void WriteCustomUserText(std::vector<std::wstring>* output);
 
         bool OtherSupportedDirective() const;
 
-        void WriteDirective();
+        void WriteDirective(std::vector<std::wstring>* output);
 
 
         static const std::wstring kDefaultTimeFormat;
@@ -60,15 +64,15 @@ namespace indexer_common {
         static const std::wstring kOtherSupportedFields;
 
         std::wstring format_;
-        int output_size_;
         std::wstring::iterator fmt_iter_;
 
         std::vector<const FileInfo*>* input_;
-        std::vector<std::wstring> output_;
+        size_t output_size_;
 
         wchar_t date_type_;
 
         bool intrerpret_symbol_as_directive_;
         bool intrerpret_symbol_as_escape_;
     };
+
 } // namespace indexer_common

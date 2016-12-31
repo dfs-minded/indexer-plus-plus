@@ -18,7 +18,8 @@ namespace indexer_common {
 
     class IQueryProcessor {
        public:
-        virtual std::vector<std::wstring> Process(const std::wstring& query, const std::wstring& format, int max_files) = 0;
+        virtual std::unique_ptr<std::vector<std::wstring>> Process(const std::wstring& query,
+                                                                   const std::wstring& format, int max_files) = 0;
 
         virtual ~IQueryProcessor() {
         }

@@ -9,7 +9,6 @@
 #include "AsyncLog.h"
 #include "FileInfo.h"
 #include "Helpers.h"
-#include "OneThreadLog.h"
 
 namespace indexer_common {
 

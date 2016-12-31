@@ -55,6 +55,8 @@ namespace indexer {
         IndexManagersContainer::Instance().AddDrive(drive_letter_);
 
         // The first call of CheckUpdates() loads MFT.
+
+        // Uncomment #define SINGLE_THREAD in CompilerSymblos.h before compilation!
         const_cast<IndexManager*>(IndexManagersContainer::Instance().GetIndexManager(drive_letter_))->CheckUpdates();
         EXPECT_EQ(107, mock_index_change_observer.IndexChangedArgs->NewItems.size());
 

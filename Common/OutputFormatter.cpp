@@ -12,32 +12,40 @@
 
 namespace indexer_common {
 
-    using namespace std;
+using std::string;
+using std::wstring;
+using std::vector;
 
 // Thu Aug 23 14:55:02 2001, locale-dependent
-    const wstring OutputFormatter::kDefaultTimeFormat = L"c";
-    const wchar_t OutputFormatter::kDefaultDateType = L'0';
+const wstring OutputFormatter::kDefaultTimeFormat = L"c";
+const wchar_t OutputFormatter::kDefaultDateType = L'0';
 
-    const wstring OutputFormatter::kTimeFields = L"@HIMpSXZ";
-    const wstring OutputFormatter::kDateFields = L"aAbBcdjmUwWxyY";
+const wstring OutputFormatter::kTimeFields = L"@HIMpSXZ";
+const wstring OutputFormatter::kDateFields = L"aAbBcdjmUwWxyY";
 
-    const wstring OutputFormatter::kDateTypes = L"ATC";
+const wstring OutputFormatter::kDateTypes = L"ATC";
 
-    const wstring OutputFormatter::kOtherSupportedFields = L"%hps";
+const wstring OutputFormatter::kOtherSupportedFields = L"%hps";
 
 
-    OutputFormatter::OutputFormatter(vector<const FileInfo*>* const input, wstring fmt /*= std::wstring(L"")*/,
-                                     int max_files /*= -1 */)
-        : format_(fmt),
-          input_(input),
-          output_(make_shared<vector<wstring>>()),
-          date_type_(kDefaultDateType),
-          intrerpret_symbol_as_directive_(false),
-          intrerpret_symbol_as_escape_(false) {
+OutputFormatter::OutputFormatter(vector<const FileInfo*>* const input, wstring fmt /*= wstring(L"")*/,
+                                 size_t max_files /*= -1 */)
+    : format_(fmt),
+      input_(input),
+      date_type_(kDefaultDateType),
+      intrerpret_symbol_as_directive_(false),
+      intrerpret_symbol_as_escape_(false) {
 
-        output_size_ = max_files == -1 ? input->size() : min(max_files, input->size());
-        setlocale(LC_ALL, ".OCP");
-        size_t pos = format_.find(L"%a");
+    output_size_ = max_files == -1 ? input->size() : min(max_files, input->size());
+
+    setlocale(LC_ALL, ".OCP");
+
+    ReplaceSmallLettersInFormatToUppercase();
+    }
+
+    void OutputFormatter::ReplaceSmallLettersInFormatToUppercase() {
+
+        auto pos = format_.find(L"%a");
         while (pos != string::npos) {
             format_ = format_.replace(pos + 1, 1, L"A" + kDefaultTimeFormat);
             pos = format_.find(L"%a");
@@ -54,19 +62,32 @@ namespace indexer_common {
             format_ = format_.replace(pos + 1, 1, L"C" + kDefaultTimeFormat);
             pos = format_.find(L"%c");
         }
-
-        fmt_iter_ = begin(format_);
     }
 
-    std::vector<std::wstring> OutputFormatter::Format() {
-        // |output_| could be already moved, call of clear makes its state defined..
-        output_.clear();
-        output_.resize(output_size_);
-        if (DefaultFormat()) {
-            WriteDefaultFormat();
-            return move(output_);
-        }
+    std::unique_ptr<vector<wstring>> OutputFormatter::Format() {
+        fmt_iter_ = begin(format_);
 
+        auto output = std::make_unique<vector<wstring>>(output_size_);
+
+        if (DefaultFormat())
+            WriteDefaultFormat(output.get());
+        else
+            WriteCustomUserFormat(output.get());
+
+        return std::move(output);
+    }
+
+    bool OutputFormatter::DefaultFormat() {
+        return fmt_iter_ == end(format_);
+    }
+
+    void OutputFormatter::WriteDefaultFormat(vector<wstring>* output) {
+        for (size_t i = 0; i < output->size(); ++i) {
+            (*output)[i] += reinterpret_cast<const wchar_t*>(input_->at(i)->GetName());
+        }
+    }
+
+    void OutputFormatter::WriteCustomUserFormat(vector<wstring>* output) {
         for (; fmt_iter_ != end(format_); ++fmt_iter_) {
             wchar_t symbol = *fmt_iter_;
 
@@ -81,8 +102,8 @@ namespace indexer_common {
             }
 
             if (intrerpret_symbol_as_escape_) {
-                if (!ParseEscape()) {
-                    WriteCustomUserText();
+                if (!ParseEscape(output)) {
+                    WriteCustomUserText(output);
                 }
                 intrerpret_symbol_as_escape_ = false;
                 continue;
@@ -95,35 +116,24 @@ namespace indexer_common {
                 }
 
                 if (DateTimeDirective() && DateTypeIsSet()) {
-                    ParseDateTime();
+                    ParseDateTime(output);
                     date_type_ = kDefaultDateType;
 
                 } else if (OtherSupportedDirective()) {
-                    WriteDirective();
+                    WriteDirective(output);
 
                 } else {
-                    WriteCustomUserText();
+                    WriteCustomUserText(output);
                 }
 
                 intrerpret_symbol_as_directive_ = false;
                 continue;
             }
 
-            WriteCustomUserText();
-        }
-
-        return move(output_);
-    }
-
-    bool OutputFormatter::DefaultFormat() {
-        return fmt_iter_ == end(format_);
-    }
-
-    void OutputFormatter::WriteDefaultFormat() {
-        for (size_t i = 0; i < output_.size(); ++i) {
-            output_[i] += reinterpret_cast<const wchar_t*>(input_->at(i)->GetName());
+            WriteCustomUserText(output);
         }
     }
+
 
     bool OutputFormatter::DateTimeDirective() const {
         wchar_t symbol = *fmt_iter_;
@@ -135,27 +145,27 @@ namespace indexer_common {
         return kDateTypes.find(*fmt_iter_) != string::npos;
     }
 
-    void OutputFormatter::ParseDateTime() {
-        for (size_t i = 0; i < output_.size(); ++i) {
-            const FileInfo* fi = (*input_)[i];
+    void OutputFormatter::ParseDateTime(vector<wstring>* output) {
+        for (size_t i = 0; i < output->size(); ++i) {
+            auto fi = (*input_)[i];
             switch (date_type_) {
                 case L'A':
-                    output_[i] += GetDateTimeStr(fi->LastAccessTime);
+                    (*output)[i] += GetDateTimeStr(fi->LastAccessTime);
                     break;
                 case L'T':
-                    output_[i] += GetDateTimeStr(fi->LastWriteTime);
+                    (*output)[i] += GetDateTimeStr(fi->LastWriteTime);
                     break;
                 case L'C':
-                    output_[i] += GetDateTimeStr(fi->LastAccessTime);
+                    (*output)[i] += GetDateTimeStr(fi->LastAccessTime);
                     break;
             }
         }
     }
 
-    std::wstring OutputFormatter::GetDateTimeStr(uint64 ticks) const {
+    wstring OutputFormatter::GetDateTimeStr(uint64 ticks) const {
         wchar_t symbol = *fmt_iter_;
         if (symbol == L'@') {
-            return to_wstring(IndexerDateTime::TicksToSeconds(ticks));
+            return std::to_wstring(IndexerDateTime::TicksToSeconds(ticks));
         }
 
         FILETIME filetime = IndexerDateTime::TicksToFiletime(ticks);
@@ -169,7 +179,7 @@ namespace indexer_common {
         return wstr;
     }
 
-    void OutputFormatter::WriteCustomUserText() {
+    void OutputFormatter::WriteCustomUserText(vector<wstring>* output) {
         wstring userText;
 
         if (DateTypeIsSet()) {
@@ -183,8 +193,8 @@ namespace indexer_common {
 
         userText += *fmt_iter_;
 
-        for (size_t i = 0; i < output_.size(); ++i) {
-            output_[i] += userText;
+        for (size_t i = 0; i < output->size(); ++i) {
+            (*output)[i] += userText;
         }
     }
 
@@ -192,58 +202,58 @@ namespace indexer_common {
         return kOtherSupportedFields.find(*fmt_iter_) != string::npos;
     }
 
-    void OutputFormatter::WriteDirective() {
-        for (size_t i = 0; i < output_.size(); ++i) {
-            const FileInfo* fi = (*input_)[i];
+    void OutputFormatter::WriteDirective(vector<wstring>* output) {
+        for (size_t i = 0; i < output->size(); ++i) {
+            auto fi = (*input_)[i];
             wstring path;
 
             switch (*fmt_iter_) {
                 case L'%':
-                    output_[i] += wstring(L"%");
+                    (*output)[i] += wstring(L"%");
                     break;
                 case L'h':
                     path = reinterpret_cast<const wchar_t*>(FileInfoHelper::GetPath(*fi, false).get());
-                    output_[i] += path;
+                    (*output)[i] += path;
                     break;
                 case L'p':
-                    output_[i] += reinterpret_cast<const wchar_t*>(fi->GetName());
+                    (*output)[i] += reinterpret_cast<const wchar_t*>(fi->GetName());
                     break;
                 case L's':
-                    output_[i] += to_wstring(fi->SizeReal);
+                    (*output)[i] += std::to_wstring(fi->SizeReal);
                     break;
             }
         }
     }
 
-    bool OutputFormatter::ParseEscape() {
-        for (size_t i = 0; i < output_.size(); ++i) {
-            const FileInfo* fi = (*input_)[i];
-            wstring& currentElem = output_[i];
+    bool OutputFormatter::ParseEscape(vector<wstring>* output) {
+        for (size_t i = 0; i < output->size(); ++i) {
+            auto fi = (*input_)[i];
+            auto& current_elem = (*output)[i];
 
             switch (*fmt_iter_) {
                 case L'a':
-                    currentElem += L'\a';
+                    current_elem += L'\a';
                     break;
                 case L'b':
-                    currentElem += L'\b';
+                    current_elem += L'\b';
                     break;
                 case L'f':
-                    currentElem += L'\f';
+                    current_elem += L'\f';
                     break;
                 case L'n':
-                    currentElem += L'\n';
+                    current_elem += L'\n';
                     break;
                 case L'r':
-                    currentElem += L'\r';
+                    current_elem += L'\r';
                     break;
                 case L't':
-                    currentElem += L'\t';
+                    current_elem += L'\t';
                     break;
                 case L'v':
-                    currentElem += L'\v';
+                    current_elem += L'\v';
                     break;
                 case L'\\':
-                    currentElem += L'\\';
+                    current_elem += L'\\';
                     break;
                 default:
                     return false;

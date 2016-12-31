@@ -95,9 +95,9 @@ namespace CLIInterop
 		auto output = fmt.Format();
 
 		auto res = gcnew List<String^>();
-		for (size_t i = 0; i < output.size(); ++i)
+		for (size_t i = 0; i < output->size(); ++i)
 		{
-			res->Add(Helper::ToSystemString(output[i]));
+			res->Add(Helper::ToSystemString((*output)[i]));
 		}
 		return res;
 	}

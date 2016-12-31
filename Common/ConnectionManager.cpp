@@ -66,9 +66,9 @@ namespace indexer_common {
         int max_files;
         ParseData(message, &query, &format, &max_files);
 
-        vector<wstring> result = query_processor_->Process(query, format, max_files);
+        auto result = query_processor_->Process(query, format, max_files);
 
-        for (const wstring& s : result) {
+        for (const wstring& s : *result) {
             if (!WriteMessageToPipe(pipe, s)) {
                 logger_->Error(METHOD_METADATA + L"Cannot write message to named pipe.");
                 break;
@@ -77,7 +77,7 @@ namespace indexer_common {
 
         WriteMessageToPipe(pipe, kLastMessageIndicator);  // Last message.
         logger_->Info(METHOD_METADATA + L"Search result is sent to a client, number of files = " +
-                      to_wstring(result.size()));
+                      to_wstring(result->size()));
 
         CloseHandle(pipe);
     }

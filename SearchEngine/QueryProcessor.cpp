@@ -4,6 +4,8 @@
 
 #include "QueryProcessor.h"
 
+#include <memory>
+
 #include "OutputFormatter.h"
 #include "SearchEngine.h"
 #include "SearchQuery.h"
@@ -14,15 +16,17 @@ namespace indexer {
 
 	using namespace indexer_common;
 
-    std::vector<wstring> QueryProcessor::Process(const wstring& query_string, const wstring& format_string, int max_files) {
-        std::unique_ptr<SearchEngine> engine(std::make_unique<SearchEngine>(nullptr, true));
+        std::unique_ptr<std::vector<wstring>> QueryProcessor::Process(const wstring& query_string,
+                                                                      const wstring& format_string, int max_files) {
 
-		uSearchQuery query = DeserializeQuery(query_string);
+            auto engine(std::make_unique<SearchEngine>(nullptr, true));
 
-        auto search_res = engine->Search(query.release());
+            uSearchQuery query = DeserializeQuery(query_string);
 
-		OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
-        return fmt.Format();
+            auto search_res = engine->Search(query.release());
+
+            OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
+            return fmt.Format();
     }
 
 } // namespace indexer
