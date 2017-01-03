@@ -52,7 +52,7 @@ namespace indexer {
         logger_->Debug(METHOD_METADATA + L"SearchEngine_ctor");
         indices_container_ = &IndexManagersContainer::Instance();
 
-        if (search_mode_only_) {
+        if (!search_mode_only_) {
             indices_container_->RegisterIndexChangeObserver(interface_class_);
         }
 
@@ -78,7 +78,7 @@ namespace indexer {
 
 #ifndef SINGLE_THREAD
         if (!search_mode_only_) {
-            delete locker_;
+			DELETE_MUTEX
             delete conditional_var_;
             delete worker_thread_;
         }
@@ -106,7 +106,7 @@ namespace indexer {
         query_search_res_outdated_ = true;
         stop_processing_current_query_ = true;
 
-        UNLOCK_AND_NOTIFY_ONE
+        NOTIFY_ONE
     }
 
     bool SearchEngineImpl::ReadyToProcessSearch() const {
@@ -139,7 +139,7 @@ namespace indexer {
             UNIQUE_LOCK
 
 #ifndef SINGLE_THREAD
-            conditional_var_->wait(locker_, [this]() { return ReadyToProcessSearch(); });
+            conditional_var_->wait(lock, [this]() { return ReadyToProcessSearch(); });
 #endif
 
             logger_->Debug(METHOD_METADATA + L"Worker thread awakened.");
@@ -162,7 +162,7 @@ namespace indexer {
 
             stop_processing_current_query_ = false;
 
-            UNLOCK
+            UNIQUE_UNLOCK
 
             // Process changes in the priority:
             // new search query, new sorting property or direction (and send this result to the user), indices changes.
@@ -217,8 +217,6 @@ namespace indexer {
             if (result_observer_) result_observer_->OnNewSearchResult(p_search_result_, query_changed);
         } else
             u_tmp_search_result_.release();
-
-        UNLOCK;
     }
 
     void SearchEngineImpl::ProcessNewSearchQuery() {
@@ -268,7 +266,7 @@ namespace indexer {
 
         TIK
 
-            SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
+        SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
 
         TOK(METHOD_METADATA + L"Search finished.");
 
@@ -348,8 +346,8 @@ namespace indexer {
         logger_->Debug(L"Processing " + to_wstring(do_not_include.size()) + L" old items, " +
                        to_wstring(items_to_include.size()) + L" new and changed items");
 
-        auto merge_res =
-            Merger::MergeWithMainCollection(*p_search_result_->Files, move(do_not_include), move(items_to_include), cmp);
+        auto merge_res = Merger::MergeWithMainCollection(*p_search_result_->Files, 
+												move(do_not_include), move(items_to_include), cmp);
 
         // Form new |u_tmp_search_result_|.
         auto deleter = make_unique<OldFileInfosDeleter>();
@@ -365,21 +363,21 @@ namespace indexer {
         logger_->Debug(METHOD_METADATA + L"Finished");
     }
 
-// Called from other then SearchWorker thread (UI thread).
+	// Called from other then SearchWorker thread (UI thread).
     void SearchEngineImpl::Sort(const string& property_name, int direction) {
 
         logger_->Info(METHOD_METADATA + L"Called from UI.");
 
+		UNIQUE_LOCK
+
         auto sort_column = PropertyNameToSortingPropertyEnum(property_name);
         assert(sort_column != SortingProperty::SORT_NOTSUPPORTED_COLUMNS);
-
-        UNIQUE_LOCK
 
         last_sort_prop_ = sort_column;
         last_sort_direction_ = direction;
         sort_outdated_ = true;
 
-        UNLOCK_AND_NOTIFY_ONE
+        NOTIFY_ONE
     }
 
     void SearchEngineImpl::Sort(vector<const FileInfo*>* file_infos) {
@@ -392,7 +390,7 @@ namespace indexer {
         TOK(L"Sorting finished.")
     }
 
-// Traverses index tree with DFS algo.
+	// Traverses index tree with DFS algo.
     void SearchEngineImpl::SearchInTree(const FileInfo& start_dir, vector<const FileInfo*>* result) const {
 
         static ushort counter = 0;
@@ -425,7 +423,7 @@ namespace indexer {
         }
     }
 
-// Called from other then SearchWorker thread (UI thread).
+	// Called from other then SearchWorker thread (UI thread).
     void SearchEngineImpl::OnIndexChanged(pNotifyIndexChangedEventArgs p_args) {
 
         logger_->Debug(METHOD_METADATA + L"Called.");
@@ -435,7 +433,7 @@ namespace indexer {
         index_changed_args_.push_back(move(p_args));
         index_outdated_ = true;
 
-        UNLOCK_AND_NOTIFY_ONE
+		NOTIFY_ONE
     }
 
 } // namespace indexer

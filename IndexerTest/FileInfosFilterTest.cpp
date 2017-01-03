@@ -74,7 +74,7 @@ namespace indexer {
             return filter_.filename_filter_.get();
         }
 
-        bool PassesSizeDatesFilterCall(const FileInfo& fi) {
+        bool PassesSizeDatesFilterCall(const FileInfo& fi) const {
             return filter_.PassesSizeDatesFilter(fi);
         }
     };

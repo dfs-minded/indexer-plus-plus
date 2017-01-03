@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "ConnectionManager.h"
-#include "QueryFactory.h"
+#include "UserArgsParser.h"
 #include "SearchQuery.h"
 
 using std::wcout;
@@ -22,23 +22,25 @@ using std::wstring;
 const int kMaxOutputLines = 50;
 
 int wmain(int argc, wchar_t* argv[]) {
-	_setmode(_fileno(stdout), _O_U16TEXT);  // For correct Unicode output to console.
-	wstring appName = argv[0];
 
-	if (argc <= 1) {
-		wcout << "Syntax " << appName << " [path...] [expression]\n";
-		return 0;
+    _setmode(_fileno(stdout), _O_U16TEXT);  // For correct Unicode output to console.
+
+    wstring app_name = argv[0];
+
+    if (argc <= 1) {
+        wcout << "Syntax " << app_name << " [path...] [expression]\n";
+        return 0;
 	}
 
-	wstring firstArg = argv[1];
+	wstring first_arg = argv[1];
 
-	if (firstArg == L"-help" || firstArg == L"--help") {
-		std::wifstream helpfile("helpText.txt");
+	if (first_arg == L"-help" || first_arg == L"--help") {
+		std::wifstream help_file("helpText.txt");
 		wstring line;
-		while (getline(helpfile, line))
-			wcout << line;
-		return 0;
-	}
+		while (getline(help_file, line))
+                    wcout << line << endl;
+                return 0;
+        }
 
 	if (!IsUserAnAdmin()) {
 		wcout << "Please run console with administrator privileges and try again." << endl;
@@ -46,22 +48,22 @@ int wmain(int argc, wchar_t* argv[]) {
 	}
 
 	std::vector<wstring> args;
-	for (int i = 1; i < argc; ++i)
-		args.push_back(wstring(argv[i]));
+        for (auto i = 1; i < argc; ++i)
+            args.push_back(wstring(argv[i]));
 
-	ifind::QueryFactory factory;
-	wstring format;
+    wstring format;
 	wstring outputPath;
-	indexer_common::uSearchQuery query;
+	indexer_common::uSearchQuery query; 
 
 	try {
-		query = factory.ParseInput(args, &format, &outputPath);
-	} catch (std::range_error& e) {
-		wcout << appName << e.what();
+      query = ifind::ComposeQueryFromUserInput(args, &format, &outputPath);
+    } 
+	catch (std::range_error& e) {
+		wcout << app_name << e.what();
 		return 0;
 	}
 	catch (std::invalid_argument& e) {
-		wcout << appName << e.what();
+		wcout << app_name << e.what();
 		return 0;
 	}
 

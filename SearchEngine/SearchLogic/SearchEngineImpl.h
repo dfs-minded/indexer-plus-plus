@@ -152,16 +152,16 @@ namespace indexer {
         std::unique_ptr<SearchResult> u_tmp_search_result_;
 
 
-        // Query received from Client (GUI, CMD, etc). Need to synchronize access via |locker_|.
+        // Query received from Client (GUI, CMD, etc). Need to synchronize access via |mtx_|.
 		std::unique_ptr<indexer_common::SearchQuery> last_query_;
 
         // Filter based on the value of |last_query_|.
         std::unique_ptr<FileInfosFilter> file_infos_filter_;
 
-        // Set by GUI. Need to synchronize access via |locker_|.
+        // Set by GUI. Need to synchronize access via |mtx_|.
         SortingProperty last_sort_prop_;
 
-        // Set by GUI. 1 == ascending, -1 == descending. Need to synchronize access via |locker_|.
+        // Set by GUI. 1 == ascending, -1 == descending. Need to synchronize access via |mtx_|.
         int last_sort_direction_;
 
         // Object, which performs FileInfos sorting.
@@ -178,7 +178,7 @@ namespace indexer {
 
 		indexer_common::Log* logger_;
 
-        std::mutex* locker_;
+        std::mutex* mtx_;
 
         std::condition_variable* conditional_var_;
 

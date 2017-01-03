@@ -42,6 +42,9 @@ namespace ntfs_reader {
     }
 
     USNJournalRecordsSerializer::~USNJournalRecordsSerializer() {
+
+		DELETE_MUTEX
+
         if (records_db_) {
             fclose(records_db_);
         }

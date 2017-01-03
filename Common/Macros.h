@@ -17,30 +17,28 @@ namespace indexer_common {
 
 #define NEW_MUTEX
 #define DELETE_MUTEX
-#define PLOCK_GUARD
+
 #define PLOCK
-#define UNIQUE_LOCK
-#define UNLOCK
 #define PUNLOCK
-#define UNLOCK_AND_NOTIFY_ONE SearchWorker();
+
+#define PLOCK_GUARD
+#define UNIQUE_LOCK
+#define UNIQUE_UNLOCK
+
 #define NOTIFY_ONE SearchWorker();
 
 #else
 
-#define NEW_MUTEX locker_ = new std::mutex();
-#define DELETE_MUTEX delete locker_;
+#define NEW_MUTEX mtx_ = new std::mutex();
+#define DELETE_MUTEX delete mtx_;
 
-#define LOCK locker_.lock();
-#define PLOCK locker_->lock();
-#define PLOCK_GUARD std::lock_guard<std::mutex> lock(*locker_);
+#define PLOCK mtx_->lock();
+#define PUNLOCK mtx_->unlock();
 
-#define UNIQUE_LOCK std::unique_lock<std::mutex> locker_(*locker_);
+#define PLOCK_GUARD std::lock_guard<std::mutex> lock(*mtx_);
+#define UNIQUE_LOCK std::unique_lock<std::mutex> lock(*mtx_);
+#define UNIQUE_UNLOCK lock.unlock();
 
-#define UNLOCK locker_.unlock();
-#define PUNLOCK locker_->unlock();
-#define UNLOCK_AND_NOTIFY_ONE \
-        locker_.unlock();         \
-        conditional_var_->notify_one();
 #define NOTIFY_ONE conditional_var_->notify_one();
 
 #endif  // SINGLE_THREAD

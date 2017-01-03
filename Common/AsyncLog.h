@@ -51,7 +51,7 @@ namespace indexer_common {
         std::list<std::wstring> tmp_messages_storage_;
 
 #ifndef SINGLE_THREAD
-        std::mutex* locker_;
+        std::mutex* mtx_;
         std::thread* worker_thread_;
 #endif
     };

@@ -14,6 +14,7 @@
     <ProjectGuid>{B5632A92-8D9F-4E03-9D5E-5E030062DA69}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ifind</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -97,16 +98,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="QueryFactory.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="ifind.cpp" />
-    <ClCompile Include="QueryFactory.cpp" />
+    <ClCompile Include="UserArgsParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{d8d07719-c061-41dc-9d8c-6e0c8a3c986f}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UserArgsParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

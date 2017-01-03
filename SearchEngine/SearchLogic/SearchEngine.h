@@ -23,7 +23,7 @@ namespace indexer {
        public:
         // When |search_mode_only| = false, SearchEngine doesn't listen to changes in file system and doesn't create
         // a dedicated thread for search. It can work only in sync mode, so only Search() method should be called.
-        SearchEngine(SearchResultObserver* resultObserver, bool search_mode_only = false);
+	    explicit SearchEngine(SearchResultObserver* result_observer, bool search_mode_only = false);
 
         NO_COPY(SearchEngine)
 

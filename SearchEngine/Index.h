@@ -150,7 +150,7 @@ namespace indexer {
 
 		indexer_common::uint64 start_time_;
 
-        std::mutex* locker_;
+        std::mutex* mtx_;
     };
 
     typedef std::unique_ptr<Index> uIndex;

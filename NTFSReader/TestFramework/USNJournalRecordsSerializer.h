@@ -58,7 +58,7 @@ namespace ntfs_reader {
         std::map<char, std::unique_ptr<USNJournalRecordsProvider> > records_providers_;
 
 
-        std::mutex* locker_;
+        std::mutex* mtx_;
 
         std::thread* worker_;
 

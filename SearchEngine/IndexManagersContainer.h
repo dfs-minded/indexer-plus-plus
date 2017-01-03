@@ -104,7 +104,7 @@ namespace indexer {
 
 		indexer_common::Log* logger_;
 
-        std::mutex* locker_;
+        std::mutex* mtx_;
     };
 
 } // namespace indexer

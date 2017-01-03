@@ -12,9 +12,8 @@ namespace indexer {
 
 	using namespace indexer_common;
 
-    SearchEngine::SearchEngine(SearchResultObserver* resultObserver, bool search_mode_only /*= false by default*/) {
-
-        p_impl_ = std::make_unique<SearchEngineImpl>(static_cast<SearchEngine*>(this), resultObserver, search_mode_only);
+    SearchEngine::SearchEngine(SearchResultObserver* result_observer, bool search_mode_only /*= false by default*/) :
+		p_impl_ { std::make_unique<SearchEngineImpl>(static_cast<SearchEngine*>(this), result_observer, search_mode_only) } {
     }
 
 	// If there is no explicit destructor implementation, C++/CLI treats SearchEngine as an incomplete type.

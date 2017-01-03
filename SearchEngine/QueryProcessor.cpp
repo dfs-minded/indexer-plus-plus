@@ -17,7 +17,7 @@ namespace indexer {
 	using namespace indexer_common;
 
         std::unique_ptr<std::vector<wstring>> QueryProcessor::Process(const wstring& query_string,
-                                                                      const wstring& format_string, int max_files) {
+                                                        const wstring& format_string, int max_files) {
 
             auto engine(std::make_unique<SearchEngine>(nullptr, true));
 

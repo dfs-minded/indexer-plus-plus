@@ -45,7 +45,7 @@ namespace indexer {
     }
 
     TEST(IndexerCommonHelpersTest, Char16ToWstring) {
-        const char16_t* s = reinterpret_cast<char16_t*>(L"file_name3");
+        const char16_t* s = reinterpret_cast<const char16_t*>(L"file_name3");
 
         wstring expected = L"file_name3";
         wstring result = indexer_common::helpers::Char16ToWstring(s);

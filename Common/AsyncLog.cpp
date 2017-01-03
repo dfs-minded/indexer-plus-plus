@@ -41,6 +41,7 @@ namespace indexer_common {
     }
 
     AsyncLog::~AsyncLog() {
+		DELETE_MUTEX
         fclose(log_file_);
     }
 
