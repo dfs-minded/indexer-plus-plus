@@ -39,11 +39,6 @@ namespace Indexer
                 Log.Instance.Error("LanguageProperty.OverrideMetadata throw exception: " + ex.Message);
             }
 
-            if (SystemConfigFlagsWrapper.Instance().TrayIcon)
-            {
-                TrayIconManager.CreateIcon();
-            }
-
             if (SystemConfigFlagsWrapper.Instance().PipeManager)
             {
                 ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -52,6 +47,13 @@ namespace Indexer
             else
             {
                 ShutdownMode = ShutdownMode.OnMainWindowClose;
+            }
+
+            if(AppAlreadyRuns) return;
+
+            if (SystemConfigFlagsWrapper.Instance().TrayIcon)
+            {
+                TrayIconManager.CreateIcon();
             }
 
             //if (SystemConfigFlagsWrapper.Instance().ShowDebugLogWindow)
@@ -72,7 +74,7 @@ namespace Indexer
 
             Log.Instance.Debug("Checking if app already runs.");
 
-            if (AppAlreadyRuns())
+            if (AppAlreadyRuns)
             {
                 var initialDir = CmdArgumentsParser.FilterDirPath;
                 Log.Instance.Debug("App already running, starting client. Filter dir path = " + initialDir);
@@ -99,11 +101,20 @@ namespace Indexer
             base.OnExit(e);
         }
 
-        private static bool AppAlreadyRuns()
+
+        private static bool? appAlreadyRuns;
+        private static bool AppAlreadyRuns
         {
-            bool created;
-            eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset, namePrefix, out created);
-            return !created;
+            get
+            {
+                if (appAlreadyRuns == null)
+                {
+                    bool created;
+                    eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset, namePrefix, out created);
+                    appAlreadyRuns = !created;
+                }
+                return appAlreadyRuns.Value;
+            }
         }
     }
 }

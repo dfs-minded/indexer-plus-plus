@@ -81,11 +81,16 @@ namespace Indexer
         public static void SetMainWndDirPathFilter(string dirPath)
         {
             var wnd = (MainWindow) Application.Current.MainWindow;
-            if (wnd == null || string.IsNullOrWhiteSpace(dirPath)) return;
+            if (wnd == null || string.IsNullOrWhiteSpace(dirPath))
+            {
+                Log.Instance.Error("SetMainWndDirPathFilter: Main window is null or dirPath is empty.");
+                return;
+            }
 
             wnd.DirFilterEnabled = true;
             wnd.SearchDirPath = dirPath;
             wnd.FiltersVisibility = UserSettings.Instance.FiltersVisibility = Visibility.Visible;
+            Log.Instance.Debug("SetMainWndDirPathFilter finished.");
         }
 
         public static void OpenNewIndexerWnd()

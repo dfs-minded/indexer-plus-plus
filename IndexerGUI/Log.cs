@@ -12,7 +12,6 @@ namespace Indexer
 {
     public class Log : IDisposable
     {
-        private readonly string filename = "IndexerUILog.txt";
         private readonly StreamWriter sw;
         private SingleThreadTimer saveTimer;
 
@@ -20,16 +19,18 @@ namespace Indexer
 
         private Log()
         {
-            sw = new StreamWriter(filename);
+            if (!Directory.Exists("Logs"))
+                Directory.CreateDirectory("Logs");
+
+            var filename = @"Logs/" + "IndexerUILog_" + DateTime.Now.Ticks + ".txt";
+
+            sw = File.AppendText(filename);
+
             Task.Factory.StartNew(RunSaveTimer);
         }
 
         private static Log instance;
-
-        public static Log Instance
-        {
-            get { return instance ?? (instance = new Log()); }
-        }
+        public static Log Instance => instance ?? (instance = new Log());
 
 
         public void Debug(string message)
@@ -52,8 +53,8 @@ namespace Indexer
         {
             var tmpStorage = Interlocked.Exchange(ref messages, new List<string>());
 
-            for (var i = 0; i < tmpStorage.Count; ++i)
-                sw.WriteLine(tmpStorage[i]);
+            foreach (var msg in tmpStorage)
+                sw.WriteLine(msg);
 
             sw.Flush();
         }

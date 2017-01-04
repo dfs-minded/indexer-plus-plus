@@ -256,8 +256,10 @@ Section "uninstall"
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
 	
+	rmDir /r /REBOOTOK $INSTDIR\Logs
+	
 	# Always delete uninstaller as the last action
 	delete "$INSTDIR\Uninstall ${APPNAME}.exe"
-	rmDir '$INSTDIR'
+	rmDir /r /REBOOTOK '$INSTDIR'
 	
 SectionEnd

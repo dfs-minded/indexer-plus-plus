@@ -16,16 +16,12 @@ namespace AddExplorerContextMenu
         {
             using (RegistryKey shellKey = Registry.ClassesRoot.OpenSubKey("Directory\\shell", true))
             {
-                if (shellKey != null)
-                {
-                    RegistryKey keyFolder = shellKey.CreateSubKey(KeyFolderName);
-                    if (keyFolder != null)
-                    {
-                        keyFolder.SetValue("Icon", iconPath);
-                        keyFolder.CreateSubKey("command")
-                            .SetValue("", exePath + " " + FilterDirPathArgName + "=\"%1\"");
-                    }
-                }
+                RegistryKey keyFolder = shellKey?.CreateSubKey(KeyFolderName);
+                if (keyFolder == null) return;
+                
+                keyFolder.SetValue("Icon", iconPath);
+                keyFolder.CreateSubKey("command").SetValue("", exePath + " " + FilterDirPathArgName + "=\"%1\"");
+                
             }
         }
 

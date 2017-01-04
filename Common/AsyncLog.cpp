@@ -24,7 +24,7 @@ namespace indexer_common {
 
     AsyncLog::AsyncLog() {
 #ifdef WIN32
-        log_file_ = _wfopen(L"IndexerLog.txt", L"w");
+        log_file_ = _wfopen(L"Logs//IndexerLog.txt", L"w");
         _setmode(_fileno(log_file_), _O_U8TEXT);
 #else
         log_file_ = fopen("IndexerLog.txt", "w");
