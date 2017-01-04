@@ -173,7 +173,7 @@ namespace ntfs_reader {
         // Move to the next header.
         attr_header = (ATTRIBUTE_HEADER*)((char*)attr_header + attr_header->RecordLength);
 
-        uint record_end_offset = min(volume_data_.MFTRecordSize, (uint)record_header.RecLength);
+        uint record_end_offset = std::min(volume_data_.MFTRecordSize, (uint)record_header.RecLength);
 
         auto record_end = (char*)&record_header + record_end_offset;
 

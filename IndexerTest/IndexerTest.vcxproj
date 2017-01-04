@@ -88,6 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ifind\UserArgsParser.cpp" />
+    <ClCompile Include="ComposeQueryFromUserInputTest.cpp" />
     <ClCompile Include="FIleInfoSerializationTest.cpp" />
     <ClCompile Include="FileInfosFilterTest.cpp" />
     <ClCompile Include="HelperCommonTest.cpp" />
@@ -105,9 +107,6 @@
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{d8d07719-c061-41dc-9d8c-6e0c8a3c986f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ifind\ifind.vcxproj">
-      <Project>{b5632a92-8d9f-4e03-9d5e-5e030062da69}</Project>
     </ProjectReference>
     <ProjectReference Include="..\NTFSReader\NTFSReader.vcxproj">
       <Project>{ea34951b-b40d-414e-9c3b-692d99513033}</Project>

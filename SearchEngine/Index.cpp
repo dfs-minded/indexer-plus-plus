@@ -206,7 +206,7 @@ namespace indexer {
             }
 
             // Just in case for size rounding error accumulation, assign zero if less than zero.
-            tmp->SizeReal = max(0, tmp->SizeReal + size_delta);
+            tmp->SizeReal = std::max(0, tmp->SizeReal + size_delta);
 
             if (tmp->ID == RootID()) break;
             tmp = GetNode(tmp->ParentID);

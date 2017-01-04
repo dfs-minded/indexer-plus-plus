@@ -6,12 +6,6 @@
 
 #include <memory>
 
-// I did not figure out why, but because of "Windows.h" header and related definitions of min and max template
-// functions, RE2 fails to compile StringPiece class.
-// TODO: write a wrapper for re2 to avoid writing #undef.
-#ifdef min
-#undef min
-#endif
 #include "re2.h"
 
 #include "FileInfo.h"

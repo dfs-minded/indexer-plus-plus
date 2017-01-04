@@ -1,6 +1,11 @@
 #pragma once
 
 #ifdef WIN32
+
+#ifndef NOMINMAX // We do not need min and max macroses from <Windows.h>
+#define NOMINMAX
+#endif
+
 #include <Windows.h>
 #include <io.h>
 #else

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 #include "Helpers.h"
 #include "IndexerDateTime.h"
@@ -20,7 +21,17 @@ namespace ifind {
 
     namespace {
 
-	const std::map<wchar_t, int> kSizeMultipliers{ { L'c', 1 },{ L'k', 1024 },{ L'M', 1024 * 1024 },{ L'G', 1024 * 1024 * 1024 } };
+	const std::map<wchar_t, int> kSizeMultipliers{ 
+		{ L'c', 1 },
+		{ L'B', 1 },
+		{ L'k', 1024 },
+		{ L'M', 1024 * 1024 },
+		{ L'G', 1024 * 1024 * 1024 } };
+
+	const std::map<wstring, wstring> kTwoLetterToOneSizeMultipliersMap{
+		{ wstring(L"KB"), wstring(L"k") },
+		{ wstring(L"MB"), wstring(L"M") },
+		{ wstring(L"GB"), wstring(L"G") } };
 
 
     // Returnts the current execution directory.
@@ -39,14 +50,31 @@ namespace ifind {
     }
 
 
-	int TryParseSize(const wstring& text) {
+	void NormalizeSizeSpecifierToOneLetter(wstring* size_text) {
+		// if the last but one is not a letter - nothing to normalize
+		auto last_but_one_indx = size_text->length() - 2;
+		if (isdigit(size_text->at(last_but_one_indx))) return;
+
+		for(auto& size_specif : kTwoLetterToOneSizeMultipliersMap) {
+			auto fount_pos = size_text->find(size_specif.first, last_but_one_indx);
+			if(fount_pos != string::npos) {
+				(*size_text) = size_text->replace(fount_pos, size_specif.first.length(), size_specif.second);
+				return;
+			}
+		}
+	}
+
+	int TryParseSize(wstring&& text) {
 		long multiplier = 1;  // If nothing specified, default is kilobytes.
 		int number_len = text.size();
 
-		// Try to find multiplier value by name.
-		auto multiplier_val = kSizeMultipliers.find(text.back());
-
 		if (!isdigit(text.back())) {
+			
+			NormalizeSizeSpecifierToOneLetter(&text);
+
+			// Try to find multiplier value by name.
+			auto multiplier_val = kSizeMultipliers.find(text.back());
+
 			if (multiplier_val == kSizeMultipliers.end())
 				throw std::invalid_argument(static_cast<char>(text.back()) + string(" is not valid unit for size"));
 
@@ -54,25 +82,26 @@ namespace ifind {
 			--number_len;
 		}
 
-		auto size = indexer_common::helpers::ParseNumber<long>(text.substr(0, number_len));
+		auto size = indexer_common::helpers::ParseNumber<long>(std::move(text.substr(0, number_len)));
 		return size * multiplier;
 	}
 
 
 	// Must be implemented like conjunction of all size restrictions.
-	void SetSize(const wstring& size_text, int* size_from, int* size_to) {
-		if (size_text[0] == '+') {
-			int size = TryParseSize(size_text.substr(1));
-			*size_from = max(*size_from, size);
+	// Making a copy of the original user input arg |size_text|, because we may need to modify it.
+	void SetSize(wstring size_text, int* size_from, int* size_to) {
+		if (size_text.front() == '+') {
+			auto size = TryParseSize(std::move(size_text.substr(1)));
+			*size_from = std::max(*size_from, size);
 		}
-		else if (size_text[0] == '-') {
-			int size = TryParseSize(size_text.substr(1));
-			*size_to = min(*size_to, size);
+		else if (size_text.front() == '-') {
+			auto size = TryParseSize(std::move(size_text.substr(1)));
+			*size_to = std::min(*size_to, size);
 		}
 		else {  // exact (precise) size
-			int size = TryParseSize(size_text);
-			*size_from = max(*size_from, size);
-			*size_to = min(*size_to, size);
+			auto size = TryParseSize(std::move(size_text));
+			*size_from = std::max(*size_from, size);
+			*size_to = std::min(*size_to, size);
 		}
 
 		if (*size_from > *size_to) {
@@ -108,23 +137,23 @@ namespace ifind {
 				time = 1;  // Zero means within the past 1 day, according to the documentation.
 			}
 			dt_now->Add(-1 * time, timeType);
-			*time_to = min(*time_to, dt_now->UnixSeconds());
+			*time_to = std::min(*time_to, dt_now->UnixSeconds());
 
 		}
 		else if (time_text[0] == '-') {
 			double time = indexer_common::helpers::ParseNumber<double>(time_text.substr(1));
 			dt_now->Add(-1 * time, timeType);
-			*time_from = max(*time_from, dt_now->UnixSeconds());
+			*time_from = std::max(*time_from, dt_now->UnixSeconds());
 
 		}
 		else {  // From |time - 1| to |time|.
 			double time = indexer_common::helpers::ParseNumber<double>(time_text);
 
 			dt_now->Add(-1 * time, timeType);
-			*time_to = min(*time_to, dt_now->UnixSeconds());
+			*time_to = std::min(*time_to, dt_now->UnixSeconds());
 
 			dt_now->Add(-1, timeType);
-			*time_from = max(*time_from, dt_now->UnixSeconds());
+			*time_from = std::max(*time_from, dt_now->UnixSeconds());
 		}
 	}
 
@@ -272,8 +301,8 @@ namespace ifind {
             } else if (arg == L"-size") {
 
                 ++args_num;
-                wstring sizeText = args[args_num];
-                SetSize(sizeText, &size_from, &size_to);
+                wstring size_text = args[args_num];
+                SetSize(size_text, &size_from, &size_to);
 
             } else if (arg == L"-type") {
 

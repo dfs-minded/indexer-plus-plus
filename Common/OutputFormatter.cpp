@@ -5,6 +5,7 @@
 #include "OutputFormatter.h"
 
 #include <string>
+#include <algorithm>
 
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
@@ -36,7 +37,7 @@ OutputFormatter::OutputFormatter(vector<const FileInfo*>* const input, wstring f
       intrerpret_symbol_as_directive_(false),
       intrerpret_symbol_as_escape_(false) {
 
-    output_size_ = max_files == -1 ? input->size() : min(max_files, input->size());
+    output_size_ = max_files == -1 ? input->size() : std::min(max_files, input->size());
 
     setlocale(LC_ALL, ".OCP");
 

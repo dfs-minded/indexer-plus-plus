@@ -66,16 +66,16 @@ namespace ntfs_reader {
                    to_wstring(different_fi_ids.size()) + L"\n";
 
         result_ += L" Only in " + lhs_name_ + L" result\n;";
-        for (size_t i = 0; i < min((size_t)100, only_in_lhs_ids.size()); ++i)
+        for (size_t i = 0; i < std::min((size_t)100, only_in_lhs_ids.size()); ++i)
 			result_ += SerializeFileInfoHumanReadable(*lhs.at(only_in_lhs_ids[i])) + L"\n";
 
         result_ += L" Only in " + rhs_name_ + L" result\n";
-        for (size_t i = 0; i < min((size_t)100, only_in_rhs_ids.size()); ++i)
+        for (size_t i = 0; i < std::min((size_t)100, only_in_rhs_ids.size()); ++i)
 			result_ += SerializeFileInfoHumanReadable(*rhs.at(only_in_rhs_ids[i])) + L"\n";
 
         result_ += L"Different:\n";
 
-        for (size_t i = 0; i < min((size_t)1000, different_fi_ids.size()); ++i) {
+        for (size_t i = 0; i < std::min((size_t)1000, different_fi_ids.size()); ++i) {
 
 			FileInfo* lhs_fi = lhs.at(different_fi_ids[i]);
 			FileInfo* rhs_fi = rhs.at(different_fi_ids[i]);

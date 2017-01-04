@@ -112,7 +112,7 @@ namespace ntfs_reader {
             SetVolumePointerFromVolumeBegin(run_offset);
 
             while (reading_offset < run_length) {
-				auto bytes_count = static_cast<uint>(min((uint64)kBufferSize, volume_data_.MFTSize - reading_offset));
+				auto bytes_count = static_cast<uint>(std::min((uint64)kBufferSize, volume_data_.MFTSize - reading_offset));
 
                 int res = read_serialized_mft_ ? RawMFTSerializer::Instance().ReadMFTFromFile(u_buff.get(), bytes_count)
                                                : WinApiCommon::ReadBytes(volume_.get(), u_buff.get(), bytes_count);

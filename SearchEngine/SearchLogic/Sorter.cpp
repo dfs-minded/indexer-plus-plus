@@ -68,12 +68,12 @@ namespace indexer {
         const auto& begin_iter = file_infos->begin();
         vector<vector<const FileInfo*>> sub_vectors_to_sort;
 
-        TIK for (uint from = 0, to = min(input_size, num_files_to_sort_per_thread); from < input_size;) {
+        TIK for (uint from = 0, to = std::min(input_size, num_files_to_sort_per_thread); from < input_size;) {
 
             sub_vectors_to_sort.push_back(vector<const FileInfo*>(begin_iter + from, begin_iter + to));
 
             from = to;
-            to = min(input_size, to + num_files_to_sort_per_thread);
+            to = std::min(input_size, to + num_files_to_sort_per_thread);
         }
         TOK(L"Sorting: file copying " + to_wstring(input_size) + L" " + to_wstring(num_files_to_sort_per_thread));
 
