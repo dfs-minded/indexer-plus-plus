@@ -13,8 +13,7 @@ Brief <i class="icon-provider-gdrive"></i><a href="https://docs.google.com/docum
 
 
 ###To build Indexer++ from source
-Sources can be built using Visual Studio 13 or later, .NET Framework 4.0. Suggested target platform is x86.
-Do not upgrade VC++ Compiler and libraries in Visual Studio dialog box.
+Sources can be built using Visual Studio <b>15</b>, .NET Framework 4.0. Suggested target platform is x86.
 
 IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be installed using NuGet package manager in Visual Studio.
 
