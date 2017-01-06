@@ -50,12 +50,16 @@ Base of file name (the path with the leading directories removed) matches patter
 
 **-iname pattern** Like **-name**, but the match is case insensitive. For example, the patterns 'fo*' and 'F??' match the file names 'Foo', 'FOO', 'foo', 'fOo', etc. 
 
-**-size n[cwbkMG]** File uses n units of space. The following suffixes can be used:
+**-size n[cwbkMG]** File uses n units of space.
 
->'c' or 'B' for bytes
->'k' or 'KB' for Kilobytes (units of 1024 bytes)
->'M' or 'MB' for Megabytes (units of 1048576 bytes)
->'G' or 'GB' for Gigabytes (units of 1073741824 bytes) 
+The following suffixes can be used:
+> 'c' or 'B' for bytes
+> 
+>  k' or 'KB' for Kilobytes (units of 1024 bytes)
+>  
+> 'M' or 'MB' for Megabytes (units of 1048576 bytes)
+> 
+> 'G' or 'GB' for Gigabytes (units of 1073741824 bytes)
 
 **-type d** File is of type d:
 	d directory
@@ -71,22 +75,37 @@ Print format into file filename, interpreting '\' escapes and '%' directives.
 
 Maximum number of files that would be displayed in console is 50. Use **-fprint** or **-fprintf** for bigger results set.
 
-The escapes and directives are: 
+The escapes and directives are:
 >\a Alarm bell.
-\b Backspace.
-\f Form feed.
-\n Newline.
-\r Carriage return.
-\t Horizontal tab.
-\v Vertical tab.
-\\ A literal backslash ('\').
-A '\' character followed by any other character is treated as an ordinary character, so they both are printed. 
-%% A literal percent sign.
-%a File's last access time in the current locale format.
-%t File's last modification time in the current locale format.
-%Ak File's last access time in the format specified by k, which is either '@' or a directive for the C 'wcsftime' function.
-%Tk File's last modification time in the format specified by k, which is the same as for %A.
-For creation and modification time use c, C and m, M correspondingly.
+>
+>\b Backspace.
+>
+>\f Form feed.
+>
+>\n Newline.
+>
+>\r Carriage return.
+>
+>\t Horizontal tab.
+>
+>\v Vertical tab.
+>
+>\\ A literal backslash ('\').
+>
+>A '\' character followed by any other character is treated as an ordinary character, so they both are printed. 
+>
+>%% A literal percent sign.
+>
+>%a File's last access time in the current locale format.
+>
+>%t File's last modification time in the current locale format.
+>
+>%Ak File's last access time in the format specified by k, which is either '@' or a directive for the C 'wcsftime' function.
+>
+>%Tk File's last modification time in the format specified by k, which is the same as for %A.
+
+
+For creation and modification time use **c**, **C** and **m**, **M** correspondingly.
 
 The possible values for k are listed below:
 ######Time fields:
