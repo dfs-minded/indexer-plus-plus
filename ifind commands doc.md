@@ -133,11 +133,14 @@ The possible values for k are listed below:
 	x locale's date representation (mm/dd/yy)
 	y last two digits of year (00..99)
 	Y year (1970...)
-######Other:
-	%h Leading directories of file's name (all but the last element).
-	%p File's name.
-	%s File's size in bytes.
-	A '%' character followed by any other character is discarded (but the other character is printed).
+######Other useful directives:
+>%h Leading directories of file's name (all but the last element).
+>
+>%p File's name.
+>
+>%s File's size in bytes.
+>
+>A '%' character followed by any other character is discarded (but the other character is printed).
 
 ####Examples
 
