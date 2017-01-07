@@ -4,7 +4,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include "typedefs.h"
+
+namespace indexer_common { class FileInfo; }
 
 namespace ntfs_reader {
 

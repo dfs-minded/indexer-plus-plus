@@ -10,6 +10,8 @@
 #include "Macros.h"
 #include "typedefs.h"
 
+namespace indexer_common { class FileInfo; }
+
 namespace ntfs_reader {
 
 	// This arguments used to store and pass changes, made in the file system. The intended

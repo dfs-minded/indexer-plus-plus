@@ -136,10 +136,10 @@ namespace indexer {
         {
             logger_->Debug(METHOD_METADATA + L"Entered section before thread will wait.");
 
-            UNIQUE_LOCK
+            UNIQUE_LOCK // |locker| variable is defined inside the macro.
 
 #ifndef SINGLE_THREAD
-            conditional_var_->wait(lock, [this]() { return ReadyToProcessSearch(); });
+            conditional_var_->wait(locker, [this]() { return ReadyToProcessSearch(); });
 #endif
 
             logger_->Debug(METHOD_METADATA + L"Worker thread awakened.");

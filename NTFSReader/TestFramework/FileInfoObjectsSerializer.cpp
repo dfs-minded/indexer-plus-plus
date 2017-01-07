@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <string>
 
+#include "FileInfo.h"
 #include "FileInfoHelper.h"
 #include "IndexerDateTime.h"
 #include "WindowsWrapper.h"

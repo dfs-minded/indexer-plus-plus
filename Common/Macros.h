@@ -35,12 +35,12 @@ namespace indexer_common {
 #define PLOCK mtx_->lock();
 #define PUNLOCK mtx_->unlock();
 
-#define PLOCK_GUARD std::lock_guard<std::mutex> lock(*mtx_);
-#define UNIQUE_LOCK std::unique_lock<std::mutex> lock(*mtx_);
-#define UNIQUE_UNLOCK lock.unlock();
+#define PLOCK_GUARD std::lock_guard<std::mutex> locker(*mtx_);
+#define UNIQUE_LOCK std::unique_lock<std::mutex> locker(*mtx_);
+#define UNIQUE_UNLOCK locker.unlock();
 
 #define NOTIFY_ONE conditional_var_->notify_one();
 
-#endif  // SINGLE_THREAD
+#endif // SINGLE_THREAD
 
 } // namespace indexer_common
