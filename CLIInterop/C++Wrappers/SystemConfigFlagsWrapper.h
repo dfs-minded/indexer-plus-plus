@@ -31,12 +31,12 @@ namespace CLIInterop
 
 		SystemConfigFlagsWrapper()
 		{
-			auto& flags = indexer_common::SystemConfigFlags::Instance();
-			TrayIcon = flags.TrayIcon;
+			auto* flags = indexer_common::SystemConfigFlagsInstance();
+			/*TrayIcon = flags.TrayIcon;
 			PipeManager = flags.PipeManager;
 			CallWatchChanges = flags.CallWatchChanges;
 			ShelContextMenu = flags.ShelContextMenu;
-			ShowDebugLogWindow = flags.ShowDebugLogWindow;
+			ShowDebugLogWindow = flags.ShowDebugLogWindow;*/
 		}
 	};
 }

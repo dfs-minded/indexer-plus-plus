@@ -43,4 +43,12 @@ namespace indexer_common {
 
 #endif // SINGLE_THREAD
 
+
+#ifdef LIB_EXPORT
+#define EXPORT __declspec( dllexport )
+#define STL_EXTERN 
+#else
+#define EXPORT __declspec( dllimport )
+#define STL_EXTERN extern
+#endif
 } // namespace indexer_common

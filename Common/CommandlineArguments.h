@@ -12,11 +12,11 @@
 // Parses and stores commandline arguments. All of them are used for testing purposes.
 namespace indexer_common {
 
-    class CommandlineArguments {
+    class EXPORT CommandlineArguments {
        public:
         NO_COPY(CommandlineArguments)
 
-        static CommandlineArguments& Instance() {
+		static CommandlineArguments& Instance() {
             static CommandlineArguments instance_;
             return instance_;
         }

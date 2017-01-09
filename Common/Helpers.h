@@ -11,6 +11,7 @@
 
 #include "WindowsWrapper.h"
 
+#include "macros.h"
 #include "typedefs.h"
 
 // TODO get rid of this.
@@ -24,7 +25,7 @@ namespace helpers {
 
 	char16_t* CopyU16StringToChar16(const std::u16string& s);
 
-	std::wstring StringToWstring(const std::string& str);
+	EXPORT std::wstring StringToWstring(const std::string& str);
 
 	std::string WStringToString(const std::wstring& w_str);
 

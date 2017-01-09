@@ -15,7 +15,7 @@ namespace indexer_common {
 
     enum class DateTimeEnum { Seconds, Minutes, Days };
 
-    class IndexerDateTime {
+    class EXPORT IndexerDateTime {
        public:
         IndexerDateTime() = default;
 

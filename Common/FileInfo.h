@@ -16,7 +16,7 @@
 
 namespace indexer_common {
 
-    class FileInfo {
+    class EXPORT FileInfo {
        public:
         explicit FileInfo(char drive_letter);
 

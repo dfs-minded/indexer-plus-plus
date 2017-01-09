@@ -10,13 +10,14 @@
 
 #include "WindowsWrapper.h"
 
+#include "macros.h"
 #include "typedefs.h"
 
 namespace indexer_common {
 
     class Log;
 
-    class IQueryProcessor {
+    class EXPORT IQueryProcessor {
        public:
         virtual std::unique_ptr<std::vector<std::wstring>> Process(const std::wstring& query,
                                                                    const std::wstring& format, int max_files) = 0;
@@ -27,7 +28,7 @@ namespace indexer_common {
 
     typedef std::shared_ptr<IQueryProcessor> pIQueryProcessor;
 
-    class ConnectionManager {
+    class EXPORT ConnectionManager {
        public:
         ConnectionManager();
 

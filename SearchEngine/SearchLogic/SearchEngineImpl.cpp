@@ -121,10 +121,10 @@ namespace indexer {
     void SearchEngineImpl::SearchWorker() {
 #ifdef WIN32
         // Needed for calls to COM.
-        HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-        if (FAILED(hr))
-            logger_->Error(METHOD_METADATA + L"Worker thread after FAIL CoInitializeEx. Res = " +
-                           helpers::GetLastErrorString());
+      //  HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+     //   if (FAILED(hr))
+      //      logger_->Error(METHOD_METADATA + L"Worker thread after FAIL CoInitializeEx. Res = " +
+       //                    helpers::GetLastErrorString());
 #endif
 
 #ifdef SINGLE_THREAD

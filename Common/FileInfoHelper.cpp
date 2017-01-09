@@ -91,11 +91,11 @@ namespace indexer_common {
         auto file_attributes = FILE_ATTRIBUTE_NORMAL;
         auto flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
 
-        bool ok = SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()), 
+		bool ok = false; /*SHGetFileInfo(reinterpret_cast<const wchar_t*>(u_full_name.get()),
 								file_attributes,
 								&info,
 								sizeof(info),
-								flags);
+								flags); */
 
         if (!ok) Logger().Error(METHOD_METADATA + L"SHGetFileInfo failed.");
 

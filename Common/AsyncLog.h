@@ -23,7 +23,7 @@ namespace indexer_common {
 	
 #endif
 
-    class AsyncLog : public Log {
+    class EXPORT AsyncLog : public Log {
        public:
         static Log& Instance();
 

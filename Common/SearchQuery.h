@@ -14,7 +14,7 @@
 
 namespace indexer_common {
 
-    struct SearchQuery {
+    struct EXPORT SearchQuery {
        public:
         NO_COPY(SearchQuery)
 

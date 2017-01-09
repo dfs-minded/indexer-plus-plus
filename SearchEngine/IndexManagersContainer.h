@@ -32,7 +32,7 @@ namespace indexer {
 
 	// Container class for index managers. A layer between index managers (and corresponding indices) and search engine.
 
-    class IndexManagersContainer : public IndexChangeObserver {
+    class EXPORT IndexManagersContainer : public IndexChangeObserver {
 
        public:
         NO_COPY(IndexManagersContainer)

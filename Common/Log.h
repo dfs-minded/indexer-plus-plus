@@ -8,6 +8,7 @@
 #include <string>
 
 #include "CompilerSymb.h"
+#include "macros.h"
 
 namespace indexer_common {
 
@@ -31,7 +32,7 @@ namespace indexer_common {
             logger_->Debug(std::wstring(L"PERF | ") + (msg) + std::wstring(L" | Elapsed ") + std::to_wstring(elapsed_time)); \
         }
 
-    class Log {
+    class EXPORT Log {
        public:
         virtual void Debug(const std::wstring& message) = 0;
 

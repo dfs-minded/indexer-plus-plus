@@ -68,6 +68,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>4800;6031</DisableSpecificWarnings>
       <OpenMPSupport>true</OpenMPSupport>
+      <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,6 +87,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
+      <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -132,15 +134,6 @@
     <ClCompile Include="C++Wrappers\SearchQueryWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3dParty\re2Project\re2.vcxproj">
-      <Project>{4221929b-b870-3304-9145-d3d9703fe5a0}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.vcxproj">
-      <Project>{d8d07719-c061-41dc-9d8c-6e0c8a3c986f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\NTFSReader\NTFSReader.vcxproj">
-      <Project>{ea34951b-b40d-414e-9c3b-692d99513033}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\SearchEngine\SearchEngine.vcxproj">
       <Project>{2db221fa-d190-482e-92e7-69094debd9b2}</Project>
     </ProjectReference>

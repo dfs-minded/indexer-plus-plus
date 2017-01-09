@@ -10,13 +10,15 @@
 #include "Macros.h"
 #include "typedefs.h"
 
+STL_EXTERN EXPORT std::wstring;
+
 namespace indexer_common {
 
     class FileInfo;
 
     // From the input FileInfo objects list and formatting string, creates serialized into strings (in a given format)
     // FileInfos output result.
-    class OutputFormatter {
+    class EXPORT OutputFormatter {
        public:
         OutputFormatter(std::vector<const FileInfo*>* const input, std::wstring format_string = std::wstring(L""),
                         size_t max_files = -1);

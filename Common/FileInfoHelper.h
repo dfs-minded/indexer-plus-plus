@@ -11,6 +11,8 @@
 #include "Log.h"
 #include "TextComparison.h"
 
+#include "macros.h"
+
 namespace indexer_common {
 
     class FileInfo;
@@ -21,7 +23,7 @@ namespace indexer_common {
 
 	// Facilitates work with FileInfo objects, provides additional FileInfo functions.
 
-    class FileInfoHelper {
+    class EXPORT FileInfoHelper {
        public:
         static std::unique_ptr<const char16_t[]> GetPath(const FileInfo& fi, bool include_filename = false);
 

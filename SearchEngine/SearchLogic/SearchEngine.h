@@ -19,7 +19,7 @@ namespace indexer {
     class SearchResultObserver;
     class SearchEngineImpl;
 
-    class SearchEngine : public IndexChangeObserver {
+    class EXPORT SearchEngine : public IndexChangeObserver {
        public:
         // When |search_mode_only| = false, SearchEngine doesn't listen to changes in file system and doesn't create
         // a dedicated thread for search. It can work only in sync mode, so only Search() method should be called.
