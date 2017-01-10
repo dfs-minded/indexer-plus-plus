@@ -62,6 +62,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>4800;6031</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,6 +87,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>4800;6031</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,12 +104,12 @@
     <ClCompile Include="UserArgsParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.vcxproj">
-      <Project>{d8d07719-c061-41dc-9d8c-6e0c8a3c986f}</Project>
-    </ProjectReference>
+    <ClInclude Include="UserArgsParser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UserArgsParser.h" />
+    <ProjectReference Include="..\SearchEngine\SearchEngine.vcxproj">
+      <Project>{2db221fa-d190-482e-92e7-69094debd9b2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

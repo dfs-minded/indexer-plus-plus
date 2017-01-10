@@ -27,11 +27,11 @@ namespace helpers {
 
 	EXPORT std::wstring StringToWstring(const std::string& str);
 
-	std::string WStringToString(const std::wstring& w_str);
+	EXPORT std::string WStringToString(const std::wstring& w_str);
 
 	std::wstring U16stringToWstring(const std::u16string& s);
 
-	std::u16string WstringToU16string(const std::wstring& s);
+	EXPORT std::u16string WstringToU16string(const std::wstring& s);
 
 	const std::wstring Char16ToWstring(const char16_t* s);
 
@@ -67,7 +67,7 @@ namespace helpers {
 
 	std::wstring GetLastErrorString();
 
-	bool DirExist(const std::wstring& path);
+	EXPORT bool DirExist(const std::wstring& path);
 
 	char16_t* GetFilename(const USN_RECORD& record, ushort* name_length);
 

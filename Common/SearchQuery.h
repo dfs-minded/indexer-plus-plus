@@ -59,7 +59,7 @@ namespace indexer_common {
 
     bool operator==(const SearchQuery& lhs, const SearchQuery& rhs);
 
-    std::wstring SerializeQuery(const SearchQuery& query);
+	EXPORT std::wstring SerializeQuery(const SearchQuery& query);
 
     uSearchQuery DeserializeQuery(const std::wstring& source);
 

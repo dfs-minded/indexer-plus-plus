@@ -14,7 +14,12 @@ namespace indexer_common {
 
     using namespace std;
 
-    FileInfo::FileInfo(char drive_letter)
+	int myfunc456()
+	{
+		return 0;
+	}
+
+	FileInfo::FileInfo(char drive_letter)
         : ID(0),
           ParentID(0),
 

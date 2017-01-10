@@ -4,18 +4,18 @@
 
 #pragma once
 
-//#include "Macros.h"
+#include "Macros.h"
 
 // Wrapper on CompilerSymbols.h to make it reachable for C++/CLI classes.
 // All defines must be made only in CompilerSymbols.h file.
 
 namespace indexer_common {
 
-    class __declspec(dllexport) SystemConfigFlags {
+    class EXPORT SystemConfigFlags {
        public:
-        
+        static SystemConfigFlags& Instance();
 
-      //  NO_COPY(SystemConfigFlags)
+        NO_COPY(SystemConfigFlags)
 
         bool CallWatchChanges;
         bool TrayIcon;
@@ -23,9 +23,8 @@ namespace indexer_common {
         bool ShelContextMenu;
         bool ShowDebugLogWindow;
 
-     //  private:
+       private:
         SystemConfigFlags();
     };
 
-	__declspec(dllexport) int* SystemConfigFlagsInstance();
 } // namespace indexer_common

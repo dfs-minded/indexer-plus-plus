@@ -73,6 +73,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies />
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <Lib>
       <AdditionalDependencies>Ole32.lib</AdditionalDependencies>
@@ -97,12 +98,14 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies />
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <Lib>
       <AdditionalDependencies>Ole32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DllExport.h" />
     <ClInclude Include="IndexManagersContainer.h" />
     <ClInclude Include="OldFileInfosDeleter.h" />
     <ClInclude Include="SearchLogic\FileInfoComparatorFactory.h" />
@@ -122,6 +125,7 @@
     <ClInclude Include="StatusObserver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DllExport.cpp" />
     <ClCompile Include="IndexManagersContainer.cpp" />
     <ClCompile Include="OldFileInfosDeleter.cpp" />
     <ClCompile Include="SearchLogic\FileInfoComparatorFactory.cpp" />

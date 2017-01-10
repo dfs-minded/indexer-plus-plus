@@ -6,6 +6,11 @@
 
 namespace indexer_common {
 
+    SystemConfigFlags& SystemConfigFlags::Instance() {
+        static SystemConfigFlags instance;
+        return instance;
+    }
+
     SystemConfigFlags::SystemConfigFlags() {
         TrayIcon = false;
         PipeManager = false;
@@ -33,13 +38,6 @@ namespace indexer_common {
 #ifdef SHOW_DEBUG_LOG_WINDOW
         ShowDebugLogWindow = true;
 #endif
-    }
-
-	__declspec(dllexport) int* SystemConfigFlagsInstance()
-    {
-		//static SystemConfigFlags instance;
-		//return &instance;
-		return nullptr;
     }
 
 } // namespace indexer_common
