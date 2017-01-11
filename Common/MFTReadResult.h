@@ -9,9 +9,9 @@
 
 #include "typedefs.h"
 
-namespace indexer_common { class FileInfo; }
-
 namespace indexer_common {
+    
+    class FileInfo;
 
     struct MFTReadResult {
        public:
