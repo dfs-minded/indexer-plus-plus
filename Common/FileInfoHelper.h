@@ -10,7 +10,6 @@
 #include "Helpers.h"
 #include "Log.h"
 #include "TextComparison.h"
-
 #include "macros.h"
 
 namespace indexer_common {
@@ -21,7 +20,7 @@ namespace indexer_common {
     typedef std::map<const char16_t*, const char16_t*, WcharLessComparator> WcharToWcharMap;
 
 
-	// Facilitates work with FileInfo objects, provides additional FileInfo functions.
+    // Facilitates work with FileInfo objects, provides additional FileInfo functions.
 
     class EXPORT FileInfoHelper {
        public:
