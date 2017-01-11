@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "WindowsWrapper.h"
-
 #include "macros.h"
 #include "typedefs.h"
 
