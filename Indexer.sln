@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndexerGUI", "IndexerGUI\IndexerGUI.csproj", "{4DD1ADD8-4572-40EA-95D1-3C7C701F6D2D}"
 EndProject
@@ -39,6 +39,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloseRunningApp", "CloseRunningApp\CloseRunningApp.csproj", "{D91AC253-E8FC-43B2-99DD-67458DAC4EFA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "re2", "3dParty\re2Project\re2.vcxproj", "{4221929B-B870-3304-9145-D3D9703FE5A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddDirToPathVarialble", "AddDirToPathVarialble\AddDirToPathVarialble.csproj", "{F889066E-EA03-481A-9817-34E60885A21B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{529EDAC8-E062-4916-B121-46DA9A67889F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,8 +197,29 @@ Global
 		{4221929B-B870-3304-9145-D3D9703FE5A0}.Release|Win32.Build.0 = Release|Win32
 		{4221929B-B870-3304-9145-D3D9703FE5A0}.Release|x86.ActiveCfg = Release|Win32
 		{4221929B-B870-3304-9145-D3D9703FE5A0}.Release|x86.Build.0 = Release|Win32
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|Win32.ActiveCfg = Debug|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|Win32.Build.0 = Debug|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|x86.ActiveCfg = Debug|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Debug|x86.Build.0 = Debug|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|Win32.ActiveCfg = Release|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|Win32.Build.0 = Release|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|x86.ActiveCfg = Release|x86
+		{F889066E-EA03-481A-9817-34E60885A21B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{510CAA8E-234B-459A-85A5-E438D9C4F60A} = {529EDAC8-E062-4916-B121-46DA9A67889F}
+		{D91AC253-E8FC-43B2-99DD-67458DAC4EFA} = {529EDAC8-E062-4916-B121-46DA9A67889F}
+		{F889066E-EA03-481A-9817-34E60885A21B} = {529EDAC8-E062-4916-B121-46DA9A67889F}
 	EndGlobalSection
 EndGlobal
