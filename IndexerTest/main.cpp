@@ -10,6 +10,7 @@
 
 #include <locale.h>
 #include <iostream>
+#include <Windows.h>
 
 GTEST_API_ int main(int argc, char **argv) {
 
@@ -20,6 +21,10 @@ GTEST_API_ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // testing::GTEST_FLAG(filter) = "*.SimpleFileCreate";
+
+
+	CreateDirectory(L"Logs", nullptr);
+
 
     auto res = RUN_ALL_TESTS();
     std::cin.get();
