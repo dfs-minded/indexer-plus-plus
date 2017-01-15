@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "SearchQuery.h"
 
 namespace indexer {

@@ -5,8 +5,11 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
-#include "FileInfo.h"
+#include "macros.h"
+
+namespace indexer_common { class FileInfo; }
 
 namespace ntfs_reader {
 

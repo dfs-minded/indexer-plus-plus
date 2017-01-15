@@ -120,7 +120,7 @@ namespace ifind {
 			*exclude_folders = true;
 		}
 		else {
-			throw std::invalid_argument("invalid argument '" + *indexer_common::helpers::WStringToString(type) +
+			throw std::invalid_argument("invalid argument '" + indexer_common::helpers::WStringToString(type) +
 				"' to -type");
 		}
 	}
@@ -328,8 +328,8 @@ namespace ifind {
 
 		indexer_common::SearchQueryBuilder builder;
 
-		builder.SetSearchText(*indexer_common::helpers::WstringToU16string(search_text))
-			.SetSearchDirPath(*indexer_common::helpers::WstringToU16string(search_dir_path))
+		builder.SetSearchText(indexer_common::helpers::WstringToU16string(search_text))
+			.SetSearchDirPath(indexer_common::helpers::WstringToU16string(search_dir_path))
 			.SetSizeFrom(size_from).SetSizeTo(size_to)
 			.SetCreationTimeFrom(c_time_from).SetCreationTimeTo(c_time_to)
 			.SetLastAccessTimeFrom(a_time_from).SetLastAccessTimeTo(a_time_to)

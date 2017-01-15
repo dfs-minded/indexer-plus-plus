@@ -4,7 +4,7 @@
 
 #include "FileInfo.h"
 
-#include <cstring>
+#include <string>
 
 #include "WindowsWrapper.h"
 
@@ -64,7 +64,6 @@ namespace indexer_common {
     }
 
     void FileInfo::CopyAndSetName(const char16_t* name, ushort name_length) {
-        // name_ = L""; return;
         char16_t* filename_copy = new char16_t[name_length + 1];
 
         memcpy(filename_copy, name, 2 * name_length);
@@ -74,8 +73,8 @@ namespace indexer_common {
         SetName(filename_copy, name_length);
     }
 
-// Checks if the file name starts by $ sign (which means that it is hidden) or one of the attributes
-// says that the file is hidden.
+	// Checks if the file name starts by $ sign (which means that it is hidden) or one of the attributes
+	// says that the file is hidden.
     bool FileInfo::IsHiddenOrSystem() const {
         if (GetName()[0] == '$') return true;
 

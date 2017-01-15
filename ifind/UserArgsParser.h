@@ -12,6 +12,7 @@
 namespace ifind {
 	
 	// Composes search query from user CMD input, parses and sets |format| and |output_path|.
+
     indexer_common::uSearchQuery ComposeQueryFromUserInput(
 		const std::vector<std::wstring>& user_args, std::wstring* format, std::wstring* output_path);
 

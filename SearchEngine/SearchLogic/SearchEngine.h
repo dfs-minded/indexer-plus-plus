@@ -15,38 +15,33 @@
 
 namespace indexer {
 
-    class SearchResultObserver;
-    class SearchEngineImpl;
+	class SearchResultObserver;
+	class SearchEngineImpl;
 
-    class SearchEngine : public IndexChangeObserver {
-       public:
-        // When |search_mode_only| = false, SearchEngine doesn't listen to changes in file system and doesn't create
-        // a dedicated thread for search. It can work only in sync mode, so only Search() method should be called.
-	    explicit SearchEngine(SearchResultObserver* result_observer, bool search_mode_only = false);
+	class SearchEngine : public IndexChangeObserver {
+	public:
+		// When |search_mode_only| = false, SearchEngine doesn't listen to changes in file system and doesn't create
+		// a dedicated thread for search. It can work only in sync mode, so only Search() method should be called.
+		explicit SearchEngine(SearchResultObserver* result_observer, bool search_mode_only = false);
 
-        NO_COPY(SearchEngine)
+		NO_COPY(SearchEngine)
 
-        ~SearchEngine();
-
-
-        // It's not possible to use unique_ptr for the |query|, since C++/CLI can't correctly process them.
-        // This function takes ownership of |query|.
-
-        pSearchResult Search(indexer_common::SearchQuery* query) const;
+		~SearchEngine();
 
 
-        // This function takes ownership of |query|.
-
-		void SearchAsync(indexer_common::SearchQuery* query) const;
+		pSearchResult Search(indexer_common::uSearchQuery&& query) const;
 
 
-        void Sort(const std::string& prop_name, int direction) const;
+		void SearchAsync(indexer_common::uSearchQuery&& query) const;
 
 
-        virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override;
+		void Sort(std::string prop_name, int direction) const;
 
-       private:
-        std::unique_ptr<SearchEngineImpl> p_impl_;
-    };
+
+		virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override;
+
+	private:
+		std::unique_ptr<SearchEngineImpl> p_impl_;
+	};
 
 } // namespace indexer

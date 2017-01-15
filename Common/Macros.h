@@ -18,10 +18,15 @@ namespace indexer_common {
 #define NEW_MUTEX
 #define DELETE_MUTEX
 
+#define LOCK
+#define UNLOCK
+
 #define PLOCK
 #define PUNLOCK
 
+#define LOCK_GUARD
 #define PLOCK_GUARD
+
 #define UNIQUE_LOCK
 #define UNIQUE_UNLOCK
 
@@ -32,15 +37,28 @@ namespace indexer_common {
 #define NEW_MUTEX mtx_ = new std::mutex();
 #define DELETE_MUTEX delete mtx_;
 
+#define LOCK mtx_.lock();
+#define UNLOCK mtx_.unlock();
+
 #define PLOCK mtx_->lock();
 #define PUNLOCK mtx_->unlock();
 
-#define PLOCK_GUARD std::lock_guard<std::mutex> lock(*mtx_);
-#define UNIQUE_LOCK std::unique_lock<std::mutex> lock(*mtx_);
-#define UNIQUE_UNLOCK lock.unlock();
+#define LOCK_GUARD std::lock_guard<std::mutex> locker(mtx_);
+#define PLOCK_GUARD std::lock_guard<std::mutex> locker(*mtx_);
 
-#define NOTIFY_ONE conditional_var_->notify_one();
+#define UNIQUE_LOCK std::unique_lock<std::mutex> locker(mtx_);
+#define UNIQUE_UNLOCK locker.unlock();
 
-#endif  // SINGLE_THREAD
+#define NOTIFY_ONE conditional_var_.notify_one();
 
+#endif // SINGLE_THREAD
+
+
+#ifdef LIB_EXPORT
+#define EXPORT __declspec( dllexport )
+#define STL_EXTERN 
+#else
+#define EXPORT __declspec( dllimport )
+#define STL_EXTERN extern
+#endif
 } // namespace indexer_common

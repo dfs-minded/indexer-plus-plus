@@ -15,62 +15,62 @@
 
 namespace indexer {
 
-    class FileInfosFilterTest;
+	class FileInfosFilterTest;
 
 	// Provides all FileInfo objects filtering logic with the given search query.
 
-    class FileInfosFilter {
-        friend class FileInfosFilterTest;
+	class FileInfosFilter {
+		friend class FileInfosFilterTest;
 
-       public:
-        FileInfosFilter();
+	public:
+		FileInfosFilter();
 
-        NO_COPY(FileInfosFilter)
+		NO_COPY(FileInfosFilter)
 
-        ~FileInfosFilter();
-
-
-        // Resets the underlying search query.
-
-        void ResetQuery(std::unique_ptr<indexer_common::SearchQuery> last_query);
+			~FileInfosFilter();
 
 
-        // Used during the files tree traversal. Checks if the file |fi| passes all |query_| filters.
+		// Resets the underlying search query.
+
+		void ResetQuery(indexer_common::uSearchQuery last_query);
+
+
+		// Used during the files tree traversal. Checks if the file |fi| passes all |query_| filters.
 
 		bool PassesAllQueryFilters(const indexer_common::FileInfo& fi) const;
 
 
-        // Used during the files tree traversal. We do not want to traverse hidden directories (because their content
-        // is also hidden files) if |query_| contains exclude hidden filter set to true.
+		// Used during the files tree traversal. We do not want to traverse hidden directories (because their content
+		// is also hidden files) if |query_| contains exclude hidden filter set to true.
 
 		bool TraverseCurrentDir(const indexer_common::FileInfo& dir) const;
 
 
-        // Returns true if the FileInfo |fi| passes |query_| search in particular directory restriction.
-        // Used for checking one single file.
+		// Returns true if the FileInfo |fi| passes |query_| search in particular directory restriction.
+		// Used for checking one single file.
 
 		bool FilePassesSearchDirPathFilter(const indexer_common::FileInfo& fi) const;
 
 
-        // Returns true if the FileInfo |fi| passes |query_| exclude hidden files and directories restriction.
-        // Used for checking one single file.
+		// Returns true if the FileInfo |fi| passes |query_| exclude hidden files and directories restriction.
+		// Used for checking one single file.
 
 		bool FilePassesExcludeHiddenAndSystemFilter(const indexer_common::FileInfo& fi) const;
 
 
-        // Returns filtered items collection.
+		// Returns filtered items collection.
 
 		std::vector<const indexer_common::FileInfo*> FilterFiles(const std::vector<const indexer_common::FileInfo*>& input);
 
 
-        bool SearchInDirectorySpecified() const;
+		bool SearchInDirectorySpecified() const;
 
 
-        // Returns FileInfo object, which represents search directory, specified in |query_| filter.
+		// Returns FileInfo object, which represents search directory, specified in |query_| filter.
 
 		const indexer_common::FileInfo* GetSearchDirectory() const;
 
-       private:
+	private:
 		bool PassesFilterByFilename(const indexer_common::FileInfo& fi) const;
 
 		bool PassesSizeDatesFilter(const indexer_common::FileInfo& fi) const;
@@ -81,17 +81,17 @@ namespace indexer {
 		indexer_common::uSearchQuery query_;
 
 
-        // It contains parsed data from |cached_last_query_| for search in filenames.
+		// It contains parsed data from |cached_last_query_| for search in filenames.
 
-        std::unique_ptr<FilenameSearchQuery> filename_filter_;
+		std::unique_ptr<FilenameSearchQuery> filename_filter_;
 
-        std::unique_ptr<re2::RE2> re_;
+		std::unique_ptr<re2::RE2> re_;
 
-		static const int kBufferSize {1000};
+		static const int kBufferSize{ 1000 };
 
 		std::unique_ptr<char[]> buffer_;
 
-    	indexer_common::ushort* match_case_table_;  // TODO use from MFT.
-    };
+		indexer_common::ushort* match_case_table_;  // TODO use from MFT.
+	};
 
 } // namespace indexer

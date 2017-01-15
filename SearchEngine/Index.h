@@ -6,12 +6,14 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
-#include "Macros.h"
+#include "macros.h"
 #include "typedefs.h"
 
 // This is needed for compatibility with C++/CLI classes.
 // <mutex> is not supported when compiling with /clr or /clr:pure. (for Model.cpp class).
+// TODO write a wrapper.
 namespace std {
 	class mutex;
 }
@@ -33,131 +35,131 @@ namespace indexer {
 	// without parents will be deleted. During filesystem updates, files with no parents in an index
 	// will not be inserted and will be deleted as well.
 
-    class Index {
+	class Index {
 
-       public:
-        explicit Index(char drive_letter);
+	public:
+		explicit Index(char drive_letter);
 
-        NO_COPY(Index)
+		NO_COPY(Index)
 
-        ~Index();
-
-
-        // Returns the ID of the volumes root directory.
-
-        indexer_common::uint RootID() const {
-            return root_id_;
-        }
+			~Index();
 
 
-        // Sets the ID of the volumes root directory.
+		// Returns the ID of the volumes root directory.
+
+		indexer_common::uint RootID() const {
+			return root_id_;
+		}
+
+
+		// Sets the ID of the volumes root directory.
 
 		void RootID(indexer_common::uint root_id) {
-            root_id_ = root_id;
-        }
+			root_id_ = root_id;
+		}
 
 
-        // Returns the volumes root directory.
+		// Returns the volumes root directory.
 
-        const indexer_common::FileInfo* Root() const;
-
-
-        // Returns the drive letter for which this index was build.
-
-        char DriveLetter() const {
-            return drive_letter_;
-        }
-
-        std::wstring DriveLetterW() const {
-            return drive_letter_w_;
-        }
+		const indexer_common::FileInfo* Root() const;
 
 
-        // Yields all stored data ownership and returns the pointer to it.
-        // Assumed that the index data is locked before calling this method.
+		// Returns the drive letter for which this index was build.
 
-        std::vector<indexer_common::FileInfo*>* ReleaseData();
+		char DriveLetter() const {
+			return drive_letter_;
+		}
 
-
-        // Sets the volume data (all volume files).
-        // Assumed that the index data is locked before calling this method.
-
-        void SetData(std::unique_ptr<std::vector<indexer_common::FileInfo*>> data);
-
-
-        // Returns all files of the indexed volume. The data is locked until UnlockData() is called.
-
-        const std::vector<indexer_common::FileInfo*>* LockData();
+		std::wstring DriveLetterW() const {
+			return drive_letter_w_;
+		}
 
 
-        // Unlocks the data after it was locked during LockData() call.
-        // Assumed that the index data is locked before calling this method.
+		// Yields all stored data ownership and returns the pointer to it.
+		// Assumed that the index data is locked before calling this method.
 
-        void UnlockData();
-
-
-        // Inserts a new node into the index.
-        // Returns true if the node was inserted successfully, false otherwise.
-        // Assumed that the index data is locked before calling this method.
-
-        bool InsertNode(indexer_common::FileInfo* fi);
+		std::vector<indexer_common::FileInfo*>* ReleaseData();
 
 
-        // Retrieves the node from the index.
-        // Assumed that the index data is locked before calling this method.
+		// Sets the volume data (all volume files).
+		// Assumed that the index data is locked before calling this method.
+
+		void SetData(std::unique_ptr<std::vector<indexer_common::FileInfo*>> data);
+
+
+		// Returns all files of the indexed volume. The data is locked until UnlockData() is called.
+
+		const std::vector<indexer_common::FileInfo*>* LockData();
+
+
+		// Unlocks the data after it was locked during LockData() call.
+		// Assumed that the index data is locked before calling this method.
+
+		void UnlockData();
+
+
+		// Inserts a new node into the index.
+		// Returns true if the node was inserted successfully, false otherwise.
+		// Assumed that the index data is locked before calling this method.
+
+		bool InsertNode(indexer_common::FileInfo* fi);
+
+
+		// Retrieves the node from the index.
+		// Assumed that the index data is locked before calling this method.
 
 		indexer_common::FileInfo* GetNode(indexer_common::uint ID) const;
 
 
-        // Removes a node from the index (but not deletes it). Assigns nullptr to all its pointers to the tree
-        // except Parent pointer, because we need it to build file paths, which could be requested from UI.
-        // The node itself will be deleted as soon as no other objects need or reference this FileInfo.
-        // Assumed that the index data is locked before calling this method.
+		// Removes a node from the index (but not deletes it). Assigns nullptr to all its pointers to the tree
+		// except Parent pointer, because we need it to build file paths, which could be requested from UI.
+		// The node itself will be deleted as soon as no other objects need or reference this FileInfo.
+		// Assumed that the index data is locked before calling this method.
 
-        void RemoveNode(indexer_common::FileInfo* node);
-
-
-        // Calculates and updates all directories sizes.
-        // Assumed that the index data is locked before calling this method.
-
-        void CalculateDirsSizes();
+		void RemoveNode(indexer_common::FileInfo* node);
 
 
-        // For the given file |fi| recursively updates its parent directories sizes till the root.
-        // |size_delta| - signed size in KB on which to update.
-        // Assumed that the index data is locked before calling this method.
+		// Calculates and updates all directories sizes.
+		// Assumed that the index data is locked before calling this method.
 
-        void UpdateParentDirsSize(const indexer_common::FileInfo* fi, int size_delta);
+		void CalculateDirsSizes();
 
 
-        // Builds the tree that reflects the real file system files and directories structure. The tree is build using the
-        // |data_| member: all FileInfo objects will be assigned corresponding connections to its parent, siblings, first
-        // child nodes (if they exist).
-        // Assumed that the index data is locked before calling this method.
+		// For the given file |fi| recursively updates its parent directories sizes till the root.
+		// |size_delta| - signed size in KB on which to update.
+		// Assumed that the index data is locked before calling this method.
 
-        void BuildTree();
+		void UpdateParentDirsSize(const indexer_common::FileInfo* fi, int size_delta);
 
-       private:
-        char drive_letter_;
 
-        std::wstring drive_letter_w_;
+		// Builds the tree that reflects the real file system files and directories structure. The tree is build using the
+		// |data_| member: all FileInfo objects will be assigned corresponding connections to its parent, siblings, first
+		// child nodes (if they exist).
+		// Assumed that the index data is locked before calling this method.
+
+		void BuildTree();
+
+	private:
+		char drive_letter_;
+
+		std::wstring drive_letter_w_;
 
 		indexer_common::uint root_id_;
 
-        std::unique_ptr<std::vector<indexer_common::FileInfo*>> data_;
+		std::unique_ptr<std::vector<indexer_common::FileInfo*>> data_;
 
 		indexer_common::Log* logger_;
 
 		indexer_common::uint64 start_time_;
 
-        std::mutex* mtx_;
-    };
+		std::mutex* mtx_;
+	};
 
-    typedef std::unique_ptr<Index> uIndex;
+	typedef std::unique_ptr<Index> uIndex;
 
 
 	// Serializes files of the index tree to the Output window, starting from the |first_child|. Used for debugging.
 
-    void SerializeToOutput(const indexer_common::FileInfo* first_child, std::wstring indent = L"\t");
+	void SerializeToOutput(const indexer_common::FileInfo* first_child, std::wstring indent = L"\t");
 
 } // namespace indexer

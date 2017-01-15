@@ -6,6 +6,8 @@
 
 #include "WindowsWrapper.h"
 
+#include <string>
+
 #include "macros.h"
 #include "typedefs.h"
 

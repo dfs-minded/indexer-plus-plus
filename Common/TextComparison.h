@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "typedefs.h"
 
 namespace indexer_common {
@@ -16,4 +18,5 @@ namespace indexer_common {
 
         bool operator()(const char16_t* lhs, const char16_t* rhs) const;
     };
+
 } // namespace indexer_common
