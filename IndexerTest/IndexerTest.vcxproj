@@ -41,11 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(Configuration)\</OutDir>
+    <OutDir>..\bin\x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(Configuration)\</OutDir>
+    <OutDir>..\bin\x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -57,6 +57,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework;..\3dParty\re2Project\re2</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -77,6 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework;..\3dParty\re2Project\re2</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Macros.h"
+#include "macros.h"
 
 // Wrapper on CompilerSymbols.h to make it reachable for C++/CLI classes.
 // All defines must be made only in CompilerSymbols.h file.

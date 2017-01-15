@@ -12,6 +12,7 @@
 
 #include "Helpers.h"
 #include "IndexerDateTime.h"
+#include "SearchQueryBuilder.h"
 
 namespace ifind {
 
@@ -119,7 +120,7 @@ namespace ifind {
 			*exclude_folders = true;
 		}
 		else {
-			throw std::invalid_argument("invalid argument '" + indexer_common::helpers::WStringToString(type) +
+			throw std::invalid_argument("invalid argument '" + *indexer_common::helpers::WStringToString(type) +
 				"' to -type");
 		}
 	}
@@ -161,8 +162,8 @@ namespace ifind {
     } // namespace
 
 
-    indexer_common::uSearchQuery ComposeQueryFromUserInput(const std::vector<wstring>& args, wstring* format,
-                                                            wstring* output_path) {
+    indexer_common::uSearchQuery ComposeQueryFromUserInput(
+		const std::vector<wstring>& args, wstring* format, wstring* output_path) {
 
         using namespace indexer_common;
 
@@ -324,13 +325,22 @@ namespace ifind {
             }
         }
 
-        auto res = std::make_unique<indexer_common::SearchQuery>(
-            indexer_common::helpers::WstringToU16string(search_text),
-            indexer_common::helpers::WstringToU16string(search_dir_path), match_case, false, size_from, size_to,
-            exclude_hidden, exclude_folders, exclude_files, c_time_from, c_time_to, a_time_from, a_time_to,
-            m_time_from, m_time_to);
 
-        return res;
+		indexer_common::SearchQueryBuilder builder;
+
+		builder.SetSearchText(*indexer_common::helpers::WstringToU16string(search_text))
+			.SetSearchDirPath(*indexer_common::helpers::WstringToU16string(search_dir_path))
+			.SetSizeFrom(size_from).SetSizeTo(size_to)
+			.SetCreationTimeFrom(c_time_from).SetCreationTimeTo(c_time_to)
+			.SetLastAccessTimeFrom(a_time_from).SetLastAccessTimeTo(a_time_to)
+			.SetModificationTimeFrom(m_time_from).SetModificationTimeTo(m_time_to);
+
+		if (match_case) builder.SetMatchCase();
+		if (exclude_hidden) builder.SetExcludeHiddenAndSystem();
+		if (exclude_folders) builder.SetExcludeFolders();
+		if (exclude_files) builder.SetExcludeFiles();
+
+		return builder.Build();
     }
 
 } // namespace ifind

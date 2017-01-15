@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "Macros.h"
+#include "macros.h"
 
 #include "FileInfoComparatorFactory.h"
 

@@ -15,10 +15,8 @@ namespace CLIInterop
 	public ref struct SearchQueryWrapper
 	{
 	   public:
-		SearchQueryWrapper();
-
-		System::String^ Text;
-		System::String^ SearchDirPath;
+		System::String^ Text = "";
+		System::String^ SearchDirPath = "";
 		bool MatchCase;
 		bool UseRegex;
 
@@ -32,6 +30,6 @@ namespace CLIInterop
 		System::DateTime^ CreatedTimeFrom;
 		System::DateTime^ CreatedTimeTo;
 
-		indexer_common::SearchQuery* ToUnmanagedQuery();
+		indexer_common::uSearchQuery ToUnmanagedQuery();
 	};
 }

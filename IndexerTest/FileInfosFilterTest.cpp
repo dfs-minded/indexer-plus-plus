@@ -11,9 +11,7 @@
 #include "FileInfosFilter.h"
 #include "Helpers.h"
 #include "LetterCaseMatching.h"
-#include "SearchQuery.h"
-
-#include "Helpers.h"
+#include "SearchQueryBuilder.h"
 
 namespace indexer {
 
@@ -39,7 +37,7 @@ namespace indexer {
             };
 
             for (const auto& s : fileinfos_string_source_) {
-                fileinfos_test_collection_.push_back(indexer_common::DeserializeFileInfo(s));
+                fileinfos_test_collection_.emplace_back(indexer_common::DeserializeFileInfo(s));
             }
         }
 
@@ -62,15 +60,15 @@ namespace indexer {
 
         // Accessors to |filter_| private members;
 
-        const SearchQuery* query_get() const {
+        const SearchQuery* GetFiltersInternalQuery() const {
             return filter_.query_.get();
         }
 
-        const indexer_common::ushort* match_case_table_get() const {
+        const indexer_common::ushort* GetFiltersMatchCaseTable() const {
             return filter_.match_case_table_;
         }
 
-        const FilenameSearchQuery* filename_filter_get() const {
+        const FilenameSearchQuery* GetFiltersFilenameFilter() const {
             return filter_.filename_filter_.get();
         }
 
@@ -81,39 +79,51 @@ namespace indexer {
 
     TEST_F(FileInfosFilterTest, EverythingIsNullBeforeResetQueryCall) {
 
-        EXPECT_EQ(query_get(), nullptr);
-        EXPECT_EQ(filename_filter_get(), nullptr);
-        EXPECT_EQ(match_case_table_get(), nullptr);
+        EXPECT_EQ(GetFiltersInternalQuery(), nullptr);
+        EXPECT_EQ(GetFiltersFilenameFilter(), nullptr);
+        EXPECT_EQ(GetFiltersMatchCaseTable(), nullptr);
     }
 
     TEST_F(FileInfosFilterTest, ResetQueryDefaultQueryTest) {
+		indexer_common::SearchQueryBuilder builder;
+	
+        filter_.ResetQuery(move(builder.Build()));
 
-		auto u_default_query = make_unique<SearchQuery>();
-        filter_.ResetQuery(move(u_default_query));
+		auto u_default_query = builder.Build();
+        EXPECT_TRUE(*GetFiltersInternalQuery() == *u_default_query);
 
-		SearchQuery default_query;
-        EXPECT_TRUE(*query_get() == default_query);
-
-		EXPECT_EQ(match_case_table_get(), indexer_common::GetLowerMatchTable());
+		EXPECT_EQ(GetFiltersMatchCaseTable(), indexer_common::GetLowerMatchTable());
     }
 
     TEST_F(FileInfosFilterTest, ResetQueryCustomQueryTest) {
 
-		SearchQuery custom_query(__L__("myfile*"), __L__("d:/"), true, true, 2, 33, false, false, true, 1344556677, 1366556677,
-                                 1333556677, 1333556677, 1333444455, 1333444466);
+		indexer_common::SearchQueryBuilder builder;
+		builder.SetSearchText(__L__("myfile*"))
+			.SetSearchDirPath(__L__("d:/"))
+			.SetMatchCase()
+			.SetUseRegex()
+			.SetExcludeFiles();
 
-        unique_ptr<SearchQuery> u_custom_query;
-		u_custom_query.reset(helpers::CopyQuery(custom_query));
+		builder.SetSizeFrom(2).SetSizeTo(33);
+		
+		builder.SetCreationTimeFrom(1344556677).SetCreationTimeTo(1366556677)
+			.SetLastAccessTimeFrom(1333556677).SetLastAccessTimeTo(1333556677)
+			.SetModificationTimeFrom(1333444455).SetModificationTimeTo(1333444466);
 
-        filter_.ResetQuery(move(u_custom_query));
+		auto custom_query = builder.Build();
 
-        EXPECT_TRUE(*query_get() == custom_query);
 
-		EXPECT_EQ(match_case_table_get(), indexer_common::GetIdentityTable());
+		indexer_common::uSearchQuery custom_query_cpy = helpers::CopyQuery(*custom_query);
+
+        filter_.ResetQuery(move(custom_query_cpy));
+
+        EXPECT_TRUE(*GetFiltersInternalQuery() == *custom_query);
+
+		EXPECT_EQ(GetFiltersMatchCaseTable(), indexer_common::GetIdentityTable());
     }
 
     TEST_F(FileInfosFilterTest, PassesSizeDatesFilterWithDefaultQueryTest) {
-        auto u_query = make_unique<SearchQuery>();
+		auto u_query = indexer_common::SearchQueryBuilder().Build();
 
         filter_.ResetQuery(move(u_query));
 
@@ -124,11 +134,25 @@ namespace indexer {
 
     TEST_F(FileInfosFilterTest, DISABLED_PassesSizeDatesFilterWithCustomQueryTest) {
 
-        SearchQuery custom_query(__L__("*"), __L__(""), true, false, /*size from*/ 2, /*size to*/ 22051, false, false, true,
-                                 /*times: from and to, access, creation and modification respectively*/
-                                 1307278616, 1310243724, 1310313261, 1310313261, 13102437249, 1310243724);
+		indexer_common::SearchQueryBuilder builder;
+		builder.SetSearchText(__L__("*"))
+			.SetSearchDirPath(__L__(""))
+			.SetMatchCase()
+			.SetExcludeFiles();
 
-        ASSERT_FALSE(PassesSizeDatesFilterCall(*fileinfos_test_collection_[0]));  // both size and dates not passed.
+		builder.SetSizeFrom(2).SetSizeTo(22051);
+
+		builder.SetCreationTimeFrom(1307278616).SetCreationTimeTo(1310243724)
+			.SetLastAccessTimeFrom(1310313261).SetLastAccessTimeTo(1310313261)
+			.SetModificationTimeFrom(13102437249).SetModificationTimeTo(1310243724);
+
+		auto custom_query = builder.Build();
+
+		custom_query.reset();
+
+		// both size and dates are not match.
+        ASSERT_FALSE(PassesSizeDatesFilterCall(*fileinfos_test_collection_[0]));
+
         ASSERT_FALSE(PassesSizeDatesFilterCall(*fileinfos_test_collection_[1]));
         ASSERT_FALSE(PassesSizeDatesFilterCall(*fileinfos_test_collection_[2]));
         ASSERT_FALSE(PassesSizeDatesFilterCall(*fileinfos_test_collection_[3]));

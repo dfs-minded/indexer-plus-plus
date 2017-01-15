@@ -3,7 +3,7 @@
 #include <atomic>
 #include <mutex>
 
-#include "Macros.h"
+#include "macros.h"
 
 // Structures in this file provide wrappers for /clr or /clr:pure non-compilable types.
 

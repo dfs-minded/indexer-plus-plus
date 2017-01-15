@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "Macros.h"
+#include "macros.h"
 
 // Parses and stores commandline arguments. All of them are used for testing purposes.
 namespace indexer_common {

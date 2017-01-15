@@ -14,7 +14,7 @@
 #include "../Common/Helpers.h"
 #include "Log.h"
 #include "OneThreadLog.h"
-#include "SearchQuery.h"
+#include "SearchQueryBuilder.h"
 
 #include "Merger.h"
 #include "SearchEngine.h"
@@ -40,7 +40,7 @@ namespace indexer {
           stop_processing_current_query_(false),
           p_search_result_(make_shared<SearchResult>()),
           u_tmp_search_result_(make_unique<SearchResult>()),
-          last_query_(new SearchQuery()),
+          last_query_(SearchQueryBuilder().Build()),
           file_infos_filter_(make_unique<FileInfosFilter>()),
           last_sort_prop_(SortingProperty::SORT_NAME),
           last_sort_direction_(1),
@@ -385,7 +385,7 @@ namespace indexer {
         logger_->Debug(L"Sorting search result...");
         TIK
 
-            sorter_.Sort(file_infos);
+        sorter_.Sort(file_infos);
 
         TOK(L"Sorting finished.")
     }
@@ -430,7 +430,7 @@ namespace indexer {
 
         UNIQUE_LOCK
 
-        index_changed_args_.push_back(move(p_args));
+        index_changed_args_.emplace_back(move(p_args));
         index_outdated_ = true;
 
 		NOTIFY_ONE

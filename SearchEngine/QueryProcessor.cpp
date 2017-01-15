@@ -8,7 +8,7 @@
 
 #include "OutputFormatter.h"
 #include "SearchEngine.h"
-#include "SearchQuery.h"
+#include "SearchQueryBuilder.h"
 
 namespace indexer {
 
@@ -16,14 +16,14 @@ namespace indexer {
 
 	using namespace indexer_common;
 
-        std::unique_ptr<std::vector<wstring>> QueryProcessor::Process(const wstring& query_string,
-                                                        const wstring& format_string, int max_files) {
+        std::unique_ptr<std::vector<wstring>> QueryProcessor::Process(
+			const wstring& query_string, const wstring& format_string, int max_files) {
 
             auto engine(std::make_unique<SearchEngine>(nullptr, true));
 
-            uSearchQuery query = DeserializeQuery(query_string);
+            auto query = DeserializeQuery(query_string);
 
-            auto search_res = engine->Search(query.release());
+            auto search_res = engine->Search(std::move(query));
 
             OutputFormatter fmt(search_res->Files.get(), format_string, max_files);
             return fmt.Format();

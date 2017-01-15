@@ -5,15 +5,12 @@
 #pragma once
 
 #include <atomic>
-#include <condition_variable>
 #include <memory>
 #include <mutex>
-#include <queue>
 #include <thread>
-#include <unordered_set>
 #include <vector>
 
-#include "Macros.h"
+#include "macros.h"
 #include "typedefs.h"
 
 #include "FileInfosFilter.h"
@@ -44,7 +41,7 @@ namespace indexer {
        public:
         SearchEngineImpl(SearchEngine* interface_backlink, SearchResultObserver* result_observer, bool search_mode_only);
 
-        NO_COPY(SearchEngineImpl);
+        NO_COPY(SearchEngineImpl)
 
         ~SearchEngineImpl();
 
@@ -153,7 +150,7 @@ namespace indexer {
 
 
         // Query received from Client (GUI, CMD, etc). Need to synchronize access via |mtx_|.
-		std::unique_ptr<indexer_common::SearchQuery> last_query_;
+		indexer_common::uSearchQuery last_query_;
 
         // Filter based on the value of |last_query_|.
         std::unique_ptr<FileInfosFilter> file_infos_filter_;

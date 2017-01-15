@@ -27,7 +27,7 @@ namespace indexer {
 
         NO_COPY(FileInfosFilter)
 
-        ~FileInfosFilter() = default;
+        ~FileInfosFilter();
 
 
         // Resets the underlying search query.
@@ -37,7 +37,7 @@ namespace indexer {
 
         // Used during the files tree traversal. Checks if the file |fi| passes all |query_| filters.
 
-		bool PassesAllQueryFilters(const indexer_common::FileInfo& fi);
+		bool PassesAllQueryFilters(const indexer_common::FileInfo& fi) const;
 
 
         // Used during the files tree traversal. We do not want to traverse hidden directories (because their content
@@ -78,9 +78,7 @@ namespace indexer {
 		bool PassesAttributesFilter(const indexer_common::FileInfo& fi) const;
 
 
-        // Copy of the query received from SE client for using in the SearchEngine worker thread.
-
-    	std::unique_ptr<indexer_common::SearchQuery> query_;
+		indexer_common::uSearchQuery query_;
 
 
         // It contains parsed data from |cached_last_query_| for search in filenames.

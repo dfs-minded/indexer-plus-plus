@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "Helpers.h"
-#include "SearchQuery.h"
+#include "SearchQueryBuilder.h"
 
 namespace indexer {
 
@@ -40,15 +40,28 @@ namespace indexer {
 		uint m_time_from = 2209855552900976;
 		uint m_time_to = 11783687468765949;
 
-		indexer_common::SearchQuery query(text, search_dir_path, match_case, use_regex, size_from, size_to, 
-			exclude_hidden_and_system, exclude_folders, exclude_files,
-			c_time_from, c_time_to, a_time_from, a_time_to, m_time_from, m_time_to);
+		indexer_common::SearchQueryBuilder builder;
 
-        std::wstring serialised = SerializeQuery(query);
+		builder.SetSearchText(text)
+			.SetSearchDirPath(search_dir_path)
+			.SetSizeFrom(size_from).SetSizeTo(size_to)
+			.SetCreationTimeFrom(c_time_from).SetCreationTimeTo(c_time_to)
+			.SetLastAccessTimeFrom(a_time_from).SetLastAccessTimeTo(a_time_to)
+			.SetModificationTimeFrom(m_time_from).SetModificationTimeTo(m_time_to);
+
+		if (match_case) builder.SetMatchCase();
+		if (use_regex) builder.SetUseRegex();
+		if (exclude_hidden_and_system) builder.SetExcludeHiddenAndSystem();
+		if (exclude_folders) builder.SetExcludeFolders();
+		if (exclude_files) builder.SetExcludeFiles();
+
+		auto query = builder.Build();
+
+        std::wstring serialised = SerializeQuery(*query);
 
 		auto deserQuery = indexer_common::DeserializeQuery(serialised);
 
-        ASSERT_TRUE(query == *deserQuery.get());
+        ASSERT_TRUE(*query == *deserQuery);
     }
 
 } // namespace indexer

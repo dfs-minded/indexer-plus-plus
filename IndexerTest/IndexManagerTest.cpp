@@ -13,19 +13,16 @@
 #include "MockIndexChangeObserver.h"
 #include "MockSearchResultObserver.h"
 #include "SearchEngine.h"
-#include "SearchQuery.h"
+#include "SearchQueryBuilder.h"
 
 namespace indexer {
-
-	using std::unique_ptr;
-	using std::make_unique;
 
     class IndexManagerTest : public testing::Test {
 
        public:
         void SetUp() override {
-            u_default_query = make_unique<indexer_common::SearchQuery>();
-			engine_ = make_unique<SearchEngine>(&mock_search_res_observer);
+            u_default_query = indexer_common::SearchQueryBuilder().Build();
+			engine_ = std::make_unique<SearchEngine>(&mock_search_res_observer);
 
             // Search engine can change NotifyIndexChangedEventArgs and cause side effects.
             IndexManagersContainer::Instance().UnregisterIndexChangeObserver(engine_.get());
@@ -39,7 +36,7 @@ namespace indexer {
 
         char drive_letter_ = 'Z';
 		indexer_common::uSearchQuery u_default_query;
-        unique_ptr<SearchEngine> engine_;
+        std::unique_ptr<SearchEngine> engine_;
         MockIndexChangeObserver mock_index_change_observer;
         MockSearchResultObserver mock_search_res_observer;
     };
@@ -68,8 +65,8 @@ namespace indexer {
 
         auto actual = mock_index_change_observer.IndexChangedArgs->NewItems[0]->GetName();
         // TODO: problem with VS unicode literals compilation.
-        // auto expected = __L__(L"Новый Text Document.txt");
-        // EXPECT_EQ(expected, actual);
+        auto expected = __L__(L"Новый Text Document.txt");
+        EXPECT_EQ(expected, actual);
     }
 
 } // namespace indexer

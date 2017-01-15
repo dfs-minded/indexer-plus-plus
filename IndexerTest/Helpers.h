@@ -14,11 +14,9 @@ namespace indexer {
 
 		#define __L__(str) reinterpret_cast<const char16_t*>(str)
 
-
 		// Since SearchQuery is immutable, need some factory for producing equal queries.
 
-		indexer_common::SearchQuery* CopyQuery(const indexer_common::SearchQuery& other);
-
+		indexer_common::uSearchQuery CopyQuery(const indexer_common::SearchQuery& other);
 		
 	} //namespace helpers
 

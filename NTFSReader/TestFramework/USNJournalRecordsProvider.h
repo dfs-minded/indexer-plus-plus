@@ -9,7 +9,7 @@
 #include <vector>
 #include "WindowsWrapper.h"
 
-#include "Macros.h"
+#include "macros.h"
 
 // Provides USN records for testing purposes. This class |records_| are populated by USNJournalRecordsSerializer class.
 

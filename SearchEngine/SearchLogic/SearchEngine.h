@@ -6,13 +6,12 @@
 
 #include <string>
 
-#include "Macros.h"
+#include "macros.h"
 
 #include "IndexChangeObserver.h"
 #include "NotifyIndexChangedEventArgs.h"
 #include "SearchResult.h"
-
-namespace indexer_common { struct SearchQuery; }
+#include "SearchQuery.h"
 
 namespace indexer {
 

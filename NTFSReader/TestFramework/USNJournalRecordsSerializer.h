@@ -13,7 +13,7 @@
 #include "WindowsWrapper.h"
 
 #include "CompilerSymb.h"
-#include "Macros.h"
+#include "macros.h"
 
 #include "USNJournalRecordsProvider.h"
 

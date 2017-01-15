@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include "Macros.h"
+#include "macros.h"
 
 namespace indexer_common { class FileInfo; }
 

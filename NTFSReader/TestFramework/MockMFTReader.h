@@ -6,7 +6,7 @@
 
 #include <memory>
 
-#include "Macros.h"
+#include "macros.h"
 
 #include "MFTReadResult.h"
 #include "MFTReader.h"

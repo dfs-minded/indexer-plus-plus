@@ -38,6 +38,7 @@ namespace ifind {
 		auto query = ComposeQueryFromUserInput(args, &empty_format_, &empty_output_path);
 		EXPECT_EQ(20, query->SizeFrom);
 		EXPECT_EQ(20, query->SizeTo);
+		query.reset();
 
 		// Bytes specified in format 'c':
 		const vector<wstring> args2 = { L"-size", L"20c" };

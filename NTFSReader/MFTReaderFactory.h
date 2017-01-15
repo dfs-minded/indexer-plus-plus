@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Macros.h"
+#include "macros.h"
 
 #include "MFTReader.h"
 

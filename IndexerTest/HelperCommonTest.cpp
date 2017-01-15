@@ -23,9 +23,8 @@ namespace indexer {
 
         for (auto s : strs) {
             u16string input(s);
-			char16_t* res = indexer_common::helpers::CopyU16StringToChar16(input);
+			auto res = indexer_common::helpers::CopyU16StringToChar16(input);
             EXPECT_EQ(u16string(s), u16string(res));
-            delete[] res;
         }
     }
 
@@ -45,7 +44,8 @@ namespace indexer {
     }
 
     TEST(IndexerCommonHelpersTest, Char16ToWstring) {
-        const char16_t* s = reinterpret_cast<const char16_t*>(L"file_name3");
+		auto&& test_literal = L"file_name3";
+        auto s = reinterpret_cast<const char16_t*>(test_literal);
 
         wstring expected = L"file_name3";
         wstring result = indexer_common::helpers::Char16ToWstring(s);
@@ -159,7 +159,8 @@ namespace indexer {
         ASSERT_EQ(n_exp, n_inp);
 
         for (size_t i = 0; i < n_inp; ++i) {
-			EXPECT_EQ(expected[i], indexer_common::helpers::GetDriveName(input[i]));
+			auto drive_name = indexer_common::helpers::GetDriveName(input[i]);
+			EXPECT_EQ(expected[i], u16string(drive_name));
         }
     }
 } // namespace indexer

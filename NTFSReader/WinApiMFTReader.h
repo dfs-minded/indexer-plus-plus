@@ -9,7 +9,7 @@
 #include "WindowsWrapper.h"
 
 #include "MFTReadResult.h"
-#include "Macros.h"
+#include "macros.h"
 #include "typedefs.h"
 
 #include "MFTReader.h"

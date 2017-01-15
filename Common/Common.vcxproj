@@ -32,6 +32,7 @@
     <ClCompile Include="OneThreadLog.cpp" />
     <ClCompile Include="OutputFormatter.cpp" />
     <ClCompile Include="SearchQuery.cpp" />
+    <ClCompile Include="SearchQueryBuilder.cpp" />
     <ClCompile Include="SystemConfigFlags.cpp" />
     <ClCompile Include="TextComparison.cpp" />
     <ClCompile Include="WindowsWrapper.cpp" />
@@ -50,11 +51,12 @@
     <ClInclude Include="LetterCaseMatching.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogMessagesListener.h" />
-    <ClInclude Include="Macros.h" />
+    <ClInclude Include="macros.h" />
     <ClInclude Include="MFTReadResult.h" />
     <ClInclude Include="OneThreadLog.h" />
     <ClInclude Include="OutputFormatter.h" />
     <ClInclude Include="SearchQuery.h" />
+    <ClInclude Include="SearchQueryBuilder.h" />
     <ClInclude Include="SystemConfigFlags.h" />
     <ClInclude Include="TextComparison.h" />
     <ClInclude Include="typedefs.h" />

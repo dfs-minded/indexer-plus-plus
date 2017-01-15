@@ -4,19 +4,32 @@
 
 #include "Helpers.h"
 
+#include "SearchQueryBuilder.h"
+
 namespace indexer {
 
 	namespace helpers {
 
-		indexer_common::SearchQuery* CopyQuery(const indexer_common::SearchQuery& other) {
+		indexer_common::uSearchQuery CopyQuery(const indexer_common::SearchQuery& other) {
+			indexer_common::SearchQueryBuilder cpy_builder;
 
-			auto copied =
-				new indexer_common::SearchQuery(
-				other.Text, other.SearchDirPath, other.MatchCase, other.UseRegex, other.SizeFrom, other.SizeTo,
-				other.ExcludeHiddenAndSystem, other.ExcludeFolders, other.ExcludeFiles, other.CTimeFrom,
-				other.CTimeTo, other.ATimeFrom, other.ATimeTo, other.MTimeFrom, other.MTimeTo);
+			cpy_builder.SetSearchText(other.Text)
+					   .SetSearchDirPath(other.SearchDirPath);
 
-			return copied;
+			if (other.MatchCase) cpy_builder.SetMatchCase();
+			if (other.UseRegex) cpy_builder.SetUseRegex();
+
+			cpy_builder.SetSizeFrom(other.SizeFrom).SetSizeTo(other.SizeTo);
+
+			if (other.ExcludeHiddenAndSystem) cpy_builder.SetExcludeHiddenAndSystem();
+			if (other.ExcludeFolders) cpy_builder.SetExcludeFolders();
+			if (other.ExcludeFiles) cpy_builder.SetExcludeFiles();
+
+			cpy_builder.SetCreationTimeFrom(other.CTimeFrom).SetCreationTimeTo(other.CTimeTo)
+				.SetLastAccessTimeFrom(other.ATimeFrom).SetLastAccessTimeTo(other.ATimeTo)
+				.SetModificationTimeFrom(other.MTimeFrom).SetModificationTimeTo(other.MTimeTo);
+
+			return cpy_builder.Build();
 		}
 
 	} //namespace helpers

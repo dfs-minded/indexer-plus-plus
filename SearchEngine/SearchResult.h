@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "FileInfo.h"
-#include "Macros.h"
+#include "macros.h"
 #include "OldFileInfosDeleter.h"
 
 namespace indexer_common { class FileInfo; }

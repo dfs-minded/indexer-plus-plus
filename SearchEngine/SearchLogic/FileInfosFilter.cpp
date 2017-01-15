@@ -4,6 +4,8 @@
 
 #include "FileInfosFilter.h"
 
+#include "../Common/Helpers.h"
+
 #include "IndexManagersContainer.h"
 #include "LetterCaseMatching.h"
 #include "TextComparison.h"
@@ -32,7 +34,7 @@ namespace indexer {
 
         // Create and compile re2 object.
 
-        unique_ptr<re2::RE2> empty_reg_exp = make_unique<re2::RE2>("");
+        auto empty_reg_exp = make_unique<re2::RE2>("");
         unique_ptr<re2::RE2> reg_exp;
 
         bool ok = helpers::Utf16ToUtf8(query_->Text, buffer_.get(), kBufferSize);
@@ -45,7 +47,7 @@ namespace indexer {
         re_.swap(ok ? reg_exp : empty_reg_exp);
     }
 
-    bool FileInfosFilter::PassesAllQueryFilters(const FileInfo& fi) {
+    bool FileInfosFilter::PassesAllQueryFilters(const FileInfo& fi) const {
 
         auto res = PassesFilterByFilename(fi) && PassesSizeDatesFilter(fi) && PassesAttributesFilter(fi);
         return res;

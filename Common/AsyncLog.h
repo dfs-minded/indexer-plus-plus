@@ -8,7 +8,7 @@
 #include <string>
 
 #include "Log.h"
-#include "Macros.h"
+#include "macros.h"
 
 // This is needed for compatibility with C++/CLI classes.
 // <mutex> and <thread> are not supported when compiling with /clr or /clr:pure.

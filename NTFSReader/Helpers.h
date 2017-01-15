@@ -24,11 +24,6 @@ namespace ntfs_reader {
 
         std::wstring GetReasonString(DWORD reason);
 
-		/*   private:
-			const std::wstring kDelim;
-
-			const std::pair<std::wstring, DWORD> kUSNReasonsPairs[];*/
-
     } //namespace helpers
 
 } // namespace ntfs_reader

@@ -8,7 +8,7 @@
 
 #include "CompilerSymb.h"
 #include "MFTReadResult.h"
-#include "Macros.h"
+#include "macros.h"
 #include "NTFSChangeObserver.h"
 
 #include "Index.h"

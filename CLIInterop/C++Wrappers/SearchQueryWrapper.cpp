@@ -4,39 +4,49 @@
 
 #include "SearchQueryWrapper.h"
 
-#include <climits>
+#include <limits>
+#include <memory>
+
+#include "SearchQueryBuilder.h"
 
 #include "InteropHelper.h"
 
 // clang-format off
 
 namespace CLIInterop {
-	
-	SearchQueryWrapper::SearchQueryWrapper() 
-		: Text(""), SearchDirPath("")
-	{
-	}
 
-	indexer_common::SearchQuery* SearchQueryWrapper::ToUnmanagedQuery()
+	indexer_common::uSearchQuery SearchQueryWrapper::ToUnmanagedQuery()
 	{
+		std::u16string text = Helper::ToU16string(Text);
+		std::u16string searchDirPath = Helper::ToU16string(SearchDirPath);
+
+		indexer_common::SearchQueryBuilder builder;
+		builder.SetSearchText(text)
+			.SetSearchDirPath(searchDirPath);
+
+		if (MatchCase) builder.SetMatchCase();
+		if (UseRegex) builder.SetUseRegex();
+
+		builder.SetSizeFrom(SizeFrom);
+		if (SizeTo != 0) builder.SetSizeTo(SizeTo);
+
+		if (ExcludeHiddenAndSystem) builder.SetExcludeHiddenAndSystem();
+		if (ExcludeFolders) builder.SetExcludeFolders();
+		if (ExcludeFiles) builder.SetExcludeFiles();
+
 		// Adjusting to the end of the day.
 		CreatedTimeTo = CreatedTimeTo->AddDays(1).Subtract(System::TimeSpan::FromMilliseconds(1));
 
-		auto text = Helper::ToU16string(Text);
-		auto searchDirPath = Helper::ToU16string(SearchDirPath);
+		auto cTimeFrom = (CreatedTimeFrom->Year < 1970) 
+			? 0 
+			: Helper::DateTimeToUnixTimeSeconds(CreatedTimeFrom);
 
-		int sizeFrom = SizeFrom;
-		int sizeTo = SizeTo != 0 ? SizeTo : INT32_MAX;
+		auto cTimeTo = (CreatedTimeTo->Year < 1970)
+			? std::numeric_limits<indexer_common::uint>::max()
+			: Helper::DateTimeToUnixTimeSeconds(CreatedTimeTo);
 
-		indexer_common::uint cTimeFrom =
-			(CreatedTimeFrom->Year < 1970) ? 0 : Helper::DateTimeToUnixTimeSeconds(CreatedTimeFrom);
+		builder.SetCreationTimeFrom(cTimeFrom).SetCreationTimeTo(cTimeTo);
 
-		indexer_common::uint cTimeTo =
-			(CreatedTimeTo->Year < 1970) ? UINT32_MAX : Helper::DateTimeToUnixTimeSeconds(CreatedTimeTo);
-
-		auto query = new indexer_common::SearchQuery(move(text), searchDirPath, MatchCase, UseRegex, sizeFrom, sizeTo,
-			ExcludeHiddenAndSystem, ExcludeFolders, ExcludeFiles, cTimeFrom, cTimeTo);
-
-		return query;
+		return builder.Build();
 	}
 }

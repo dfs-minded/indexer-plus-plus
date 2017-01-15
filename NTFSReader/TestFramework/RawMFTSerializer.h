@@ -9,7 +9,7 @@
 
 #include "WindowsWrapper.h"
 
-#include "Macros.h"
+#include "macros.h"
 
 namespace ntfs_reader {
 

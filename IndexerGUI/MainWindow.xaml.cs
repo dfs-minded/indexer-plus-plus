@@ -341,12 +341,11 @@ namespace Indexer
 
             var filterDir = CmdArgumentsParser.FilterDirPath;
 
-
             foreach (var driveInfo in DrivesManager.GetDrives())
             {
                 var drive = driveInfo.Name;
-                var isChecked = selectedDrives.Count == 0 || selectedDrives.Contains(drive) ||
-                                (!string.IsNullOrEmpty(filterDir) && filterDir[0] == drive);
+                var isChecked = selectedDrives == null || selectedDrives.Count == 0 || selectedDrives.Contains(drive) 
+                    || (!string.IsNullOrEmpty(filterDir) && filterDir[0] == drive);
 
                 var di = new DriveInfo(drive, driveInfo.Label, isChecked);
                 Drives.Add(di);
@@ -416,9 +415,11 @@ namespace Indexer
         private void Filter()
         {
             if (!initializationFinished) return;
+
             var q = new SearchQueryWrapper
             {
                 Text = SearchString,
+                SearchDirPath = SearchDirPath,
                 SizeFrom = 0,
                 SizeTo = 0,
                 CreatedTimeFrom = DateTime.MinValue,
@@ -438,10 +439,7 @@ namespace Indexer
                 q.SizeTo = maxSize;
             }
 
-            if (DirFilterEnabled)
-            {
-                q.SearchDirPath = string.IsNullOrWhiteSpace(SearchDirPath) ? string.Empty : searchDirPath;
-            }
+           
 
             if (DateFilterEnabled)
             {

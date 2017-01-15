@@ -86,7 +86,7 @@ namespace CLIInterop
 	{
 		logger_->Info(METHOD_METADATA + L"Called.");
 		auto query = queryWrapper->ToUnmanagedQuery();
-		engine->SearchAsync(query);
+		engine->SearchAsync(move(query));
 	}
 
 	List<String^>^ Model::Format(String^ format)

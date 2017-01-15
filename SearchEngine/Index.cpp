@@ -11,7 +11,7 @@
 #include "AsyncLog.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
-#include "Macros.h"
+#include "macros.h"
 #include "OneThreadLog.h"
 
 namespace indexer {

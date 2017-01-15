@@ -15,7 +15,7 @@
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
 #include "../Common/Helpers.h"
-#include "Macros.h"
+#include "macros.h"
 #include "OneThreadLog.h"
 
 #include "MFTReaderFactory.h"

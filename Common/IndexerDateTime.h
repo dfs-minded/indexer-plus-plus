@@ -8,7 +8,7 @@
 #include <string>
 #include "WindowsWrapper.h"
 
-#include "Macros.h"
+#include "macros.h"
 #include "typedefs.h"
 
 namespace indexer_common {

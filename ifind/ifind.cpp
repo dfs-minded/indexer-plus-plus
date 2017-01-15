@@ -2,24 +2,32 @@
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <fcntl.h>
 #include <io.h>
 #include <fstream>
 #include <iostream>
-
+#include <algorithm>
 #include <shlobj.h>
 #include <string>
 #include <vector>
 
 #include "ConnectionManager.h"
 #include "UserArgsParser.h"
-#include "SearchQuery.h"
+#include "SearchQueryBuilder.h"
 
 using std::wcout;
 using std::endl;
 using std::wstring;
 
-const int kMaxOutputLines = 50;
+namespace {
+
+const size_t kMaxOutputLines = 50;
+
+} // namespace 
 
 int wmain(int argc, wchar_t* argv[]) {
 
@@ -53,10 +61,10 @@ int wmain(int argc, wchar_t* argv[]) {
 
     wstring format;
 	wstring outputPath;
-	indexer_common::uSearchQuery query; 
+	indexer_common::uSearchQuery u_query; 
 
 	try {
-      query = ifind::ComposeQueryFromUserInput(args, &format, &outputPath);
+      u_query = ifind::ComposeQueryFromUserInput(args, &format, &outputPath);
     } 
 	catch (std::range_error& e) {
 		wcout << app_name << e.what();
@@ -70,7 +78,7 @@ int wmain(int argc, wchar_t* argv[]) {
 	indexer_common::ConnectionManager mgr;
 	std::vector<wstring> res;
 
-	bool ok = mgr.SendQuery(SerializeQuery(*query.get()), format, outputPath.empty() ? kMaxOutputLines : -1, &res);
+	bool ok = mgr.SendQuery(SerializeQuery(*u_query), format, outputPath.empty() ? kMaxOutputLines : -1, &res);
 
 	if (!ok) {
 		std::wcerr << res[0] << endl;
@@ -93,7 +101,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
 	if (res.size() == 0) wcout << L"No files found";
 
-	int num_to_display = min(res.size(), kMaxOutputLines);
+	int num_to_display = std::min(res.size(), kMaxOutputLines);
 
 	if (res.size() == kMaxOutputLines)
 		wcout << L"Listing first " + std::to_wstring(kMaxOutputLines) + L" results:" << endl;

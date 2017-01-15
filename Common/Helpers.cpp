@@ -6,11 +6,11 @@
 #include "Helpers.h"
 #include "WindowsWrapper.h"
 
-#include <string.h>
+#include <string>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <thread>
-#include <algorithm>
 
 namespace indexer_common {
 
