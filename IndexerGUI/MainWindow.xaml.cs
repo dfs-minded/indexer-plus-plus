@@ -331,7 +331,10 @@ namespace Indexer
             filtersVisibility = Visibility.Visible;
             searchDirPath = initialDirPath;
 
-            OnPropertyChanged("");
+            searchTextUserInputTextbox.Focusable = true;
+            Keyboard.Focus(searchTextUserInputTextbox);
+
+;           OnPropertyChanged("");
         }
 
         private void PopulateDrives()

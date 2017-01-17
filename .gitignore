@@ -20,6 +20,8 @@
 *.exe
 *.cache
 *.p12
+*.cmd
+*.opendb
 
 Debug
 Release
@@ -42,4 +44,5 @@ Release
 /Installer/BasicRE2Syntax.txt
 
 IndexerLog.txt
+
 

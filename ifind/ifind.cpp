@@ -19,6 +19,8 @@
 #include "UserArgsParser.h"
 #include "SearchQueryBuilder.h"
 
+#include "HelpText.h"
+
 using std::wcout;
 using std::endl;
 using std::wstring;
@@ -43,12 +45,9 @@ int wmain(int argc, wchar_t* argv[]) {
 	wstring first_arg = argv[1];
 
 	if (first_arg == L"-help" || first_arg == L"--help") {
-		std::wifstream help_file("helpText.txt");
-		wstring line;
-		while (getline(help_file, line))
-                    wcout << line << endl;
-                return 0;
-        }
+		wcout << ifind::gHelpText;
+		return 0;
+    }
 
 	if (!IsUserAnAdmin()) {
 		wcout << "Please run console with administrator privileges and try again." << endl;
