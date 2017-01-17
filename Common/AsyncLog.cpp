@@ -24,6 +24,7 @@ namespace indexer_common {
 
     AsyncLog::AsyncLog() {
 #ifdef WIN32
+		CreateDirectory(L"Logs", nullptr);
         log_file_ = _wfopen(L"Logs//IndexerLog.txt", L"w");
         _setmode(_fileno(log_file_), _O_U8TEXT);
 #else

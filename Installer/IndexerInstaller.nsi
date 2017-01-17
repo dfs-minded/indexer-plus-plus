@@ -2,7 +2,7 @@
 
 !define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 2
+!define VERSIONMINOR 3
 
 VIProductVersion "${VERSIONMAJOR}.${VERSIONMINOR}.0.0"
 
@@ -57,7 +57,7 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Indexer++"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© Anna Krykora"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Windows Files Search Util"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.0.0.0"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.0.0.3"
 
  
  # Custom macro
@@ -111,6 +111,7 @@ Section "Bare minimum" Section1
 	file "UserSettings.xml"
 	file "AddExplorerContextMenu.exe"
 	file "CloseRunningApp.exe"
+	file "AddDirToPathVarialble.exe"
 	file "icon_v3_2.ico"
 	file "vcomp120.dll"
 	file "ifind.exe"
@@ -172,34 +173,46 @@ Section "Autorun on Startup" Section2
 #Running a .exe file on Windows Start
 !include "MUI.nsh"
 
-	WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}" "$INSTDIR\${APPNAME}.exe"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}" "$INSTDIR\${APPNAME}.exe"
 
-	SectionEnd
+SectionEnd
 
 Section "Context Menu Entry" Section3
 	ExecWait '"$INSTDIR\AddExplorerContextMenu.exe" /r "$INSTDIR\${APPNAME}.exe"'
 SectionEnd
+
+Section "Add to PATH variable for Current User" Section4
+	ExecWait '"$INSTDIR\AddDirToPathVarialble.exe" /a "$INSTDIR" /u'
+SectionEnd
+
+Section "Add to PATH variable for local machine" Section5
+	ExecWait '"$INSTDIR\AddDirToPathVarialble.exe" /a "$INSTDIR" /m'
+SectionEnd
  
-# Section "Auto-Updater" Section4
+# Section "Auto-Updater" Section6
 
 # SectionEnd
 
-Section "Desktop Shortcut" Section5
+Section "Desktop Shortcut" Section7
 	CreateShortCut "$DESKTOP\${APPNAME}.lnk" "$INSTDIR\${APPNAME}.exe" "" "$INSTDIR\IndexerLogo.ico"
 SectionEnd
  
 LangString DESC_Section1 ${LANG_ENGLISH} "Base ${APPNAME} functionality."
 LangString DESC_Section2 ${LANG_ENGLISH} "Launch ${APPNAME} on Windows start."
 LangString DESC_Section3 ${LANG_ENGLISH} "Explorer context menu entry for ${APPNAME}. Start search in any directory you want in ${APPNAME} from Windows Explorer."
-LangString DESC_Section4 ${LANG_ENGLISH} "Keep your ${APPNAME} update. This option installs update module which searches ${APPNAME} update on Internet and installs it for you."
-LangString DESC_Section5 ${LANG_ENGLISH} "Creates Desktop Shortcut for you."
+LangString DESC_Section4 ${LANG_ENGLISH} "Adds Indexer++ and ifind to the PATH variable for Current User."
+LangString DESC_Section5 ${LANG_ENGLISH} "Adds Indexer++ and ifind to the PATH variable for local machine."
+#LangString DESC_Section6 ${LANG_ENGLISH} "Keep your ${APPNAME} update. This option installs update module which searches ${APPNAME} update on Internet and installs it for you."
+LangString DESC_Section7 ${LANG_ENGLISH} "Creates Desktop Shortcut for you."
 
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${Section1} $(DESC_Section1)
   !insertmacro MUI_DESCRIPTION_TEXT ${Section2} $(DESC_Section2)
   !insertmacro MUI_DESCRIPTION_TEXT ${Section3} $(DESC_Section3)
-  # !insertmacro MUI_DESCRIPTION_TEXT ${Section4} $(DESC_Section4)
+  !insertmacro MUI_DESCRIPTION_TEXT ${Section4} $(DESC_Section4)
   !insertmacro MUI_DESCRIPTION_TEXT ${Section5} $(DESC_Section5)
+  # !insertmacro MUI_DESCRIPTION_TEXT ${Section6} $(DESC_Section6)
+  !insertmacro MUI_DESCRIPTION_TEXT ${Section7} $(DESC_Section7)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
  
  
@@ -235,6 +248,8 @@ Section "uninstall"
 	delete "$DESKTOP\${APPNAME}.lnk"
 	
 	ExecWait '"$INSTDIR\AddExplorerContextMenu.exe" /u'
+	ExecWait '"$INSTDIR\AddDirToPathVarialble.exe" /r "$INSTDIR" /u'
+	ExecWait '"$INSTDIR\AddDirToPathVarialble.exe" /r "$INSTDIR" /m'
 	
 	# Remove files
 	delete "$INSTDIR\${APPNAME}.exe"
@@ -246,6 +261,7 @@ Section "uninstall"
 	delete $INSTDIR\icon_v3_2.ico
 	delete $INSTDIR\vcomp120.dll
 	delete $INSTDIR\AddExplorerContextMenu.exe
+	delete $INSTDIR\AddDirToPathVarialble.exe
 	delete $INSTDIR\CloseRunningApp.exe
 	delete $INSTDIR\AddExplorerContextMenuErrorLog.txt
 	delete $INSTDIR\IndexerDebugLog.txt

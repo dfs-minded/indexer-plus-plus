@@ -75,6 +75,7 @@ namespace Indexer
                 return false;
             }
             mainWindow.Visibility = Visibility.Visible;
+            mainWindow.Activate();
             return true;
         }
 
