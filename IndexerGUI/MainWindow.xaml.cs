@@ -31,7 +31,8 @@ namespace Indexer
         private DispatcherTimer dispatcherTimer;
         private Dispatcher dispatcher;
 
-        private System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog()
+        private readonly System.Windows.Forms.FolderBrowserDialog folderDialog = 
+            new System.Windows.Forms.FolderBrowserDialog()
             { 
                 RootFolder = Environment.SpecialFolder.MyComputer, 
                 ShowNewFolderButton = false 
@@ -422,7 +423,7 @@ namespace Indexer
             var q = new SearchQueryWrapper
             {
                 Text = SearchString,
-                SearchDirPath = SearchDirPath,
+                SearchDirPath = DirFilterEnabled ? SearchDirPath : string.Empty,
                 SizeFrom = 0,
                 SizeTo = 0,
                 CreatedTimeFrom = DateTime.MinValue,
