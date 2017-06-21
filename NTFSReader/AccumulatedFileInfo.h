@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "FileInfo.h"
-#include "macros.h"
+#include "Macros.h"
 
 #include "NTFSDataStructures.h"
 

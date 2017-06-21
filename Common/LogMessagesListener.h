@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "macros.h"
+#include "Macros.h"
 
 // Used for debug log window.
 namespace indexer_common {

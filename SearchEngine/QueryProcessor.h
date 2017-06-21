@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "ConnectionManager.h"
-#include "macros.h"
+#include "Macros.h"
 
 namespace indexer {
 

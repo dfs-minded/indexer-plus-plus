@@ -18,11 +18,11 @@ namespace indexer {
 
 	SearchEngine::~SearchEngine() = default;
 
-	pSearchResult SearchEngine::Search(uSearchQuery query) const {
+	pSearchResult SearchEngine::Search(uSearchQuery&& query) const {
 		return p_impl_->Search(std::move(query));
 	}
 
-	void SearchEngine::SearchAsync(uSearchQuery query) const {
+	void SearchEngine::SearchAsync(uSearchQuery&& query) const {
 		p_impl_->SearchAsync(std::move(query));
 	}
 

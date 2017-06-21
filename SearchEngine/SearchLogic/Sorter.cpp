@@ -8,12 +8,13 @@
 #include <unordered_set>
 
 #include "AsyncLog.h"
+#include "OneThreadLog.h"
+#include "EmptyLog.h"
+#include "Log.h"
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
 #include "../Common/Helpers.h"
-#include "Log.h"
 #include "Merger.h"
-#include "OneThreadLog.h"
 #include "SortingProperty.h"
 
 namespace indexer {

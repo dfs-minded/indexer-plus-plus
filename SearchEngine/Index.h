@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "macros.h"
+#include "Macros.h"
 #include "typedefs.h"
 
 // This is needed for compatibility with C++/CLI classes.

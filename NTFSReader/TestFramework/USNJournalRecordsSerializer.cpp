@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 #include "../Common/Helpers.h"
-#include "macros.h"
+#include "Macros.h"
 #include "WindowsWrapper.h"
 
 #include "CommandlineArguments.h"

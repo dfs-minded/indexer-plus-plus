@@ -6,7 +6,7 @@
 
 #include <memory>
 
-#include "macros.h"
+#include "Macros.h"
 
 #include "NotifyIndexChangedEventArgs.h"
 

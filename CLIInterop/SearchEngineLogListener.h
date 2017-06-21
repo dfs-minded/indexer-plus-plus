@@ -9,7 +9,7 @@
 
 #include "DebugLogModel.h"
 #include "LogMessagesListener.h"
-#include "macros.h"
+#include "Macros.h"
 // clang-format off
 
 namespace indexer_common { class Log; }

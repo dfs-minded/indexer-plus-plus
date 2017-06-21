@@ -10,12 +10,13 @@
 #include <thread>
 
 #include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "CLRCompilantWrappers.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
 #include "FileInfoHelper.h"
 #include "../Common/Helpers.h"
-#include "macros.h"
+#include "Macros.h"
 #include "OneThreadLog.h"
 
 #include "MFTReaderFactory.h"

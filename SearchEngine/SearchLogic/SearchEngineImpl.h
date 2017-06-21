@@ -11,7 +11,7 @@
 #include <thread>
 #include <vector>
 
-#include "macros.h"
+#include "Macros.h"
 #include "typedefs.h"
 
 #include "FileInfosFilter.h"

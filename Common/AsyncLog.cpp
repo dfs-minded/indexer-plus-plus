@@ -10,7 +10,7 @@
 
 #include "Helpers.h"
 #include "LogMessagesListener.h"
-#include "macros.h"
+#include "Macros.h"
 #include "WindowsWrapper.h"
 
 namespace indexer_common {

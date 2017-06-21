@@ -5,8 +5,10 @@
 #include "SearchEngineLogListener.h"
 
 #include "AsyncLog.h"
-#include "DebugLogModel.h"
+#include "EmptyLog.h"
 #include "OneThreadLog.h"
+#include "Log.h"
+#include "DebugLogModel.h"
 // clang-format off
 
 namespace CLIInterop
@@ -14,6 +16,7 @@ namespace CLIInterop
 	SearchEngineLogListener::SearchEngineLogListener(DebugLogModel^ mdl) 
 	{
 		using indexer_common::AsyncLog;
+		using indexer_common::EmptyLog;
 		GET_LOGGER
 
 		model = mdl;

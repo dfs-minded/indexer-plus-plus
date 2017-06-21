@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-#include "macros.h"
+#include "Macros.h"
 #include "typedefs.h"
 
 #include "AccumulatedFileInfo.h"

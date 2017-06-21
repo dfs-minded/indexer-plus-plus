@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include "macros.h"
+#include "Macros.h"
 #include "typedefs.h"
 
 #pragma pack(push, 4)

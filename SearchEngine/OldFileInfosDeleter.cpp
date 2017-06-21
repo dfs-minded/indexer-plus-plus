@@ -5,6 +5,7 @@
 #include "OldFileInfosDeleter.h"
 
 #include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "FileInfo.h"
 
 namespace indexer {

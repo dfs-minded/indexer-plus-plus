@@ -27,7 +27,7 @@ namespace indexer {
 
 		NO_COPY(FileInfosFilter)
 
-			~FileInfosFilter();
+		~FileInfosFilter();
 
 
 		// Resets the underlying search query.
@@ -62,6 +62,8 @@ namespace indexer {
 
 		std::vector<const indexer_common::FileInfo*> FilterFiles(const std::vector<const indexer_common::FileInfo*>& input);
 
+
+		// Returns true if a search query contans a searching directory constraint. False othervise.
 
 		bool SearchInDirectorySpecified() const;
 

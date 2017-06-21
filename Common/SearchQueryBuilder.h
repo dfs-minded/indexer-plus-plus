@@ -9,7 +9,7 @@
 
 #include "Helpers.h"
 #include "SearchQuery.h"
-#include "macros.h"
+#include "Macros.h"
 
 namespace indexer_common {
 

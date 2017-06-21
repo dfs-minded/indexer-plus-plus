@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "Helpers.h"
 #include "Log.h"
 #include "WindowsWrapper.h"

@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "FileInfo.h"
 #include "Helpers.h"
 

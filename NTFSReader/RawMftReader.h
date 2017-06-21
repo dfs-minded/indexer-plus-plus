@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "MFTReadResult.h"
-#include "macros.h"
+#include "Macros.h"
 #include "WindowsWrapper.h"
 #include "typedefs.h"
 

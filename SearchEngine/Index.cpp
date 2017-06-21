@@ -9,9 +9,10 @@
 #include <mutex>
 
 #include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
-#include "macros.h"
+#include "Macros.h"
 #include "OneThreadLog.h"
 
 namespace indexer {

@@ -11,12 +11,14 @@
 
 namespace indexer_common {
 
-    class LogMessagesListener;
+class LogMessagesListener;
 
 #ifdef SINGLE_THREAD_LOG
 #define GET_LOGGER logger_ = &OneThreadLog::Instance();
-#else
+#elif ASYNC_LOG
 #define GET_LOGGER logger_ = &AsyncLog::Instance();
+#else
+#define GET_LOGGER logger_ = &EmptyLog::Instance();
 #endif
 
 #define COMPOSE_MSG(logLevel) \

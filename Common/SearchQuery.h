@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 
-#include "macros.h"
+#include "Macros.h"
 #include "typedefs.h"
 
 namespace indexer_common {

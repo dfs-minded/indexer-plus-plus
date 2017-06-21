@@ -12,11 +12,12 @@
 #include <string>
 
 #include "AsyncLog.h"
+#include "EmptyLog.h"
+#include "OneThreadLog.h"
 #include "ConnectionManager.h"
 #include "FileInfoComparatorFactory.h"
 #include "../Common/Helpers.h"
 #include "IndexManagersContainer.h"
-#include "OneThreadLog.h"
 #include "OutputFormatter.h"
 #include "QueryProcessor.h"
 
@@ -86,7 +87,7 @@ namespace CLIInterop
 	{
 		logger_->Info(METHOD_METADATA + L"Called.");
 		auto query = queryWrapper->ToUnmanagedQuery();
-		engine->SearchAsync(move(query));
+		engine->SearchAsync(std::move(query));
 	}
 
 	List<String^>^ Model::Format(String^ format)

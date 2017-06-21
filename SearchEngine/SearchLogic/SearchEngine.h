@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "macros.h"
+#include "Macros.h"
 
 #include "IndexChangeObserver.h"
 #include "NotifyIndexChangedEventArgs.h"
@@ -34,12 +34,12 @@ namespace indexer {
 		// Main method to perform search in volumes indices with the given user search query. Executed synchronously.
 		// Returns a search result: collection of FileInfo objects, satisfying the given search query.
 
-		pSearchResult Search(indexer_common::uSearchQuery query) const;
+		pSearchResult Search(indexer_common::uSearchQuery&& query) const;
 
 
 		// The asynchronous variant of the Search member function.
 
-		void SearchAsync(indexer_common::uSearchQuery query) const;
+		void SearchAsync(indexer_common::uSearchQuery&& query) const;
 
 
 		// Performs sorting of the search result with the given FileInfo property and sort direction 

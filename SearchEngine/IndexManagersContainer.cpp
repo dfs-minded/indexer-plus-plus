@@ -7,10 +7,10 @@
 #include <mutex>
 
 #include "AsyncLog.h"
+#include "OneThreadLog.h"
+#include "EmptyLog.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
-#include "Log.h"
-#include "OneThreadLog.h"
 
 #include "Index.h"
 #include "LetterCaseMatching.h"

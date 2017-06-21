@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "macros.h"
+#include "Macros.h"
 
 #include "IndexChangeObserver.h"
 #include "IndexManager.h"

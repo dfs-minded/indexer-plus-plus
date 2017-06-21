@@ -9,11 +9,14 @@
 #include <iterator>
 
 #include "re2.h"
+
 #include "AsyncLog.h"
+#include "EmptyLog.h"
+#include "OneThreadLog.h"
+#include "Log.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
-#include "Log.h"
-#include "OneThreadLog.h"
+
 #include "SearchQueryBuilder.h"
 
 #include "Merger.h"

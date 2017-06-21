@@ -41,6 +41,7 @@
     <ClInclude Include="AsyncLog.h" />
     <ClInclude Include="CLRCompilantWrappers.h" />
     <ClInclude Include="CommandlineArguments.h" />
+    <ClInclude Include="EmptyLog.h" />
     <ClInclude Include="FileInfoHelper.h" />
     <ClInclude Include="CompilerSymb.h" />
     <ClInclude Include="ConnectionManager.h" />
@@ -51,7 +52,7 @@
     <ClInclude Include="LetterCaseMatching.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogMessagesListener.h" />
-    <ClInclude Include="macros.h" />
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="MFTReadResult.h" />
     <ClInclude Include="OneThreadLog.h" />
     <ClInclude Include="OutputFormatter.h" />

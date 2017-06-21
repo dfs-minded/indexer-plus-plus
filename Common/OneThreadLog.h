@@ -7,7 +7,7 @@
 #include <string>
 
 #include "Log.h"
-#include "macros.h"
+#include "Macros.h"
 
 namespace indexer_common {
 
