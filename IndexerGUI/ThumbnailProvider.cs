@@ -3,11 +3,19 @@
 // and was written by Daniel Peñalba http://stackoverflow.com/users/402081/daniel-pe%C3%B1alba
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using CLIInterop;
 
 namespace Indexer
@@ -95,16 +103,99 @@ namespace Indexer
 
         private ThumbnailProvider()
         {
+            Task.Factory.StartNew(ProcessFiles, TaskCreationOptions.LongRunning);
         }
+
+        private void ProcessFiles()
+        {
+            while (true)
+            {
+                if (clearQueue)
+                {
+                    while (filesProcessingQueue.Any())
+                        filesProcessingQueue.Take();
+                    clearQueue = false;
+                }
+
+                while (filesProcessingQueue.Count() > 100)
+                    filesProcessingQueue.Take();
+                
+                while (filesProcessingQueue.Any())
+                {
+                    var fileBitmapPair = filesProcessingQueue.Take();
+                    var bitmapHandle = RetrieveBitmapHandle(fileBitmapPair.Filename);
+
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Render,
+                        new Action(() =>
+                        {
+                            fileBitmapPair.TargetBitmapSetter(ConvertToBitmapSource(bitmapHandle));
+                        }));
+                }
+                
+
+                Thread.Sleep(500);
+            } // while (true)
+        }
+
+        private static BitmapSource ConvertToBitmapSource(IntPtr bitmapHandle)
+        {
+            Bitmap bmpThumbnail = null;
+
+            try
+            {
+                bmpThumbnail = GetBitmapFromHandle(bitmapHandle);
+            }
+            catch (Exception e)
+            {
+                Log.Instance.Error("Cannot retrieve thumbnail " + e.Message);
+            }
+            finally
+            {
+                // Delete bitmapHandle to avoid memory leaks.
+                WinApiFunctions.DeleteObject(bitmapHandle);
+            }
+
+            return bmpThumbnail?.ToBitmapSource();
+        }
+
+        private class FileBitmapPair
+        {
+            public readonly string Filename;
+            public readonly Action<BitmapSource> TargetBitmapSetter;
+
+            public FileBitmapPair(string filename, Action<BitmapSource> targetBitmapSetter)
+            {
+                Filename = filename;
+                TargetBitmapSetter = targetBitmapSetter;
+            }
+        }
+
+        private readonly BlockingCollection<FileBitmapPair> filesProcessingQueue = new BlockingCollection<FileBitmapPair>(); 
 
         private static ThumbnailProvider instance;
-
-        public static ThumbnailProvider Instance
-        {
-            get { return instance ?? (instance = new ThumbnailProvider()); }
-        }
+        public static ThumbnailProvider Instance => instance ?? (instance = new ThumbnailProvider());
 
         public IconSizeEnum ThumbSize = IconSizeEnum.SmallIcon16;
+
+        public void GetThumbnail(string fileName, Action<BitmapSource> targetBitmapSetter)
+        {
+            filesProcessingQueue.Add(new FileBitmapPair(fileName, targetBitmapSetter));
+        }
+
+        private bool clearQueue = false;
+
+        public void OnUserJumpedToOtherPlace()
+        {
+            clearQueue = true;
+        }
+
+        public IntPtr RetrieveBitmapHandle(string fileName)
+        {
+            var thumbSizePixels = GetThumbSizePixels();
+            const ThumbnailOptions options = ThumbnailOptions.BiggerSizeOk | ThumbnailOptions.ResizeToFit;
+
+            return GetBitmapHandle(Path.GetFullPath(fileName), thumbSizePixels, options);           
+        }
 
         private int GetThumbSizePixels()
         {
@@ -121,31 +212,6 @@ namespace Indexer
                 default:
                     return 32;
             }
-        }
-
-        public BitmapSource GetThumbnail(string fileName)
-        {
-            var thumbSizePixels = GetThumbSizePixels();
-            var bitmapHandle = IntPtr.Zero;
-            Bitmap bmpThumbnail = null;
-            const ThumbnailOptions options = ThumbnailOptions.BiggerSizeOk | ThumbnailOptions.ResizeToFit;
-
-            try
-            {
-                bitmapHandle = GetBitmapHandle(Path.GetFullPath(fileName), thumbSizePixels, options);
-                bmpThumbnail = GetBitmapFromHandle(bitmapHandle);
-            }
-            catch (Exception e)
-            {
-                Log.Instance.Error("Cannot retrieve thumbnail " + e.Message);
-            }
-            finally
-            {
-                // Delete HBitmap to avoid memory leaks.
-                WinApiFunctions.DeleteObject(bitmapHandle);
-            }
-
-            return bmpThumbnail == null ? null : bmpThumbnail.ToBitmapSource();
         }
 
         private static Bitmap GetBitmapFromHandle(IntPtr nativeHBitmap)

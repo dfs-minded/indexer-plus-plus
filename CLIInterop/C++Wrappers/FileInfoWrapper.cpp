@@ -36,17 +36,14 @@ namespace CLIInterop
 		Extension = Helper::ToSystemString(FileInfoHelper::GetExtension(*fi));		
 
 		// TODO starting too many threads via Task::Factory slows down performance.
-		// Task^ typeLoadingTask = Task::Factory->StartNew(gcnew Action(this, &FileInfoWrapper::LoadType));
+		//Task^ typeLoadingTask = Task::Factory->StartNew(gcnew System::Action(this, &FileInfoWrapper::LoadType));
 
 		LoadType();
 
 		Thumbnail = FileInfoWrapper::IconProvider->GetIcon(FullName);
-
-		// TODO: revive thumbnails.
-		// Sync: Thumbnail = FileInfoWrapper::ThumbnailProvider->GetThumbnail(FullName);
-		// auto uiContext = TaskScheduler::FromCurrentSynchronizationContext();
-		//	Task^ thumbnailLoadingTask = Task::Factory->StartNew(gcnew Action(this, &FileInfoWrapper::LoadThumbnail),
-		//	CancellationToken::None, TaskCreationOptions::None, uiContext);
+	
+		FileInfoWrapper::ThumbnailProvider->GetThumbnail(FullName, 
+			gcnew System::Action<System::Windows::Media::Imaging::BitmapSource^>(this, &FileInfoWrapper::SetTumbnail));
 
 		Size = fi->SizeReal;
 
@@ -94,10 +91,5 @@ namespace CLIInterop
 
 		//auto state = Thread::CurrentThread->ApartmentState;
 		//WriteToOutput(METHOD_METADATA + wstring(L"LoadType ApartmentState = ") + (state == ApartmentState::STA ? L"STA" : L"MTA"));
-	}
-
-	void FileInfoWrapper::LoadThumbnail()
-	{
-		Thumbnail = FileInfoWrapper::ThumbnailProvider->GetThumbnail(FullName);
 	}
 }

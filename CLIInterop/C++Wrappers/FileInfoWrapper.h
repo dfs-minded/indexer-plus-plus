@@ -12,7 +12,12 @@ namespace CLIInterop
 {
 	public interface class IThumbnailProvider
 	{
-		System::Windows::Media::Imaging::BitmapSource^ GetThumbnail(System::String^ fileName);
+		// Asynchronyously loads thumbnail and via dispatcher using |setBitmapSource| callback assingns
+		// loaded thumbnail to target FileInfoWrapper property.
+		void GetThumbnail(System::String^ fileName, 
+						  System::Action<System::Windows::Media::Imaging::BitmapSource^>^ setBitmapSource);
+
+		void OnUserJumpedToOtherPlace();
 	};
 
 	public interface class IIconProvider
@@ -58,6 +63,11 @@ namespace CLIInterop
 		// Rereads properties which could be changed from the underlying FileInfo object |fi|.
 		void Update();
 
+		void SetTumbnail(System::Windows::Media::Imaging::BitmapSource^ newThumbnail)
+		{
+			Thumbnail = newThumbnail;
+		}
+
 		FileInfoWrapper() {}
 
 		FileInfoWrapper(const indexer_common::FileInfo* const fi, int index);
@@ -76,7 +86,5 @@ namespace CLIInterop
 		System::Windows::Media::Imaging::BitmapSource^ thumbnail;
 
 		void LoadType();
-
-		void LoadThumbnail();
 	};
 }

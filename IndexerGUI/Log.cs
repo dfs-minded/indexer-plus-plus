@@ -14,7 +14,7 @@ namespace Indexer
 {
     public class Log : IDisposable
     {
-        private readonly StreamWriter sw;
+        private readonly StreamWriter sw = null;
         private SingleThreadTimer saveTimer;
 
         private List<string> messages = new List<string>();

@@ -132,7 +132,7 @@
             </MenuItem>
             <MenuItem Click="OnFilters_Click" Header="Filters" />
 
-            <!--<MenuItem Name="ViewsMenuItem" Header="Views">
+            <MenuItem Name="ViewsMenuItem" Header="Views">
 
                 <MenuItem Click="OnMenuDetailsView_Click"
                           Name="DetailsMenuITem"
@@ -151,20 +151,20 @@
                           Header="Small Icons" />
                 <MenuItem Click="OnMenuMediumIconsView_Click"
                           Name="MediumIconsMenuItem"
-                          IsEnabled="{Binding IsNotSmallMenuItemEnabled}"
+                          IsEnabled="{Binding IsLargetThanSmallMenuItemEnabled}"
                           IsCheckable="True"
                           Header="Medium Icons" />
                 <MenuItem Click="OnMenuLargeIconsView_Click"
                           Name="LargeIconsMenuItem"
-                          IsEnabled="{Binding IsNotSmallMenuItemEnabled}"
+                          IsEnabled="{Binding IsLargetThanSmallMenuItemEnabled}"
                           IsCheckable="True"
                           Header="Large Icons" />
                 <MenuItem Click="OnMenuExtraLargeIconsView_Click"
                           Name="ExtraLargeIconsMenuItem"
-                          IsEnabled="{Binding IsNotSmallMenuItemEnabled}"
+                          IsEnabled="{Binding IsLargetThanSmallMenuItemEnabled}"
                           IsCheckable="True"
                           Header="Extra Large Icons" />
-            </MenuItem>-->
+            </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Command="indexer:CustomCommands.RegexSyntaxHelpCommand" Header="Regex Syntax"/>
                 <MenuItem Command="indexer:CustomCommands.About" Header="About Indexer++"/>
@@ -340,7 +340,7 @@
                           Width="5"
                           Grid.Column="1" />
 
-            <ContentControl Grid.Column="2" Focusable="False">
+            <ContentControl x:Name="MainContentControl" Grid.Column="2" Focusable="False">
                 <ContentControl.Style>
                     <Style TargetType="ContentControl">
                         <Style.Triggers>

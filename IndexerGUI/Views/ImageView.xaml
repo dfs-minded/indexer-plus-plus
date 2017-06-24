@@ -38,7 +38,8 @@
         <ListView x:Name="ImgesListView" 
             ItemsSource="{Binding DataModel}"
             ScrollViewer.IsDeferredScrollingEnabled="True"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.ScrollChanged="ImgesListView_OnScrollChanged"
             SelectionMode="Single">
 
             <ListView.ItemsPanel>
@@ -76,12 +77,12 @@
                                         <Canvas Width="230" Height="18">
                                             <controls:AutoScalingImage Canvas.Left="1" Canvas.Top="1"
                                                                    Width="16" Height="16"
-                                                                   Source="{Binding Thumbnail, Mode=OneTime}" 
+                                                                   Source="{Binding Thumbnail, Mode=OneWay}" 
                                                                    RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
 
                                             <controls:FileNameTextBlock Canvas.Left="18" Canvas.Top="1"
                                                                     Width="211" Height="16"
-                                                                    Text="{Binding Name, Mode=OneTime}" TextAlignment="Left" />
+                                                                    Text="{Binding Name, Mode=OneWay}" TextAlignment="Left" />
 
                                         </Canvas>
                                     </DataTemplate>
@@ -97,12 +98,12 @@
                                         <Canvas Width="68" Height="74">
                                             <controls:AutoScalingImage Canvas.Left="10" Canvas.Top="1"
                                                                        Width="48" Height="48"
-                                                                       Source="{Binding Thumbnail, Mode=OneTime}"
+                                                                       Source="{Binding Thumbnail, Mode=OneWay}"
                                                                        RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
 
                                             <controls:FileNameTextBlock Canvas.Left="1" Canvas.Top="49"
                                                                         Width="66" Height="19"
-                                                                        Text="{Binding Name, Mode=OneTime}" TextAlignment="Center" />
+                                                                        Text="{Binding Name, Mode=OneWay}" TextAlignment="Center" />
                                         </Canvas>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -116,12 +117,12 @@
                                         <Canvas Width="104" Height="116">
                                             <controls:AutoScalingImage Canvas.Left="4" Canvas.Top="1"
                                                                        Width="96" Height="96"
-                                                                       Source="{Binding Thumbnail, Mode=OneTime}"
+                                                                       Source="{Binding Thumbnail, Mode=OneWay}"
                                                                        RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
 
                                             <controls:FileNameTextBlock Canvas.Left="1" Canvas.Top="97"
                                                                         Width="102" Height="19"
-                                                                        Text="{Binding Name, Mode=OneTime}" TextAlignment="Center"/>
+                                                                        Text="{Binding Name, Mode=OneWay}" TextAlignment="Center"/>
                                         </Canvas>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -135,12 +136,12 @@
                                         <Canvas Width="266" Height="264">
                                             <controls:AutoScalingImage Canvas.Left="1" Canvas.Top="1"
                                                                        Width="262" Height="244"
-                                                                       Source="{Binding Thumbnail, Mode=OneTime}" 
+                                                                       Source="{Binding Thumbnail, Mode=OneWay}" 
                                                                        RenderOptions.BitmapScalingMode="{StaticResource BitmapScalingMode}" />
 
                                             <controls:FileNameTextBlock Canvas.Left="1" Canvas.Top="245"
                                                                         Width="266" Height="19"
-                                                                        Text="{Binding Name, Mode=OneTime}" TextAlignment="Center" />
+                                                                        Text="{Binding Name, Mode=OneWay}" TextAlignment="Center" />
                                         </Canvas>
                                     </DataTemplate>
                                 </Setter.Value>

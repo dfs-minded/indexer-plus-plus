@@ -60,7 +60,8 @@
             GridViewColumnHeader.Click="TheView_HeaderClick"
             ScrollViewer.IsDeferredScrollingEnabled="True" 
             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.ScrollChanged="DetailsListView_OnScrollChanged"
             SelectionMode="Single"
             VirtualizingStackPanel.IsVirtualizing="True"
             VirtualizingStackPanel.VirtualizationMode="Recycling">

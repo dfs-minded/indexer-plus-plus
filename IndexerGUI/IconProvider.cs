@@ -104,13 +104,8 @@ namespace Indexer
         private const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
         private const int FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
 
-
         private static IconProvider instance;
-
-        public static IconProvider Instance
-        {
-            get { return instance ?? (instance = new IconProvider()); }
-        }
+        public static IconProvider Instance => instance ?? (instance = new IconProvider());
 
         private readonly Dictionary<IconSizeEnum, BitmapSource> FolderIcon;
         private readonly Dictionary<string, BitmapSource> SmallIcons;
@@ -187,6 +182,7 @@ namespace Indexer
 
             return icon;
         }
+
 
         private int GetIconSize()
         {

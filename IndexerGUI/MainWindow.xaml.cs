@@ -201,8 +201,8 @@ namespace Indexer
             {
                 if (iconSize == value) return;
 
-                // TODO: remove this line after fixing virtualization on Windows 8.1.
-                // if (ViewType == ViewType.Details && value != IconSizeEnum.SmallIcon16) return;
+                if (ViewType == ViewType.Details && value != IconSizeEnum.SmallIcon16)
+                    return;
 
                 iconSize = value;
 
@@ -223,21 +223,13 @@ namespace Indexer
                 if (viewType == value) return;
                 viewType = value;
 
-                // TODO: remove this after fixing virtualization
                 if (value == ViewType.Details)
                 {
                     IconSize = IconSizeEnum.SmallIcon16;
-                    // OnMenuSmallIconsView_Click(this, new RoutedEventArgs());
+                    OnMenuSmallIconsView_Click(this, new RoutedEventArgs());
                 }
                 OnPropertyChanged("ViewType");
-                OnPropertyChanged("IsNotSmallMenuItemEnabled");
             }
-        }
-
-        // TODO: remove this after fixing virtualization on Windows 8.1.
-        public object IsNotSmallMenuItemEnabled
-        {
-            get { return true; } // return ViewType == ViewType.Icons; }
         }
 
         private bool explorerTreeVisible;
@@ -443,8 +435,6 @@ namespace Indexer
                 q.SizeTo = maxSize;
             }
 
-           
-
             if (DateFilterEnabled)
             {
                 q.CreatedTimeFrom = DateFrom;
@@ -628,63 +618,65 @@ namespace Indexer
 
         #endregion
 
+        #region Icons View
+
+        private void OnMenuDetailsView_Click(object sender, RoutedEventArgs e)
+        {
+            ViewType = ViewType.Details;
+
+            IconsMenuITem.IsChecked = false;
+            DetailsMenuITem.IsChecked = true;
+        }
+
+        private void OnMenuIconsView_Click(object sender, RoutedEventArgs e)
+        {
+            ViewType = ViewType.Icons;
+
+            IconsMenuITem.IsChecked = true;
+            DetailsMenuITem.IsChecked = false;
+        }
+
+        private void OnMenuLargeIconsView_Click(object sender, RoutedEventArgs e)
+        {
+            IconSize = IconSizeEnum.LargeIcon48;
+
+            SmallIconsMenuItem.IsChecked = false;
+            MediumIconsMenuItem.IsChecked = false;
+            LargeIconsMenuItem.IsChecked = true;
+            ExtraLargeIconsMenuItem.IsChecked = false;
+        }
+
+        private void OnMenuMediumIconsView_Click(object sender, RoutedEventArgs e)
+        {
+            IconSize = IconSizeEnum.MediumIcon32;
+
+            SmallIconsMenuItem.IsChecked = false;
+            MediumIconsMenuItem.IsChecked = true;
+            LargeIconsMenuItem.IsChecked = false;
+            ExtraLargeIconsMenuItem.IsChecked = false;
+        }
+
+        private void OnMenuSmallIconsView_Click(object sender, RoutedEventArgs e)
+        {
+            IconSize = IconSizeEnum.SmallIcon16;
+
+            SmallIconsMenuItem.IsChecked = true;
+            LargeIconsMenuItem.IsChecked = false;
+            MediumIconsMenuItem.IsChecked = false;
+            ExtraLargeIconsMenuItem.IsChecked = false;
+        }
+
+        private void OnMenuExtraLargeIconsView_Click(object sender, RoutedEventArgs e)
+        {
+            IconSize = IconSizeEnum.JumboIcon256;
+
+            SmallIconsMenuItem.IsChecked = false;
+            MediumIconsMenuItem.IsChecked = false;
+            LargeIconsMenuItem.IsChecked = false;
+            ExtraLargeIconsMenuItem.IsChecked = true;
+        }
+
         // TODO: revive this functionality
-        //private void OnMenuDetailsView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ViewType = ViewType.Details;
-
-        //    IconsMenuITem.IsChecked = false;
-        //    DetailsMenuITem.IsChecked = true;
-        //}
-
-        //private void OnMenuIconsView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ViewType = ViewType.Icons;
-
-        //    IconsMenuITem.IsChecked = true;
-        //    DetailsMenuITem.IsChecked = false;
-        //}
-
-        //private void OnMenuLargeIconsView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IconSize = IconSizeEnum.LargeIcon48;
-
-        //    SmallIconsMenuItem.IsChecked = false;
-        //    MediumIconsMenuItem.IsChecked = false;
-        //    LargeIconsMenuItem.IsChecked = true;
-        //    ExtraLargeIconsMenuItem.IsChecked = false;
-        //}
-
-        //private void OnMenuMediumIconsView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IconSize = IconSizeEnum.MediumIcon32;
-
-        //    SmallIconsMenuItem.IsChecked = false;
-        //    MediumIconsMenuItem.IsChecked = true;
-        //    LargeIconsMenuItem.IsChecked = false;
-        //    ExtraLargeIconsMenuItem.IsChecked = false;
-        //}
-
-        //private void OnMenuSmallIconsView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IconSize = IconSizeEnum.SmallIcon16;
-
-        //    SmallIconsMenuItem.IsChecked = true;
-        //    LargeIconsMenuItem.IsChecked = false;
-        //    MediumIconsMenuItem.IsChecked = false;
-        //    ExtraLargeIconsMenuItem.IsChecked = false;
-        //}
-
-        //private void OnMenuExtraLargeIconsView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IconSize = IconSizeEnum.JumboIcon256;
-
-        //    SmallIconsMenuItem.IsChecked = false;
-        //    MediumIconsMenuItem.IsChecked = false;
-        //    LargeIconsMenuItem.IsChecked = false;
-        //    ExtraLargeIconsMenuItem.IsChecked = true;
-        //}
-
         //private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
         //{
         //    if (Keyboard.Modifiers == ModifierKeys.Control)
@@ -728,6 +720,8 @@ namespace Indexer
         //        e.Handled = true;
         //    }
         //}
+
+        #endregion
 
         #region Context menu
 

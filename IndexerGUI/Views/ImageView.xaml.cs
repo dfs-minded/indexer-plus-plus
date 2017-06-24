@@ -12,5 +12,10 @@ namespace Indexer.Views
         {
             InitializeComponent();
         }
+
+        private void ImgesListView_OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
+        }
     }
 }
