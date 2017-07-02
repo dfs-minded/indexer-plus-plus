@@ -18,9 +18,9 @@
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     Icon="Icons/icon_v3_2.ico"
     FontSize="12"
+    PreviewMouseWheel="MainWindow_OnMouseWheel"
     SizeChanged="MainWindow_OnSizeChanged"
     mc:Ignorable="d">
-    <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
     
     <Window.Resources>
         <ResourceDictionary>

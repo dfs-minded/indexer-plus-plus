@@ -674,50 +674,44 @@ namespace Indexer
             ExtraLargeIconsMenuItem.IsChecked = true;
         }
 
-        // TODO: revive this functionality
-        //private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
-        //{
-        //    if (Keyboard.Modifiers == ModifierKeys.Control)
-        //    {
-        //        if (e.Delta > 0)
-        //        {
-        //            switch (IconSize)
-        //            {
-        //                case IconSizeEnum.SmallIcon16:
-        //                    OnMenuMediumIconsView_Click(null, null);
-        //                    break;
-        //                case IconSizeEnum.MediumIcon32:
-        //                    OnMenuLargeIconsView_Click(null, null);
-        //                    break;
-        //                case IconSizeEnum.LargeIcon48:
-        //                    OnMenuExtraLargeIconsView_Click(null, null);
-        //                    break;
+        private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.Modifiers != ModifierKeys.Control)
+                return;
 
-        //                default:
-        //                    throw new ArgumentOutOfRangeException();
-        //            }
-        //        }
-        //        else
-        //        {
-        //            switch (IconSize)
-        //            {
-        //                case IconSizeEnum.MediumIcon32:
-        //                    OnMenuSmallIconsView_Click(null, null);
-        //                    break;
-        //                case IconSizeEnum.LargeIcon48:
-        //                    OnMenuMediumIconsView_Click(null, null);
-        //                    break;
-        //                case IconSizeEnum.JumboIcon256:
-        //                    OnMenuLargeIconsView_Click(null, null);
-        //                    break;
-        //                default:
-        //                    throw new ArgumentOutOfRangeException();
-        //            }
-        //        }
+            if (e.Delta > 0)
+            {
+                switch (IconSize)
+                {
+                    case IconSizeEnum.SmallIcon16:
+                        OnMenuMediumIconsView_Click(null, null);
+                        break;
+                    case IconSizeEnum.MediumIcon32:
+                        OnMenuLargeIconsView_Click(null, null);
+                        break;
+                    case IconSizeEnum.LargeIcon48:
+                        OnMenuExtraLargeIconsView_Click(null, null);
+                        break;
+                }
+            }
+            else
+            {
+                switch (IconSize)
+                {
+                    case IconSizeEnum.MediumIcon32:
+                        OnMenuSmallIconsView_Click(null, null);
+                        break;
+                    case IconSizeEnum.LargeIcon48:
+                        OnMenuMediumIconsView_Click(null, null);
+                        break;
+                    case IconSizeEnum.JumboIcon256:
+                        OnMenuLargeIconsView_Click(null, null);
+                        break;
+                }
+            }
 
-        //        e.Handled = true;
-        //    }
-        //}
+            e.Handled = true;
+        }
 
         #endregion
 

@@ -50,12 +50,7 @@ namespace Indexer.Views
 
         private Model DataModel
         {
-            get
-            {
-                if (model == null)
-                    model = (DataContext as MainWindow).DataModel;
-                return model;
-            }
+            get { return model ?? (model = (DataContext as MainWindow).DataModel); }
         }
 
         // Prevents column width to be less than COL_MIN_WIDTH.
