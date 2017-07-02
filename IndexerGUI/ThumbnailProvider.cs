@@ -122,7 +122,7 @@ namespace Indexer
                 bool processItems;
                 lock (syncLock)
                 {
-                    processItems = filesProcessingQueue.Count() > 1;
+                    processItems = filesProcessingQueue.Any();
                 }
 
                 while (processItems)
@@ -143,7 +143,7 @@ namespace Indexer
                             filesBitmapData.TargetBitmapSetter(res);
                         }));
 
-                    processItems = filesProcessingQueue.Count() > 1 && filesProcessingQueue.Count() < 300 && !clearQueue;
+                    processItems = filesProcessingQueue.Any() && filesProcessingQueue.Count() < 300 && !clearQueue;
                 } //  while (processItems)
 
                 Thread.Sleep(500);
@@ -195,7 +195,16 @@ namespace Indexer
         private static ThumbnailProvider instance;
         public static ThumbnailProvider Instance => instance ?? (instance = new ThumbnailProvider());
 
-        public IconSizeEnum ThumbSize = IconSizeEnum.SmallIcon16;
+        private IconSizeEnum thumbSize = IconSizeEnum.SmallIcon16;
+        public IconSizeEnum ThumbSize
+        {
+            get { return thumbSize; }
+            set
+            {
+                cache.Clear();
+                thumbSize = value;
+            }
+        }
 
         public void GetThumbnail(ulong uid, string filename, Action<BitmapSource> targetBitmapSetter)
         {
@@ -227,7 +236,7 @@ namespace Indexer
 
         private int GetThumbSizePixels()
         {
-            switch (ThumbSize)
+            switch (thumbSize)
             {
                 case IconSizeEnum.SmallIcon16:
                     return 16;
