@@ -111,7 +111,7 @@ namespace Indexer
             {   
                 lock (syncLock)
                 {
-                    if(clearQueue || filesProcessingQueue.Count() > 300)
+                    if(clearQueue || filesProcessingQueue.Count() > MaxItemsToProcess)
                     {
                         filesProcessingQueue.Clear();
                         filesProcessingSet.Clear();
@@ -142,9 +142,10 @@ namespace Indexer
                         }));
 
                     lock (syncLock)
-                        processItems = filesProcessingQueue.Any() && filesProcessingQueue.Count() < 300 && !clearQueue;
+                        processItems = filesProcessingQueue.Any() && filesProcessingQueue.Count() < MaxItemsToProcess 
+                                       && !clearQueue;
 
-                } //  while (processItems)
+                } // while (processItems)
 
                 Thread.Sleep(500);
             } // while (true)
@@ -188,9 +189,11 @@ namespace Indexer
         private readonly object syncLock = new object();
 
         // From FileInfoWrapper object UID to corresponding BitmapSource.
-        private readonly CustomCacheDictionary<BitmapSource> cache = new CustomCacheDictionary<BitmapSource>(250);
+        private readonly CustomCacheDictionary<BitmapSource> cache = new CustomCacheDictionary<BitmapSource>(350);
 
-        private readonly Queue<FileBitmapPair> filesProcessingQueue = new Queue<FileBitmapPair>(); 
+        private const int MaxItemsToProcess = 400;
+
+        private readonly Queue<FileBitmapPair> filesProcessingQueue = new Queue<FileBitmapPair>(MaxItemsToProcess); 
         private readonly SortedSet<ulong> filesProcessingSet = new SortedSet<ulong>(); 
 
         private static ThumbnailProvider instance;
