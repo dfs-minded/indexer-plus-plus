@@ -227,7 +227,13 @@ namespace Indexer
                     OnMenuSmallIconsView_Click(this, new RoutedEventArgs());
                 }
                 OnPropertyChanged("ViewType");
+                OnPropertyChanged("IsLargerThanSmallMenuItemEnabled");
             }
+        }
+
+        public object IsLargerThanSmallMenuItemEnabled
+        {
+            get { return ViewType == ViewType.Icons; }
         }
 
         private bool explorerTreeVisible;

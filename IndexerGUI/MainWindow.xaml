@@ -151,17 +151,17 @@
                           Header="Small Icons" />
                 <MenuItem Click="OnMenuMediumIconsView_Click"
                           Name="MediumIconsMenuItem"
-                          IsEnabled="{Binding IsLargetThanSmallMenuItemEnabled}"
+                          IsEnabled="{Binding IsLargerThanSmallMenuItemEnabled}"
                           IsCheckable="True"
                           Header="Medium Icons" />
                 <MenuItem Click="OnMenuLargeIconsView_Click"
                           Name="LargeIconsMenuItem"
-                          IsEnabled="{Binding IsLargetThanSmallMenuItemEnabled}"
+                          IsEnabled="{Binding IsLargerThanSmallMenuItemEnabled}"
                           IsCheckable="True"
                           Header="Large Icons" />
                 <MenuItem Click="OnMenuExtraLargeIconsView_Click"
                           Name="ExtraLargeIconsMenuItem"
-                          IsEnabled="{Binding IsLargetThanSmallMenuItemEnabled}"
+                          IsEnabled="{Binding IsLargerThanSmallMenuItemEnabled}"
                           IsCheckable="True"
                           Header="Extra Large Icons" />
             </MenuItem>
