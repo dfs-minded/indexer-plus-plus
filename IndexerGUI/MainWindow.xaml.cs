@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +17,6 @@ using Point = System.Drawing.Point;
 using Microsoft.Win32;
 
 using System.Windows.Threading;
-using System.Threading;
 using System.Threading.Tasks;
 
 using CLIInterop;

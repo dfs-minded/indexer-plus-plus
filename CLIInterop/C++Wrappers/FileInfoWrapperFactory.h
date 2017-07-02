@@ -5,30 +5,26 @@
 #pragma once
 
 #include "FileInfoWrapper.h"
+#include "CustomCacheDictionary.h"
 // clang-format off
 
 namespace CLIInterop
 {
-	ref class FileInfoWrapperFactory
-	{
-		public:
-            explicit FileInfoWrapperFactory(int max_elements, IIconProvider^ icons_provider, IThumbnailProvider^ thumbs_provider);
 
-            FileInfoWrapper^ GetFileInfoWrapper(const indexer_common::FileInfo* fi, int index);
+ref class FileInfoWrapperFactory
+{
+  public:
+        explicit FileInfoWrapperFactory(int max_elements, IIconProvider^ icons_provider, IThumbnailProvider^ thumbs_provider);
 
-			void UpdateCachedItems();
+        FileInfoWrapper^ GetFileInfoWrapper(const indexer_common::FileInfo* fi, int index);
 
-            void Clear();
+		void UpdateCachedItems();
 
-		private:
+        void Clear();
 
-			void RemoveOldElements();
+  private:
+	  // From FileInfoWrapper object UID to corresponding wrapper.
+	  CustomCacheDictionary<FileInfoWrapper^>^ cache;
+};
 
-			int max_elements_;
-
-			int next_time_;
-
-			// From FileInfo object address to corresponding wrapper.
-			System::Collections::Generic::Dictionary<System::UInt32, FileInfoWrapper^>^ cache_;
-	};
-}
+} // namespace CLIInterop

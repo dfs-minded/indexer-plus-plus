@@ -125,7 +125,7 @@ namespace CLIInterop
 			if (res == nullptr) return;
 
 			// TODO: not to clear cache on update, device some mechanism to check which elements were deleted.
-			fileInfoFactory->Clear(); // UpdateCachedItems(); 
+			fileInfoFactory->Clear(); // UpdateCachedItems();
 			*searchResult = res;
 			Count = (*searchResult)->Files->size();
 

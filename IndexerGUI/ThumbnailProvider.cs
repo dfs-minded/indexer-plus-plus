@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -17,6 +15,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using CLIInterop;
+using System.Collections.Generic;
 
 namespace Indexer
 {
@@ -109,29 +108,43 @@ namespace Indexer
         private void ProcessFiles()
         {
             while (true)
-            {
-                if (clearQueue)
+            {   
+                lock (syncLock)
                 {
-                    while (filesProcessingQueue.Any())
-                        filesProcessingQueue.Take();
-                    clearQueue = false;
+                    if(clearQueue || filesProcessingQueue.Count() > 300)
+                    {
+                        filesProcessingQueue.Clear();
+                        clearQueue = false;
+                        continue;
+                    }
                 }
 
-                while (filesProcessingQueue.Count() > 100)
-                    filesProcessingQueue.Take();
-                
-                while (filesProcessingQueue.Any())
+                bool processItems;
+                lock (syncLock)
                 {
-                    var fileBitmapPair = filesProcessingQueue.Take();
-                    var bitmapHandle = RetrieveBitmapHandle(fileBitmapPair.Filename);
+                    processItems = filesProcessingQueue.Count() > 1;
+                }
+
+                while (processItems)
+                {
+                    FileBitmapPair filesBitmapData;
+                    lock (syncLock)
+                    {
+                        filesBitmapData = filesProcessingQueue.Dequeue();
+                    }
+
+                    var bitmapHandle = RetrieveBitmapHandle(filesBitmapData.Filename);
 
                     Application.Current.Dispatcher.Invoke(DispatcherPriority.Render,
                         new Action(() =>
                         {
-                            fileBitmapPair.TargetBitmapSetter(ConvertToBitmapSource(bitmapHandle));
+                            var res = ConvertToBitmapSource(bitmapHandle);
+                            cache.Add(filesBitmapData.Uid, res);
+                            filesBitmapData.TargetBitmapSetter(res);
                         }));
-                }
-                
+
+                    processItems = filesProcessingQueue.Count() > 1 && filesProcessingQueue.Count() < 300 && !clearQueue;
+                } //  while (processItems)
 
                 Thread.Sleep(500);
             } // while (true)
@@ -160,26 +173,41 @@ namespace Indexer
 
         private class FileBitmapPair
         {
+            public readonly ulong Uid;
             public readonly string Filename;
             public readonly Action<BitmapSource> TargetBitmapSetter;
 
-            public FileBitmapPair(string filename, Action<BitmapSource> targetBitmapSetter)
+            public FileBitmapPair(ulong uid, string filename, Action<BitmapSource> targetBitmapSetter)
             {
+                Uid = uid;
                 Filename = filename;
                 TargetBitmapSetter = targetBitmapSetter;
             }
         }
 
-        private readonly BlockingCollection<FileBitmapPair> filesProcessingQueue = new BlockingCollection<FileBitmapPair>(); 
+        private readonly object syncLock = new object();
+
+        // From FileInfoWrapper object UID to corresponding BitmapSource.
+        private readonly CustomCacheDictionary<BitmapSource> cache = new CustomCacheDictionary<BitmapSource>(250);
+
+        private readonly Queue<FileBitmapPair> filesProcessingQueue = new Queue<FileBitmapPair>(); 
 
         private static ThumbnailProvider instance;
         public static ThumbnailProvider Instance => instance ?? (instance = new ThumbnailProvider());
 
         public IconSizeEnum ThumbSize = IconSizeEnum.SmallIcon16;
 
-        public void GetThumbnail(string fileName, Action<BitmapSource> targetBitmapSetter)
+        public void GetThumbnail(ulong uid, string filename, Action<BitmapSource> targetBitmapSetter)
         {
-            filesProcessingQueue.Add(new FileBitmapPair(fileName, targetBitmapSetter));
+            BitmapSource res = cache.TryGetValue(uid);
+            if (res == null)
+            {
+                lock(syncLock)
+                    filesProcessingQueue.Enqueue(new FileBitmapPair(uid, filename, targetBitmapSetter));
+                return;
+            }
+
+            targetBitmapSetter(res);
         }
 
         private bool clearQueue = false;

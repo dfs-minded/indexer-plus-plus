@@ -430,7 +430,8 @@ namespace Indexer.Views
 
         private void DetailsListView_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-           ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
+            if (e.VerticalChange > e.ViewportHeight)
+                ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
         }
     }
 }

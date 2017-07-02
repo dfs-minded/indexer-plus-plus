@@ -24,7 +24,7 @@ namespace CLIInterop
 		: thumbnail(nullptr), mimeType(System::String::Empty)
 	{
 		this->fi = fi;
-		ID		 = fi->ID;
+		UID		 = GetFileUID(fi->ID, fi->DriveLetter);
 		Name	 = Helper::ToSystemString(fi->GetName());
 	
 		auto path = FileInfoHelper::GetPath(*fi, false);
@@ -35,14 +35,11 @@ namespace CLIInterop
 		
 		Extension = Helper::ToSystemString(FileInfoHelper::GetExtension(*fi));		
 
-		// TODO starting too many threads via Task::Factory slows down performance.
-		//Task^ typeLoadingTask = Task::Factory->StartNew(gcnew System::Action(this, &FileInfoWrapper::LoadType));
-
 		LoadType();
 
 		Thumbnail = FileInfoWrapper::IconProvider->GetIcon(FullName);
 	
-		FileInfoWrapper::ThumbnailProvider->GetThumbnail(FullName, 
+		FileInfoWrapper::ThumbnailProvider->GetThumbnail(UID, FullName,
 			gcnew System::Action<System::Windows::Media::Imaging::BitmapSource^>(this, &FileInfoWrapper::SetTumbnail));
 
 		Size = fi->SizeReal;
@@ -53,6 +50,14 @@ namespace CLIInterop
 
 		Index = index;
 		LastTimeUsed = 0;
+	}
+
+	System::UInt64 FileInfoWrapper::GetFileUID(System::UInt32 fileInfoID, char driveLetter)
+	{
+		System::UInt64 res(fileInfoID);
+		//res = res << 32;
+		//res += (uint)driveLetter;
+		return res;
 	}
 
 	void FileInfoWrapper::Update()
@@ -91,5 +96,12 @@ namespace CLIInterop
 
 		//auto state = Thread::CurrentThread->ApartmentState;
 		//WriteToOutput(METHOD_METADATA + wstring(L"LoadType ApartmentState = ") + (state == ApartmentState::STA ? L"STA" : L"MTA"));
+	}
+
+	System::UInt64 GetFileUID(System::UInt32 fileInfoID, char driveLetter)
+	{
+		System::UInt64 res = fileInfoID;
+		res = (res << 32) + driveLetter;
+		return res;
 	}
 }

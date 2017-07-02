@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="C++Wrappers\FileInfoWrapperFactory.h" />
     <ClInclude Include="CmdArgumentsParser.h" />
+    <ClInclude Include="CustomCacheDictionary.h" />
     <ClInclude Include="DebugLogModel.h" />
     <ClInclude Include="DriveInfo.h" />
     <ClInclude Include="DrivesManager.h" />
@@ -182,6 +183,7 @@
   <ItemGroup>
     <ClCompile Include="C++Wrappers\FileInfoWrapperFactory.cpp" />
     <ClCompile Include="CmdArgumentsParser.cpp" />
+    <ClCompile Include="CustomCacheDictionary.cpp" />
     <ClCompile Include="DebugLogModel.cpp" />
     <ClCompile Include="DriveInfo.cpp" />
     <ClCompile Include="DrivesManager.cpp" />

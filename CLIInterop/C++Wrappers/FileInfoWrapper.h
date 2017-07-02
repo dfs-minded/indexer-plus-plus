@@ -14,7 +14,7 @@ namespace CLIInterop
 	{
 		// Asynchronyously loads thumbnail and via dispatcher using |setBitmapSource| callback assingns
 		// loaded thumbnail to target FileInfoWrapper property.
-		void GetThumbnail(System::String^ fileName, 
+		void GetThumbnail(System::UInt64 fileUid, System::String^ filename,
 						  System::Action<System::Windows::Media::Imaging::BitmapSource^>^ setBitmapSource);
 
 		void OnUserJumpedToOtherPlace();
@@ -28,7 +28,7 @@ namespace CLIInterop
 	public ref class FileInfoWrapper : public System::ComponentModel::INotifyPropertyChanged
 	{
 	public:
-		property System::UInt32 ID;
+		property System::UInt64 UID;
 		property System::String^ Name;
 		property System::String^ FullName;
 		property System::String^ Path;
@@ -72,6 +72,7 @@ namespace CLIInterop
 
 		FileInfoWrapper(const indexer_common::FileInfo* const fi, int index);
 
+		static System::UInt64 GetFileUID(System::UInt32 fileInfoID, char driveLetter);
 
 		virtual event System::ComponentModel::PropertyChangedEventHandler^ PropertyChanged;
 

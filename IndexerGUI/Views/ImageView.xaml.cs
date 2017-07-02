@@ -15,7 +15,8 @@ namespace Indexer.Views
 
         private void ImgesListView_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
+            if (e.VerticalChange > e.ViewportHeight)
+                ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
         }
     }
 }
