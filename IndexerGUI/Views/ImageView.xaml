@@ -46,6 +46,7 @@
                 <ItemsPanelTemplate>
                     <controls:VirtualWrapPanel ItemHeight="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemHeightConvertor} }" 
                                                ItemWidth="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemWidthConvertor} }"  
+                                               SmallChanges="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemHeightConvertor} }"
                                                Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
@@ -68,8 +69,6 @@
             <ListView.Style>
                 <Style TargetType="ListView">
                     <Style.Triggers>
-
-
                         <DataTrigger Binding="{Binding IconSize}" Value="{x:Static indexer:IconSizeEnum.SmallIcon16}">
                             <Setter Property="ItemTemplate">
                                 <Setter.Value>
@@ -89,8 +88,7 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        
-                        
+                                            
                         <DataTrigger Binding="{Binding IconSize}" Value="{x:Static indexer:IconSizeEnum.MediumIcon32}">
                             <Setter Property="ItemTemplate">
                                 <Setter.Value>

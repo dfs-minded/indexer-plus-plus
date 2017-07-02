@@ -132,6 +132,12 @@ namespace Indexer.Views
             }
         }
 
+        private void DetailsListView_OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.VerticalChange > e.ViewportHeight)
+                ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
+        }
+
         #region Virtualization
 
         public SuppressableObservableCollection<FileInfoWrapper> RealizedItems { get; private set; }
@@ -422,11 +428,5 @@ namespace Indexer.Views
         #endregion Helper methods
 
         #endregion Virtualization
-
-        private void DetailsListView_OnScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (e.VerticalChange > e.ViewportHeight)
-                ThumbnailProvider.Instance.OnUserJumpedToOtherPlace();
-        }
     }
 }
