@@ -55,8 +55,8 @@ namespace CLIInterop
 	System::UInt64 FileInfoWrapper::GetFileUID(System::UInt32 fileInfoID, char driveLetter)
 	{
 		System::UInt64 res(fileInfoID);
-		//res = res << 32;
-		//res += (uint)driveLetter;
+		res = res << 32;
+		res += driveLetter;
 		return res;
 	}
 

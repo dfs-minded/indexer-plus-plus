@@ -114,6 +114,7 @@ namespace Indexer
                     if(clearQueue || filesProcessingQueue.Count() > 300)
                     {
                         filesProcessingQueue.Clear();
+                        filesProcessingSet.Clear();
                         clearQueue = false;
                         continue;
                     }
@@ -121,17 +122,13 @@ namespace Indexer
 
                 bool processItems;
                 lock (syncLock)
-                {
                     processItems = filesProcessingQueue.Any();
-                }
 
                 while (processItems)
                 {
                     FileBitmapPair filesBitmapData;
                     lock (syncLock)
-                    {
                         filesBitmapData = filesProcessingQueue.Dequeue();
-                    }
 
                     var bitmapHandle = RetrieveBitmapHandle(filesBitmapData.Filename);
 
@@ -140,10 +137,13 @@ namespace Indexer
                         {
                             var res = ConvertToBitmapSource(bitmapHandle);
                             cache.Add(filesBitmapData.Uid, res);
+                            filesProcessingSet.Remove(filesBitmapData.Uid);
                             filesBitmapData.TargetBitmapSetter(res);
                         }));
 
-                    processItems = filesProcessingQueue.Any() && filesProcessingQueue.Count() < 300 && !clearQueue;
+                    lock (syncLock)
+                        processItems = filesProcessingQueue.Any() && filesProcessingQueue.Count() < 300 && !clearQueue;
+
                 } //  while (processItems)
 
                 Thread.Sleep(500);
@@ -191,6 +191,7 @@ namespace Indexer
         private readonly CustomCacheDictionary<BitmapSource> cache = new CustomCacheDictionary<BitmapSource>(250);
 
         private readonly Queue<FileBitmapPair> filesProcessingQueue = new Queue<FileBitmapPair>(); 
+        private readonly SortedSet<ulong> filesProcessingSet = new SortedSet<ulong>(); 
 
         private static ThumbnailProvider instance;
         public static ThumbnailProvider Instance => instance ?? (instance = new ThumbnailProvider());
@@ -206,14 +207,19 @@ namespace Indexer
             }
         }
 
+        private List<Tuple<ulong, string>> uid_filename = new List<Tuple<ulong, string>>();
         public void GetThumbnail(ulong uid, string filename, Action<BitmapSource> targetBitmapSetter)
         {
+            uid_filename.Add(Tuple.Create(uid, filename));
             BitmapSource res = cache.TryGetValue(uid);
             if (res == null)
             {
-                lock(syncLock)
+                lock (syncLock)
+                {
+                    if (filesProcessingSet.Contains(uid)) return;
+                    filesProcessingSet.Add(uid);
                     filesProcessingQueue.Enqueue(new FileBitmapPair(uid, filename, targetBitmapSetter));
-                return;
+                }
             }
 
             targetBitmapSetter(res);
@@ -304,7 +310,7 @@ namespace Indexer
             var shellItem2Guid = new Guid(ShellItem2Guid);
             var retCode = SHCreateItemFromParsingName(fileName, IntPtr.Zero, ref shellItem2Guid, out nativeShellItem);
 
-            if (retCode != 0) throw Marshal.GetExceptionForHR(retCode);
+            if (retCode != 0) return IntPtr.Zero;
 
             var nativeSize = new NativeSize
             {
@@ -317,9 +323,7 @@ namespace Indexer
 
             Marshal.ReleaseComObject(nativeShellItem);
 
-            if (hr == HResult.Ok) return hBitmap;
-
-            throw Marshal.GetExceptionForHR((int) hr);
+            return hr == HResult.Ok ? hBitmap : IntPtr.Zero;
         }
     }
 }
