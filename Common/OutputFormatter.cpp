@@ -92,12 +92,12 @@ OutputFormatter::OutputFormatter(vector<const FileInfo*>* const input, wstring f
         for (; fmt_iter_ != end(format_); ++fmt_iter_) {
             wchar_t symbol = *fmt_iter_;
 
-            if (symbol == L'%' && !intrerpret_symbol_as_directive_) {
+            if ((symbol == L'%') && !intrerpret_symbol_as_directive_) {
                 intrerpret_symbol_as_directive_ = true;
                 continue;
             }
 
-            if (symbol == L'\\') {
+            if ((symbol == L'\\') && !intrerpret_symbol_as_escape_) {
                 intrerpret_symbol_as_escape_ = true;
                 continue;
             }

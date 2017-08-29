@@ -14,7 +14,7 @@
 
 GTEST_API_ int main(int argc, char **argv) {
 
-    printf("Running main() from NTFSResderTest\n");
+    printf("Running main() from IndexerTest\n");
 
     setlocale(LC_ALL, ".OCP");
 
