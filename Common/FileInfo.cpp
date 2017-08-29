@@ -57,7 +57,6 @@ namespace indexer_common {
 
     void FileInfo::SetName(const char16_t* name, ushort name_length) {
         delete[] name_;
-        // name_ = L""; return;
 
         name_ = name;
         NameLength = name_length;
