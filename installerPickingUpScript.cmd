@@ -1,4 +1,3 @@
-rem xcopy /s c:\source d:\target
 copy /y AddExplorerContextMenu\bin\Release\AddExplorerContextMenu.exe	Installer
 copy /y CloseRunningApp\bin\Release\CloseRunningApp.exe   				Installer
 copy /y AddDirToPathVarialble\bin\Release\AddDirToPathVarialble.exe   	Installer
@@ -9,7 +8,7 @@ copy /y "IndexerGUI\bin\Release\Indexer++.exe"			 				"Installer\Indexer++ Beta.
 copy /y IndexerGUI\bin\Release\UserSettings.xml			 				Installer
 copy /y ifind\Release\ifind.exe											Installer
 copy /y BasicRE2Syntax.txt												Installer
-
+xcopy /s/y wingup 														Installer\updater\
 
 set signToolPath="C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe"
 

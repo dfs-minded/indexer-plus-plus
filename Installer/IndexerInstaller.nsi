@@ -2,7 +2,7 @@
 
 !define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 3
+!define VERSIONMINOR 4
 
 VIProductVersion "${VERSIONMAJOR}.${VERSIONMINOR}.0.0"
 
@@ -57,7 +57,7 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Indexer++"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© Anna Krykora"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Windows Files Search Util"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.0.0.3"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.0.0.4"
 
  
  # Custom macro
@@ -118,6 +118,9 @@ Section "Bare minimum" Section1
 	file "BasicRE2Syntax.txt"
 	file "LICENSE"
 	file "README"
+	
+	setOutPath "$INSTDIR\updater"
+	file /nonfatal /a /r "updater\"
  
 	${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
 	IntFmt $0 "0x%08X" $0
@@ -271,6 +274,7 @@ Section "uninstall"
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
 	
+	rmDir /r /REBOOTOK $INSTDIR\updater
 	rmDir /r /REBOOTOK $INSTDIR\Logs
 	
 	# Always delete uninstaller as the last action

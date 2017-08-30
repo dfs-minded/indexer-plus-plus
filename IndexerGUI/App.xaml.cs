@@ -49,7 +49,21 @@ namespace Indexer
                 ShutdownMode = ShutdownMode.OnMainWindowClose;
             }
 
-            if(AppAlreadyRuns) return;
+            try
+            {
+                var startInfo = new System.Diagnostics.ProcessStartInfo("GUP.exe")
+                {
+                    WorkingDirectory = "updater"
+                };
+
+                System.Diagnostics.Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error("Checking for update failed: " + ex.Message);
+            }
+
+            if (AppAlreadyRuns) return;
 
             if (SystemConfigFlagsWrapper.Instance().TrayIcon)
             {
