@@ -116,6 +116,7 @@ typedef struct {
     DWORDLONG Timeout;
     DWORDLONG BytesToWaitFor;
     DWORDLONG UsnJournalID;
+	// TODO: Think whether need to delete this after new platform toolset(141_x) tested on XP
     WORD MinMajorVersion;
     WORD MaxMajorVersion;
 
@@ -176,7 +177,8 @@ typedef struct {
     DWORDLONG StartFileReferenceNumber;
     USN LowUsn;
     USN HighUsn;
-    WORD MinMajorVersion;
+	// TODO: Think whether need to delete this after new platform toolset(141_x) tested on XP
+	WORD MinMajorVersion;
     WORD MaxMajorVersion;
 
 } MFT_ENUM_DATA, *PMFT_ENUM_DATA;
