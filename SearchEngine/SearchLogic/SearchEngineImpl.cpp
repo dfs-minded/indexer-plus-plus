@@ -10,9 +10,9 @@
 
 #include "re2.h"
 
+#include "OneThreadLog.h"
 #include "AsyncLog.h"
 #include "EmptyLog.h"
-#include "OneThreadLog.h"
 #include "Log.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"

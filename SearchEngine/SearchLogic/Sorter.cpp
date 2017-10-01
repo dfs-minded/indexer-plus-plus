@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <unordered_set>
 
-#include "AsyncLog.h"
 #include "OneThreadLog.h"
+#include "AsyncLog.h"
 #include "EmptyLog.h"
 #include "Log.h"
 #include "FileInfo.h"

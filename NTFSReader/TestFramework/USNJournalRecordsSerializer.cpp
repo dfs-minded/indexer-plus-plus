@@ -34,16 +34,16 @@ namespace ntfs_reader {
         _setmode(_fileno(records_db_), _O_U8TEXT);
 #endif
 
-        NEW_MUTEX
-
 #ifndef SINGLE_THREAD_LOG
+		NEW_MUTEX
 		worker_ = new std::thread(&USNJournalRecordsSerializer::WriteToFileAsync, this);
-#endif
+#endif  //!SINGLE_THREAD_LOG
     }
 
     USNJournalRecordsSerializer::~USNJournalRecordsSerializer() {
-
+#ifndef SINGLE_THREAD_LOG
 		DELETE_MUTEX
+#endif  //!SINGLE_THREAD_LOG
 
         if (records_db_) {
             fclose(records_db_);
@@ -53,11 +53,11 @@ namespace ntfs_reader {
 
     void USNJournalRecordsSerializer::SerializeRecord(const USN_RECORD& record, char drive_letter) {
         auto res = helpers::SerializeRecord(record, drive_letter);
-        PLOCK_GUARD
 
 #ifdef SINGLE_THREAD_LOG
-        WriteToFile(move(res));
+        WriteToFile(std::move(res));
 #else
+		PLOCK_GUARD
         records_.push_back(std::move(res));
 #endif  // SINGLE_THREAD_LOG
     }
@@ -100,8 +100,8 @@ namespace ntfs_reader {
 
 #ifdef SINGLE_THREAD_LOG
 
-    void USNJournalRecordsSerializer::WriteToFile(wstring* msg) {
-        fwprintf(records_db_, L"%s\n", (*msg).c_str());
+    void USNJournalRecordsSerializer::WriteToFile(std::wstring msg) {
+        fwprintf(records_db_, L"%s\n", (msg).c_str());
         fflush(records_db_);
     }
 

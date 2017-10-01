@@ -4,8 +4,10 @@
 
 #include "OldFileInfosDeleter.h"
 
+#include "OneThreadLog.h"
 #include "AsyncLog.h"
 #include "EmptyLog.h"
+#include "Log.h"
 #include "FileInfo.h"
 
 namespace indexer {

@@ -10,8 +10,8 @@
 #include <mutex>
 #include <string>
 #include <thread>
-#include "WindowsWrapper.h"
 
+#include "WindowsWrapper.h"
 #include "CompilerSymb.h"
 #include "Macros.h"
 
@@ -49,14 +49,13 @@ namespace ntfs_reader {
 
         void WriteToFileAsync();
 
+		FILE* records_db_;
+		
+		std::map<char, std::unique_ptr<USNJournalRecordsProvider> > records_providers_;
+
 #ifdef SINGLE_THREAD_LOG
-        void WriteToFile(std::wstring* msg);
+        void WriteToFile(std::wstring msg);
 #else
-
-        FILE* records_db_;
-
-        std::map<char, std::unique_ptr<USNJournalRecordsProvider> > records_providers_;
-
 
         std::mutex* mtx_;
 
