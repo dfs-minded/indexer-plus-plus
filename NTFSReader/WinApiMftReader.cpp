@@ -78,8 +78,9 @@ namespace ntfs_reader {
         mft_enum_data->StartFileReferenceNumber = 0;
         mft_enum_data->LowUsn = 0;
         mft_enum_data->HighUsn = u_journal->MaxUsn;
-        mft_enum_data->MinMajorVersion = 2;  // journal->MinSupportedMajorVersion;
-        mft_enum_data->MaxMajorVersion = 2;  // journal->MaxSupportedMajorVersion;
+		// TODO: delete after tested on XP
+        //mft_enum_data->MinMajorVersion = 2;  // journal->MinSupportedMajorVersion;
+        //mft_enum_data->MaxMajorVersion = 2;  // journal->MaxSupportedMajorVersion;
 
         return mft_enum_data;
     }

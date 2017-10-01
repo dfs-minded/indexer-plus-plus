@@ -103,6 +103,13 @@ namespace indexer {
         }
     }
 
+	void IndexManagersContainer::UpdateIndexChangedEventPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity) {
+		PLOCK_GUARD
+
+		for (const auto& mgr : index_managers_)
+			mgr->UpdateNTFSChangesWatchingPriority(new_priotity);
+	}
+
 #ifdef SINGLE_THREAD
     void IndexManagersContainer::CheckUpdates() {
         for (const auto& mgr : index_managers_) {

@@ -6,11 +6,14 @@
 
 #include <atomic>
 #include <memory>
+#include <mutex>
+#include <map>
 #include "WindowsWrapper.h"
 
 #include "CompilerSymb.h"
 #include "Macros.h"
 #include "typedefs.h"
+#include "FilesystemChangesWatchingPriority.h"
 
 namespace ntfs_reader {
 
@@ -40,7 +43,10 @@ namespace ntfs_reader {
         // Method which runs an infinite loop and waits for new update sequence number in a journal and calls ReadChanges()
         // to process NTFS changes. If |StopWatching| set to true, it deallocates the |buffer_| and returns.
 
-        void WatchChanges();
+        void WatchChanges(indexer_common::FilesystemChangesWatchingPriority = indexer_common::FilesystemChangesWatchingPriority::REALTIME);
+
+
+		void UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity);
 
 
 #ifdef SINGLE_THREAD
@@ -53,7 +59,7 @@ namespace ntfs_reader {
         // |ntfs_chabge_observer_|
         // to inform about changes.
 
-        USN ReadChanges(USN low_usn, char* buffer);
+        USN ReadChangesAndNotify(USN low_usn, char* buffer);
 
 
         // This function queries USN journal using winAPI and does not return until the new USN record created (which means
@@ -80,6 +86,11 @@ namespace ntfs_reader {
 
 
 		static void DeleteFromCreatedAndChangedIfPresent(NotifyNTFSChangedEventArgs* args, indexer_common::uint ID);
+
+
+		std::mutex mtx_;
+
+		indexer_common::FilesystemChangesWatchingPriority ntfs_changes_watching_priority_;
 
 
         // The reference to the class, that consumes NTFS change event. When volume changes, NTFSChangesWatcher calls its
@@ -111,7 +122,14 @@ namespace ntfs_reader {
         USNJournalRecordsProvider* usn_records_provider_;
 
 		indexer_common::uint last_read_{ 0 };
-		const indexer_common::uint kMinTimeBetweenRead{ 1000 };
+		const indexer_common::uint kMinTimeBetweenReadMs{ 1000 };
+
+		const std::map<indexer_common::FilesystemChangesWatchingPriority, indexer_common::uint> prioryti_to_min_time_between_read_ =
+			std::map<indexer_common::FilesystemChangesWatchingPriority, indexer_common::uint> {
+				{ indexer_common::FilesystemChangesWatchingPriority::REALTIME, kMinTimeBetweenReadMs },
+				{ indexer_common::FilesystemChangesWatchingPriority::NORMAL, 10 * 1000 },
+				{ indexer_common::FilesystemChangesWatchingPriority::BACKGROUND, 60 * 1000 }
+		};
     };
 
 } // namespace ntfs_reader

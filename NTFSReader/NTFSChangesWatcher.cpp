@@ -4,12 +4,13 @@
 
 #include "NTFSChangesWatcher.h"
 
-#include <map>
-
 #include "CommandlineArguments.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
+#include "OneThreadLog.h"
+#include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "Log.h"
 #include "WindowsWrapper.h"
 #include "typedefs.h"
@@ -60,7 +61,11 @@ namespace ntfs_reader {
         }
     }
 
-    void NTFSChangesWatcher::WatchChanges() {
+    void NTFSChangesWatcher::WatchChanges(indexer_common::FilesystemChangesWatchingPriority priority /*= NTFSChangedEventFiringFrequency::REALTIME*/) {
+		{
+			std::unique_lock<std::mutex> locker(mtx_);
+			ntfs_changes_watching_priority_ = priority;
+		}
 
         auto u_buffer = make_unique<char[]>(kBufferSize);
 
@@ -71,9 +76,21 @@ namespace ntfs_reader {
             WaitForNextUsn(read_journal_query.get());
 
             uint current_time = GetTickCount();
+			uint time_to_wait = 0;
+			
+			{
+				std::unique_lock<std::mutex> locker(mtx_);
+				time_to_wait = prioryti_to_min_time_between_read_.at(ntfs_changes_watching_priority_);
+			}
 
-            if (current_time < last_read_ + kMinTimeBetweenRead) {
-                Sleep(last_read_ + kMinTimeBetweenRead - current_time);
+            while (current_time < last_read_ + time_to_wait) {	
+                Sleep(kMinTimeBetweenReadMs);
+				
+				{
+					std::unique_lock<std::mutex> locker(mtx_);
+					time_to_wait = prioryti_to_min_time_between_read_.at(ntfs_changes_watching_priority_);
+				}
+				current_time = GetTickCount();
             }
 
             last_read_ = GetTickCount();
@@ -85,12 +102,17 @@ namespace ntfs_reader {
                 return;
             }
 
-            last_usn_ = ReadChanges(read_journal_query->StartUsn, u_buffer.get());
+            last_usn_ = ReadChangesAndNotify(read_journal_query->StartUsn, u_buffer.get());
             read_journal_query->StartUsn = last_usn_;
         }
     }
 
-    USN NTFSChangesWatcher::ReadChanges(USN low_usn, char* buffer) {
+	void NTFSChangesWatcher::UpdateNTFSChangesWatchingPriority(FilesystemChangesWatchingPriority new_priotity) {
+		std::unique_lock<std::mutex> locker(mtx_);
+		ntfs_changes_watching_priority_ = new_priotity;
+	}
+
+    USN NTFSChangesWatcher::ReadChangesAndNotify(USN low_usn, char* buffer) {
 
         DWORD byte_count;
 
@@ -190,8 +212,9 @@ namespace ntfs_reader {
         query->Timeout = 0;  			 // No timeout.
         query->BytesToWaitFor = 0;
         query->UsnJournalID = journal_id_;
-        query->MinMajorVersion = 2;
-        query->MaxMajorVersion = 2;
+       /* TODO: delete after tested on XP
+	    query->MinMajorVersion = 2;
+        query->MaxMajorVersion = 2;*/
 
         return query;
     }
@@ -220,8 +243,9 @@ namespace ntfs_reader {
         query->Timeout = 0;                 // No timeout.
         query->BytesToWaitFor = 1;          // Wait for this.
         query->UsnJournalID = journal_id_;  // The journal.
-        query->MinMajorVersion = 2;
-        query->MaxMajorVersion = 2;
+       /* TODO: delete after tested on XP
+	    query->MinMajorVersion = 2;
+        query->MaxMajorVersion = 2;*/
 
         return query;
     }

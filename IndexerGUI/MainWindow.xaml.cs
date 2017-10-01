@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +17,6 @@ using Point = System.Drawing.Point;
 using Microsoft.Win32;
 
 using System.Windows.Threading;
-using System.Threading;
 using System.Threading.Tasks;
 
 using CLIInterop;
@@ -461,6 +459,8 @@ namespace Indexer
             DataModel.Filter(q);
         }
 
+        #region Window Events
+
         private void MainWindow_OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             Log.Instance.Debug("MainWindow_OnClosing called.");
@@ -482,6 +482,17 @@ namespace Indexer
         {
             UserSettings.Instance.Save(this);
         }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == System.Windows.WindowState.Minimized)
+                DataModel.OnWindowStateChanged(CLIInterop.WindowState.Hidden);
+            else
+                DataModel.OnWindowStateChanged(CLIInterop.WindowState.Visible);
+        }
+
+        #endregion
+
 
         private void OnFilters_Click(object sender, RoutedEventArgs e)
         {

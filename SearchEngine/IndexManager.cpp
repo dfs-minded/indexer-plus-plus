@@ -46,7 +46,8 @@ namespace indexer {
           disable_index_requested_(make_unique<BoolAtomicWrapper>(false)),
           index_(make_unique<Index>(drive_letter)),
           index_change_observer_(index_change_observer),
-          start_time_(0) {
+          start_time_(0),
+		  ntfs_changes_watching_priority_(FilesystemChangesWatchingPriority::REALTIME) {
 
         GET_LOGGER
     }
@@ -102,12 +103,7 @@ namespace indexer {
             return;
         }
 
-        // IndexManager will be no more responsible for |ntfs_changes_watcher_| deletion.
-        // It must be deleted itself in its worker thread.
-        if (ntfs_changes_watcher_) {
-            auto* watcher = ntfs_changes_watcher_.release();
-            watcher->StopWatching = true;
-        }
+		StopNtfsChangesWatching();
 
         index_->LockData();
 
@@ -138,6 +134,12 @@ namespace indexer {
     bool IndexManager::DisableIndexRequested() const {
         return disable_index_requested_->load();
     }
+
+	void IndexManager::UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity) {
+		ntfs_changes_watching_priority_ = new_priotity;
+		if (ntfs_changes_watcher_)
+			ntfs_changes_watcher_->UpdateNTFSChangesWatchingPriority(new_priotity);
+	}
 
     void IndexManager::Run() {
 
@@ -209,14 +211,20 @@ namespace indexer {
         index_change_observer_->OnIndexChanged(p_args);
 
 #if defined(WATCH_CHANGES) && !defined(SINGLE_THREAD)
-
+		// Building Tree and calculating dirs sizes are long-time operations, meanwhile the volume could be disabled by user.
+		if (DisableIndexRequested())
+			return;
+		
         ntfs_changes_watcher_ = make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), this);
-        ntfs_changes_watcher_->WatchChanges();
-
+        ntfs_changes_watcher_->WatchChanges(ntfs_changes_watching_priority_);
 #endif
     }
 
 	void IndexManager::OnNTFSChanged(unique_ptr<ntfs_reader::NotifyNTFSChangedEventArgs> u_args) {
+		if (DisableIndexRequested()) {
+			StopNtfsChangesWatching();
+			return;
+		}
 
         logger_->Debug(METHOD_METADATA + L" drive " + DriveLetterW() + u_args->ToWString());
 
@@ -407,5 +415,12 @@ namespace indexer {
 
         u_read_res = nullptr;
     }
+
+	void IndexManager::StopNtfsChangesWatching() {
+		if (ntfs_changes_watcher_) {
+			auto* watcher = ntfs_changes_watcher_.release();
+			watcher->StopWatching = true;
+		}
+	}
 
 } // namespace indexer

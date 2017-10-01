@@ -10,6 +10,7 @@
 #include "MFTReadResult.h"
 #include "Macros.h"
 #include "NTFSChangeObserver.h"
+#include "FilesystemChangesWatchingPriority.h"
 
 #include "Index.h"
 
@@ -66,6 +67,8 @@ namespace indexer {
 
         bool DisableIndexRequested() const;
 
+		void UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity);
+
        private:
         // Reads MFT, builds |index_| and watches NTFS changes.
 
@@ -85,6 +88,12 @@ namespace indexer {
 
 		static void DisposeReaderResult(std::unique_ptr<indexer_common::MFTReadResult> u_read_res);
 
+
+		// IndexManager will be no more responsible for |ntfs_changes_watcher_| deletion.
+		// It must be deleted itself in its worker thread.
+		
+		void StopNtfsChangesWatching();
+		
 
         // The index, which is uniquely hold and managed by this class instance.
 
@@ -108,6 +117,8 @@ namespace indexer {
         // or uses CheckUpdates method in single thread mode.
 
 		std::unique_ptr<ntfs_reader::NTFSChangesWatcher> ntfs_changes_watcher_;
+
+		indexer_common::FilesystemChangesWatchingPriority ntfs_changes_watching_priority_;
 
 		indexer_common::Log* logger_;
 

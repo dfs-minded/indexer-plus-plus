@@ -19,6 +19,7 @@
     Icon="Icons/icon_v3_2.ico"
     FontSize="12"
     SizeChanged="MainWindow_OnSizeChanged"
+    StateChanged="Window_StateChanged"
     mc:Ignorable="d">
     <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
     

@@ -37,7 +37,7 @@ Release
 */bin/x86/Release/*
 
 /packages/Hardcodet.NotifyIcon.Wpf.1.0.5
-/.vs/Indexer/*
+/.vs/*
 
 /Installer/IndexerLogo.ico
 /Installer/UserSettings.xml

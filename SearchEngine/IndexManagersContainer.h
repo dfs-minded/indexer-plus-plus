@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Macros.h"
+#include "FilesystemChangesWatchingPriority.h"
 
 #include "IndexChangeObserver.h"
 #include "IndexManager.h"
@@ -62,6 +63,8 @@ namespace indexer {
 #ifdef SINGLE_THREAD
         void CheckUpdates();
 #endif
+
+		void UpdateIndexChangedEventPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity);
 
 
         virtual void OnIndexChanged(pNotifyIndexChangedEventArgs p_args) override;
