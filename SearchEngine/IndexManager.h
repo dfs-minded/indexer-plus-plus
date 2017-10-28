@@ -10,7 +10,7 @@
 #include "MFTReadResult.h"
 #include "Macros.h"
 #include "NTFSChangeObserver.h"
-#include "FilesystemChangesWatchingPriority.h"
+#include "UpdatesPriority.h"
 
 #include "Index.h"
 
@@ -36,7 +36,9 @@ namespace indexer {
 
         NO_COPY(IndexManager)
 
+
         // Starts IndexManager in separate thread.
+
         void RunAsync();
 
 #ifdef SINGLE_THREAD
@@ -67,7 +69,10 @@ namespace indexer {
 
         bool DisableIndexRequested() const;
 
-		void UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity);
+
+		//	Sets new priority of reading and applying filesystem changes to the Index.  
+
+		void UpdateIndexChangesPriority(indexer_common::UpdatesPriority new_priotity);
 
        private:
         // Reads MFT, builds |index_| and watches NTFS changes.
@@ -118,7 +123,7 @@ namespace indexer {
 
 		std::unique_ptr<ntfs_reader::NTFSChangesWatcher> ntfs_changes_watcher_;
 
-		indexer_common::FilesystemChangesWatchingPriority ntfs_changes_watching_priority_;
+		indexer_common::UpdatesPriority ntfs_changes_watching_priority_;
 
 		indexer_common::Log* logger_;
 

@@ -47,7 +47,7 @@ namespace indexer {
           index_(make_unique<Index>(drive_letter)),
           index_change_observer_(index_change_observer),
           start_time_(0),
-		  ntfs_changes_watching_priority_(FilesystemChangesWatchingPriority::REALTIME) {
+		  ntfs_changes_watching_priority_(UpdatesPriority::REALTIME) {
 
         GET_LOGGER
     }
@@ -135,7 +135,7 @@ namespace indexer {
         return disable_index_requested_->load();
     }
 
-	void IndexManager::UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity) {
+	void IndexManager::UpdateIndexChangesPriority(indexer_common::UpdatesPriority new_priotity) {
 		ntfs_changes_watching_priority_ = new_priotity;
 		if (ntfs_changes_watcher_)
 			ntfs_changes_watcher_->UpdateNTFSChangesWatchingPriority(new_priotity);

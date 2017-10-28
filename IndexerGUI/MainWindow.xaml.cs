@@ -491,6 +491,16 @@ namespace Indexer
                 DataModel.OnWindowStateChanged(CLIInterop.WindowState.Visible);
         }
 
+        private void Window_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            DataModel.OnWindowStateChanged(CLIInterop.WindowState.NotFocused);
+        }
+
+        private void Window_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            DataModel.OnWindowStateChanged(CLIInterop.WindowState.Visible);
+        }
+
         #endregion
 
 

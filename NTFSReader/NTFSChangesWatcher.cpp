@@ -61,7 +61,7 @@ namespace ntfs_reader {
         }
     }
 
-    void NTFSChangesWatcher::WatchChanges(indexer_common::FilesystemChangesWatchingPriority priority /*= NTFSChangedEventFiringFrequency::REALTIME*/) {
+    void NTFSChangesWatcher::WatchChanges(indexer_common::UpdatesPriority priority /*= UpdatesPriority::REALTIME*/) {
 		{
 			std::unique_lock<std::mutex> locker(mtx_);
 			ntfs_changes_watching_priority_ = priority;
@@ -107,7 +107,7 @@ namespace ntfs_reader {
         }
     }
 
-	void NTFSChangesWatcher::UpdateNTFSChangesWatchingPriority(FilesystemChangesWatchingPriority new_priotity) {
+	void NTFSChangesWatcher::UpdateNTFSChangesWatchingPriority(UpdatesPriority new_priotity) {
 		std::unique_lock<std::mutex> locker(mtx_);
 		ntfs_changes_watching_priority_ = new_priotity;
 	}

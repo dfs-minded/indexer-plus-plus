@@ -54,7 +54,6 @@
     <ClInclude Include="LogMessagesListener.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="MFTReadResult.h" />
-    <ClInclude Include="FilesystemChangesWatchingPriority.h" />
     <ClInclude Include="OneThreadLog.h" />
     <ClInclude Include="OutputFormatter.h" />
     <ClInclude Include="SearchQuery.h" />
@@ -62,6 +61,7 @@
     <ClInclude Include="SystemConfigFlags.h" />
     <ClInclude Include="TextComparison.h" />
     <ClInclude Include="typedefs.h" />
+    <ClInclude Include="UpdatesPriority.h" />
     <ClInclude Include="WindowsWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

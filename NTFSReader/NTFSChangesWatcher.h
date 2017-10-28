@@ -13,7 +13,7 @@
 #include "CompilerSymb.h"
 #include "Macros.h"
 #include "typedefs.h"
-#include "FilesystemChangesWatchingPriority.h"
+#include "UpdatesPriority.h"
 
 namespace ntfs_reader {
 
@@ -43,10 +43,10 @@ namespace ntfs_reader {
         // Method which runs an infinite loop and waits for new update sequence number in a journal and calls ReadChanges()
         // to process NTFS changes. If |StopWatching| set to true, it deallocates the |buffer_| and returns.
 
-        void WatchChanges(indexer_common::FilesystemChangesWatchingPriority = indexer_common::FilesystemChangesWatchingPriority::REALTIME);
+        void WatchChanges(indexer_common::UpdatesPriority = indexer_common::UpdatesPriority::REALTIME);
 
 
-		void UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemChangesWatchingPriority new_priotity);
+		void UpdateNTFSChangesWatchingPriority(indexer_common::UpdatesPriority new_priotity);
 
 
 #ifdef SINGLE_THREAD
@@ -90,7 +90,7 @@ namespace ntfs_reader {
 
 		std::mutex mtx_;
 
-		indexer_common::FilesystemChangesWatchingPriority ntfs_changes_watching_priority_;
+		indexer_common::UpdatesPriority ntfs_changes_watching_priority_;
 
 
         // The reference to the class, that consumes NTFS change event. When volume changes, NTFSChangesWatcher calls its
@@ -124,11 +124,11 @@ namespace ntfs_reader {
 		indexer_common::uint last_read_{ 0 };
 		const indexer_common::uint kMinTimeBetweenReadMs{ 1000 };
 
-		const std::map<indexer_common::FilesystemChangesWatchingPriority, indexer_common::uint> prioryti_to_min_time_between_read_ =
-			std::map<indexer_common::FilesystemChangesWatchingPriority, indexer_common::uint> {
-				{ indexer_common::FilesystemChangesWatchingPriority::REALTIME, kMinTimeBetweenReadMs },
-				{ indexer_common::FilesystemChangesWatchingPriority::NORMAL, 10 * 1000 },
-				{ indexer_common::FilesystemChangesWatchingPriority::BACKGROUND, 60 * 1000 }
+		const std::map<indexer_common::UpdatesPriority, indexer_common::uint> prioryti_to_min_time_between_read_ =
+			std::map<indexer_common::UpdatesPriority, indexer_common::uint> {
+				{ indexer_common::UpdatesPriority::REALTIME, kMinTimeBetweenReadMs },
+				{ indexer_common::UpdatesPriority::NORMAL, 10 * 1000 },
+				{ indexer_common::UpdatesPriority::BACKGROUND, 60 * 1000 }
 		};
     };
 

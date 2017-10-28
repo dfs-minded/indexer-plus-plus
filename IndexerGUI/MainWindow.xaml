@@ -20,6 +20,8 @@
     FontSize="12"
     SizeChanged="MainWindow_OnSizeChanged"
     StateChanged="Window_StateChanged"
+    LostKeyboardFocus="Window_LostKeyboardFocus"
+    GotKeyboardFocus="Window_GotKeyboardFocus"
     mc:Ignorable="d">
     <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
     

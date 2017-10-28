@@ -157,21 +157,21 @@ namespace CLIInterop
 		}
 	}
 
-	void Model::OnWindowStateChanged(WindowState state)
+	void Model::ChangeUpdatesPriority(WindowState state)
 	{
 		switch (state)
 		{
 		case CLIInterop::WindowState::Visible:
-			IndexManagersContainer::Instance().UpdateIndexChangedEventPriority(
-				indexer_common::FilesystemChangesWatchingPriority::REALTIME);
+			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
+				indexer_common::UpdatesPriority::REALTIME);
 			break;
 		case CLIInterop::WindowState::NotFocused:
-			IndexManagersContainer::Instance().UpdateIndexChangedEventPriority(
-				indexer_common::FilesystemChangesWatchingPriority::NORMAL);
+			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
+				indexer_common::UpdatesPriority::NORMAL);
 			break;
 		case CLIInterop::WindowState::Hidden:
-			IndexManagersContainer::Instance().UpdateIndexChangedEventPriority(
-				indexer_common::FilesystemChangesWatchingPriority::BACKGROUND);
+			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
+				indexer_common::UpdatesPriority::BACKGROUND);
 			break;
 		default:
 			break;
