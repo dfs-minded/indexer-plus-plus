@@ -486,19 +486,19 @@ namespace Indexer
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (this.WindowState == System.Windows.WindowState.Minimized)
-                DataModel.OnWindowStateChanged(CLIInterop.WindowState.Hidden);
+                DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.Hidden);
             else
-                DataModel.OnWindowStateChanged(CLIInterop.WindowState.Visible);
+                DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.Visible);
         }
 
         private void Window_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            DataModel.OnWindowStateChanged(CLIInterop.WindowState.NotFocused);
+            DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.NotFocused);
         }
 
         private void Window_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            DataModel.OnWindowStateChanged(CLIInterop.WindowState.Visible);
+            DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.Visible);
         }
 
         #endregion
