@@ -257,7 +257,7 @@ namespace indexer {
 
 		TIK
 
-			SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
+		SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
 
 		TOK(METHOD_METADATA + L"Search finished.");
 

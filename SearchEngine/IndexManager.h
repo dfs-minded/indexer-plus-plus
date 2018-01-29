@@ -83,7 +83,7 @@ namespace indexer {
         // Handles the NTFS changed event, applies all changes to |index_| and notifies |index_change_observer_|
         // about changes made in |index_|.
 
-		virtual void OnNTFSChanged(std::unique_ptr<ntfs_reader::NotifyNTFSChangedEventArgs> u_args) override;
+		virtual void OnNTFSChanged(ntfs_reader::uNotifyNTFSChangedEventArgs u_args) override;
 
 
         // This method is for testing and debugging purposes.

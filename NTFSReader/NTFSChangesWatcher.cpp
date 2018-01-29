@@ -80,7 +80,7 @@ namespace ntfs_reader {
 			
 			{
 				std::unique_lock<std::mutex> locker(mtx_);
-				time_to_wait = prioryti_to_min_time_between_read_.at(ntfs_changes_watching_priority_);
+				time_to_wait = kPriorytiToMinTimeBetweenReadMs.at(ntfs_changes_watching_priority_);
 			}
 
             while (current_time < last_read_ + time_to_wait) {	
@@ -88,7 +88,7 @@ namespace ntfs_reader {
 				
 				{
 					std::unique_lock<std::mutex> locker(mtx_);
-					time_to_wait = prioryti_to_min_time_between_read_.at(ntfs_changes_watching_priority_);
+					time_to_wait = kPriorytiToMinTimeBetweenReadMs.at(ntfs_changes_watching_priority_);
 				}
 				current_time = GetTickCount();
             }
@@ -278,7 +278,7 @@ namespace ntfs_reader {
 
         do {
             last_usn_ = nextUSN;
-            nextUSN = ReadChanges(last_usn_, u_buffer.get());
+            nextUSN = ReadChangesAndNotify(last_usn_, u_buffer.get());
         } while (last_usn_ != nextUSN);
     }
 #endif

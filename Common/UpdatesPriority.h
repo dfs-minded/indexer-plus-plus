@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include <map>
+
+#include "typedefs.h"
+
 namespace indexer_common {
 	
 	// Represents a filesystem changes updates priority in the application.
@@ -12,6 +16,16 @@ namespace indexer_common {
 		REALTIME,
 		NORMAL,
 		BACKGROUND
+	};
+
+	const uint kMinTimeBetweenReadMs{ 500 };
+
+	const std::map<indexer_common::UpdatesPriority, indexer_common::uint> kPriorytiToMinTimeBetweenReadMs{
+		std::map<indexer_common::UpdatesPriority, indexer_common::uint>{
+			{ indexer_common::UpdatesPriority::REALTIME, kMinTimeBetweenReadMs },
+			{ indexer_common::UpdatesPriority::NORMAL, 10 * 1000 },
+			{ indexer_common::UpdatesPriority::BACKGROUND, 60 * 1000 }
+		} 
 	};
 
 } // namespace ntfs_reader

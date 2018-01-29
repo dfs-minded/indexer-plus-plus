@@ -21,7 +21,7 @@ namespace ntfs_reader {
 
         // Fired when file system changed. |args| provide the information what exactly has been changed.
 
-        virtual void OnNTFSChanged(std::unique_ptr<NotifyNTFSChangedEventArgs> args){};
+        virtual void OnNTFSChanged(uNotifyNTFSChangedEventArgs args){};
     };
 
 } // namespace ntfs_reader

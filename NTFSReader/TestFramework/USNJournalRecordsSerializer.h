@@ -49,6 +49,8 @@ namespace ntfs_reader {
 
         void WriteToFileAsync();
 
+		const std::string kFilenamePrefix{ "USNRecordsDB_" };
+
 		FILE* records_db_;
 		
 		std::map<char, std::unique_ptr<USNJournalRecordsProvider> > records_providers_;

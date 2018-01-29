@@ -7,7 +7,7 @@
 #include <atomic>
 #include <memory>
 #include <mutex>
-#include <map>
+
 #include "WindowsWrapper.h"
 
 #include "CompilerSymb.h"
@@ -122,14 +122,6 @@ namespace ntfs_reader {
         USNJournalRecordsProvider* usn_records_provider_;
 
 		indexer_common::uint last_read_{ 0 };
-		const indexer_common::uint kMinTimeBetweenReadMs{ 1000 };
-
-		const std::map<indexer_common::UpdatesPriority, indexer_common::uint> prioryti_to_min_time_between_read_ =
-			std::map<indexer_common::UpdatesPriority, indexer_common::uint> {
-				{ indexer_common::UpdatesPriority::REALTIME, kMinTimeBetweenReadMs },
-				{ indexer_common::UpdatesPriority::NORMAL, 10 * 1000 },
-				{ indexer_common::UpdatesPriority::BACKGROUND, 60 * 1000 }
-		};
     };
 
 } // namespace ntfs_reader

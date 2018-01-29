@@ -6,6 +6,7 @@
 
 #include <map>
 #include <set>
+#include <memory>
 
 #include "Macros.h"
 #include "typedefs.h"
@@ -44,5 +45,7 @@ namespace ntfs_reader {
 
         std::wstring ToWString() const;
     };
+
+	using uNotifyNTFSChangedEventArgs = std::unique_ptr<NotifyNTFSChangedEventArgs>;
 
 } // namespace ntfs_reader

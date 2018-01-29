@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndexerGUI", "IndexerGUI\IndexerGUI.csproj", "{4DD1ADD8-4572-40EA-95D1-3C7C701F6D2D}"
 EndProject
@@ -45,9 +45,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{529EDAC8-E062-4916-B121-46DA9A67889F}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -171,6 +168,7 @@ Global
 		{D273B58D-DE35-4D7A-B695-53C7CE0F2175}.Release|Win32.ActiveCfg = Release|Win32
 		{D273B58D-DE35-4D7A-B695-53C7CE0F2175}.Release|Win32.Build.0 = Release|Win32
 		{D273B58D-DE35-4D7A-B695-53C7CE0F2175}.Release|x86.ActiveCfg = Release|Win32
+		{D273B58D-DE35-4D7A-B695-53C7CE0F2175}.Release|x86.Build.0 = Release|Win32
 		{D91AC253-E8FC-43B2-99DD-67458DAC4EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D91AC253-E8FC-43B2-99DD-67458DAC4EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D91AC253-E8FC-43B2-99DD-67458DAC4EFA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -223,5 +221,11 @@ Global
 		{510CAA8E-234B-459A-85A5-E438D9C4F60A} = {529EDAC8-E062-4916-B121-46DA9A67889F}
 		{D91AC253-E8FC-43B2-99DD-67458DAC4EFA} = {529EDAC8-E062-4916-B121-46DA9A67889F}
 		{F889066E-EA03-481A-9817-34E60885A21B} = {529EDAC8-E062-4916-B121-46DA9A67889F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1CCE2E40-985A-425A-A9A4-F36A4590CC1D}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

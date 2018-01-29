@@ -220,7 +220,7 @@ namespace indexer {
 #endif
     }
 
-	void IndexManager::OnNTFSChanged(unique_ptr<ntfs_reader::NotifyNTFSChangedEventArgs> u_args) {
+	void IndexManager::OnNTFSChanged(ntfs_reader::uNotifyNTFSChangedEventArgs u_args) {
 		if (DisableIndexRequested()) {
 			StopNtfsChangesWatching();
 			return;

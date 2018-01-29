@@ -27,7 +27,7 @@ namespace ntfs_reader {
     USNJournalRecordsSerializer::USNJournalRecordsSerializer() : records_db_(nullptr) {
         if (!CommandlineArguments::Instance().SaveUSNJournalRecords) return;
 
-		auto filename = "USNRecordsDB_" + std::to_string(IndexerDateTime::TicksNow()) + ".txt";
+		auto filename = kFilenamePrefix + std::to_string(IndexerDateTime::TicksNow()) + ".txt";
 
         records_db_ = fopen(filename.c_str(), "w");
 #ifdef WIN32
