@@ -21,14 +21,14 @@ namespace indexer_common {
 
 #define WATCH_CHANGES  // Indicates if we want to listen file system changes from USN Journal.
 
-//#define SINGLE_THREAD_LOG // Writes log synchronously, useful for debug. By defaul logging is off.
-//#define ASYNC_LOG // Writes log asynchronously, useful for debug. By defaul logging is off.
+//#define SINGLE_THREAD_LOG // Writes log synchronously, useful for debug. By default logging is off.
+//#define ASYNC_LOG // Writes log asynchronously, useful for debug. By default logging is off.
 
 //#define SINGLE_THREAD // Test framework works only for single thread mode.
 
-//#define WIN_API_MFT_READ // Reads MFT using WinAPI. Fallback API for testing and debugging purposes.
+//#define WIN_API_MFT_READ // Reads MFT using WinAPI. Fall back API for testing and debugging purposes.
 
 // !!! *** *** ***
-// For other options use commandline arguments, which you can find in CmdArgumentsParser class.
+// For other options use commandline arguments, which you can find in CommandlineArguments class.
 
 } // namespace indexer_common

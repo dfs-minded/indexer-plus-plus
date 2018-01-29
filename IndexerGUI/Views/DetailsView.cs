@@ -308,10 +308,20 @@ namespace Indexer.Views
             else
             {
                 scrollBar.Visibility = Visibility.Visible;
-                scrollBar.ViewportSize = numberOfVisible*1.0/count;
-                scrollBar.Value = firstVisible*1.0/(count - numberOfVisible);
-                scrollBar.SmallChange = 1.0/count;
-                scrollBar.LargeChange = 1.0*numberOfVisible/count;
+                if (count == 0)
+                {
+                    scrollBar.ViewportSize = 0;
+                    scrollBar.Value = 0;
+                    scrollBar.SmallChange = 0;
+                    scrollBar.LargeChange = 0;
+                }
+                else
+                {
+                    scrollBar.ViewportSize = numberOfVisible * 1.0 / count;
+                    scrollBar.Value = firstVisible * 1.0 / (count - numberOfVisible);
+                    scrollBar.SmallChange = 1.0 / count;
+                    scrollBar.LargeChange = 1.0 * numberOfVisible / count;
+                }               
             }
         }
 
