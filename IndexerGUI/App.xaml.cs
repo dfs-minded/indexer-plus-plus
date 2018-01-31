@@ -70,13 +70,17 @@ namespace Indexer
                 TrayIconManager.CreateIcon();
             }
 
-            //if (SystemConfigFlagsWrapper.Instance().ShowDebugLogWindow)
-            //{
-            //    var wnd = new DebugLogWindow();
-            //    wnd.Show();
-            //}
+            if (SystemConfigFlagsWrapper.Instance().ShowDebugLogWindow)
+            {
+                var wnd = new DebugLogWindow();
+                wnd.Show();
+            }
 
-            Helper.OpenNewIndexerWnd();
+            var visibility = Visibility.Visible;
+            if (e.Args.Length > 0 && e.Args[0] == "-scheduled")
+                visibility = Visibility.Collapsed;
+
+            Helper.OpenNewIndexerWnd(visibility);
         }
 
         private static void CreateAndStartPipeManager(StartupEventArgs e)

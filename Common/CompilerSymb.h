@@ -15,7 +15,7 @@ namespace indexer_common {
 							// already runs).
 
 #define SHELL_CONTEXT_MENU  // Enables on file right click context menu, the same as in Windows Explorer.
-#define SHOW_DEBUG_LOG_WINDOW
+//#define SHOW_DEBUG_LOG_WINDOW
 
 #define COMMANDLINE_SERVER
 
