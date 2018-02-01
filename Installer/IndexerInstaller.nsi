@@ -1,8 +1,9 @@
-!Include 'MUI.nsh'
+!include 'MUI.nsh'
+!include 'ShellExecWait.nsh'
 
 !define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 4
+!define VERSIONMINOR 5
 
 VIProductVersion "${VERSIONMAJOR}.${VERSIONMINOR}.0.0"
 
@@ -116,6 +117,7 @@ Section "Bare minimum" Section1
 	file "vcomp120.dll"
 	file "ifind.exe"
 	file "BasicRE2Syntax.txt"
+	file "DeleteScheduledAsTaskIndexer.cmd"
 	file "LICENSE"
 	file "README"
 	
@@ -172,11 +174,8 @@ Function UninstallPrevious
 FunctionEnd
 
 Section "Autorun on Startup" Section2
-#Running a .exe file on Windows Start
-!include "MUI.nsh"
-
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}" "$INSTDIR\${APPNAME}.exe"
-
+# Schedule to run the App when user logged in
+!insertmacro ShellExecWait "" "$EXEDIR\ScheduleIndexerAsTask.cmd" '"$INSTDIR\${APPNAME}.exe"' "" hide ""
 SectionEnd
 
 Section "Context Menu Entry" Section3
@@ -233,10 +232,9 @@ Section "uninstall"
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${APPNAME}"
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 
-	#DeleteRegKey from autorun
-	#DeleteRegKey HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run\${APPNAME}"
-	DeleteRegValue HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
-	DeleteRegValue HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
+	# Delete App from task scheduler
+	!insertmacro ShellExecWait "" '"$INSTDIR\DeleteScheduledAsTaskIndexer.cmd"' "" "" hide ""
+	
 	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
 	delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
@@ -271,6 +269,7 @@ Section "uninstall"
 	delete $INSTDIR\ifind.exe
 	delete $INSTDIR\helpText.txt
 	delete $INSTDIR\BasicRE2Syntax.txt
+	delete $INSTDIR\DeleteScheduledAsTaskIndexer.cmd
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
 	
