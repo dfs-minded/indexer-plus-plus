@@ -167,6 +167,8 @@
     <Compile Include="Views\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WatermarkAdorner.cs" />
+    <Compile Include="WatermarkService.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
