@@ -15,7 +15,8 @@
 #include "WindowsWrapper.h"
 #include "typedefs.h"
 
-#include "NTFSChangeObserver.h"
+#include "INTFSChangeObserver.h"
+#include "NTFSChangesUpdatesTimer.h"
 #include "NotifyNTFSChangedEventArgs.h"
 #include "USNJournalRecordsProvider.h"
 #include "USNJournalRecordsSerializer.h"
@@ -33,7 +34,7 @@ namespace ntfs_reader {
         USN_REASON_RENAME_NEW_NAME | USN_REASON_SECURITY_CHANGE | USN_REASON_BASIC_INFO_CHANGE | USN_REASON_DATA_OVERWRITE |
         USN_REASON_DATA_TRUNCATION | USN_REASON_DATA_EXTEND | USN_REASON_CLOSE;
 
-    NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, NTFSChangeObserver* observer)
+    NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, INTFSChangeObserver& observer)
         : StopWatching(false),
           ntfs_change_observer_(observer),
           drive_letter_(drive_letter),
@@ -61,11 +62,14 @@ namespace ntfs_reader {
         }
     }
 
-    void NTFSChangesWatcher::WatchChanges(indexer_common::UpdatesPriority priority /*= UpdatesPriority::REALTIME*/) {
-		{
-			std::unique_lock<std::mutex> locker(mtx_);
-			ntfs_changes_watching_priority_ = priority;
-		}
+    void NTFSChangesWatcher::WatchChanges(
+		indexer_common::FilesystemUpdatesPriority priority /*= UpdatesPriority::REALTIME*/,
+		std::unique_ptr<INTFSChangesUpdatesTimer> u_updates_timer) {
+		
+		if (!u_updates_timer)
+			u_updates_timer_ = std::make_unique<NTFSChangesUpdatesTimer>(priority);
+		else
+			u_updates_timer_ = std::move(u_updates_timer);
 
         auto u_buffer = make_unique<char[]>(kBufferSize);
 
@@ -75,29 +79,11 @@ namespace ntfs_reader {
 
             WaitForNextUsn(read_journal_query.get());
 
-            uint current_time = GetTickCount();
-			uint time_to_wait = 0;
-			
-			{
-				std::unique_lock<std::mutex> locker(mtx_);
-				time_to_wait = kPriorytiToMinTimeBetweenReadMs.at(ntfs_changes_watching_priority_);
-			}
-
-            while (current_time < last_read_ + time_to_wait) {	
-                Sleep(kMinTimeBetweenReadMs);
+			u_updates_timer_->SleepTillNextUpdate();
 				
-				{
-					std::unique_lock<std::mutex> locker(mtx_);
-					time_to_wait = kPriorytiToMinTimeBetweenReadMs.at(ntfs_changes_watching_priority_);
-				}
-				current_time = GetTickCount();
-            }
-
-            last_read_ = GetTickCount();
-
             if (StopWatching) {
-                // This thread is already detached, StopWatching indicates that it needs to finish execution and to free all
-                // holding resources.
+                // This thread is already detached, StopWatching indicates that it needs to finish execution 
+                // and to free all holding resources.
                 delete this;
                 return;
             }
@@ -107,9 +93,8 @@ namespace ntfs_reader {
         }
     }
 
-	void NTFSChangesWatcher::UpdateNTFSChangesWatchingPriority(UpdatesPriority new_priotity) {
-		std::unique_lock<std::mutex> locker(mtx_);
-		ntfs_changes_watching_priority_ = new_priotity;
+	void NTFSChangesWatcher::UpdateNTFSChangesWatchingPriority(FilesystemUpdatesPriority new_priority) {
+		u_updates_timer_->UpdateNTFSChangesPriority(new_priority);
 	}
 
     USN NTFSChangesWatcher::ReadChangesAndNotify(USN low_usn, char* buffer) {
@@ -196,7 +181,7 @@ namespace ntfs_reader {
         }
 
         if (u_args->CreatedItems.size() || u_args->DeletedItems.size() || u_args->ChangedItems.size()) {
-            ntfs_change_observer_->OnNTFSChanged(move(u_args));
+            ntfs_change_observer_.OnNTFSChanged(move(u_args));
         }
 
         return *(USN*)buffer;
@@ -258,7 +243,7 @@ namespace ntfs_reader {
         if (read_volume_changes_from_file_) {
             usn_records_provider_->ImitateWatchDelay();
         } else {
-#ifdef WIN32  // TODO Linux
+#ifdef WIN32
             // This function does not return until new USN record created.
             ok = DeviceIoControl(volume_, FSCTL_READ_USN_JOURNAL, read_journal_data, sizeof(*read_journal_data),
                                  &read_journal_data->StartUsn, sizeof(read_journal_data->StartUsn), &bytes_read,

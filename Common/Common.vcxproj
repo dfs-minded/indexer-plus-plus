@@ -46,6 +46,7 @@
     <ClInclude Include="CompilerSymb.h" />
     <ClInclude Include="ConnectionManager.h" />
     <ClInclude Include="FileInfo.h" />
+    <ClInclude Include="FilesystemUpdatesPriority.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="IndexerDateTime.h" />
     <ClInclude Include="IndexerTimeSpan.h" />
@@ -61,7 +62,6 @@
     <ClInclude Include="SystemConfigFlags.h" />
     <ClInclude Include="TextComparison.h" />
     <ClInclude Include="typedefs.h" />
-    <ClInclude Include="UpdatesPriority.h" />
     <ClInclude Include="WindowsWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

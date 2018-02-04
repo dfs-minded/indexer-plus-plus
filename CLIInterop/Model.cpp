@@ -163,15 +163,15 @@ namespace CLIInterop
 		{
 		case CLIInterop::WindowState::Visible:
 			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
-				indexer_common::UpdatesPriority::REALTIME);
+				indexer_common::FilesystemUpdatesPriority::REALTIME);
 			break;
 		case CLIInterop::WindowState::NotFocused:
 			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
-				indexer_common::UpdatesPriority::NORMAL);
+				indexer_common::FilesystemUpdatesPriority::NORMAL);
 			break;
 		case CLIInterop::WindowState::Hidden:
 			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
-				indexer_common::UpdatesPriority::BACKGROUND);
+				indexer_common::FilesystemUpdatesPriority::BACKGROUND);
 			break;
 		default:
 			break;

@@ -6,29 +6,30 @@
 
 #include <atomic>
 #include <memory>
-#include <mutex>
 
 #include "WindowsWrapper.h"
-
 #include "CompilerSymb.h"
 #include "Macros.h"
 #include "typedefs.h"
-#include "UpdatesPriority.h"
+#include "FilesystemUpdatesPriority.h"
+
+#include "NTFSChangesUpdatesTimer.h"
 
 namespace ntfs_reader {
 
     class NotifyNTFSChangedEventArgs;
     class USNJournalRecordsProvider;
     class USNJournalRecordsSerializer;
-    class NTFSChangeObserver;
+    class INTFSChangeObserver;
+	class INTFSChangesUpdatesTimer;
 
 
 	// This class watches a NTFS volume changes. It uses a USN (Update Sequence Number) journal to get information about
 	// files creation, modification or deletion.
 
-    class NTFSChangesWatcher {
+	class NTFSChangesWatcher {
        public:
-        NTFSChangesWatcher(char drive_letter, NTFSChangeObserver* observer);
+        NTFSChangesWatcher(char drive_letter, INTFSChangeObserver& observer);
 
         NO_COPY(NTFSChangesWatcher)
 
@@ -40,13 +41,18 @@ namespace ntfs_reader {
         std::atomic<bool> StopWatching;
 
 
-        // Method which runs an infinite loop and waits for new update sequence number in a journal and calls ReadChanges()
-        // to process NTFS changes. If |StopWatching| set to true, it deallocates the |buffer_| and returns.
+        // Method which runs an infinite loop and waits for new update sequence number in a journal and calls
+        // ReadChangesAndNotify() to process NTFS changes. If |StopWatching| set to true, it deallocates
+		// the |buffer_| and returns. 
+		// |u_updates_timer| regulates how often to call ReadChangesAndNotify() (given that we have pending
+		// changes to process). If no value provided, NTFSChangesUpdatesTimer will be created and used.
 
-        void WatchChanges(indexer_common::UpdatesPriority = indexer_common::UpdatesPriority::REALTIME);
+        void WatchChanges(
+			indexer_common::FilesystemUpdatesPriority priorty = indexer_common::FilesystemUpdatesPriority::REALTIME,
+			std::unique_ptr<INTFSChangesUpdatesTimer> u_updates_timer = nullptr);
 
 
-		void UpdateNTFSChangesWatchingPriority(indexer_common::UpdatesPriority new_priotity);
+		void UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemUpdatesPriority new_priority);
 
 
 #ifdef SINGLE_THREAD
@@ -87,16 +93,12 @@ namespace ntfs_reader {
 
 		static void DeleteFromCreatedAndChangedIfPresent(NotifyNTFSChangedEventArgs* args, indexer_common::uint ID);
 
-
-		std::mutex mtx_;
-
-		indexer_common::UpdatesPriority ntfs_changes_watching_priority_;
-
+		std::unique_ptr<INTFSChangesUpdatesTimer> u_updates_timer_;
 
         // The reference to the class, that consumes NTFS change event. When volume changes, NTFSChangesWatcher calls its
         // OnNTFSChanged method with change arguments.
 
-        NTFSChangeObserver* ntfs_change_observer_;
+        INTFSChangeObserver& ntfs_change_observer_;
 
         char drive_letter_;
 
@@ -120,8 +122,6 @@ namespace ntfs_reader {
         USNJournalRecordsSerializer* usn_records_serializer_;
 
         USNJournalRecordsProvider* usn_records_provider_;
-
-		indexer_common::uint last_read_{ 0 };
     };
 
 } // namespace ntfs_reader

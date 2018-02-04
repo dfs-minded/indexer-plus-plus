@@ -9,8 +9,8 @@
 #include "CompilerSymb.h"
 #include "MFTReadResult.h"
 #include "Macros.h"
-#include "NTFSChangeObserver.h"
-#include "UpdatesPriority.h"
+#include "INTFSChangeObserver.h"
+#include "FilesystemUpdatesPriority.h"
 
 #include "Index.h"
 
@@ -30,7 +30,7 @@ namespace indexer {
 
 	// Manages access to the index of a volume, maintains index structure on filesystem changes.
 
-    class IndexManager : public ntfs_reader::NTFSChangeObserver {
+    class IndexManager : public ntfs_reader::INTFSChangeObserver {
        public:
         IndexManager(char drive_letter, IndexChangeObserver* index_change_observer);
 
@@ -72,7 +72,7 @@ namespace indexer {
 
 		//	Sets new priority of reading and applying filesystem changes to the Index.  
 
-		void UpdateIndexChangesPriority(indexer_common::UpdatesPriority new_priotity);
+		void UpdateIndexChangesPriority(indexer_common::FilesystemUpdatesPriority new_priotity);
 
        private:
         // Reads MFT, builds |index_| and watches NTFS changes.
@@ -123,7 +123,7 @@ namespace indexer {
 
 		std::unique_ptr<ntfs_reader::NTFSChangesWatcher> ntfs_changes_watcher_;
 
-		indexer_common::UpdatesPriority ntfs_changes_watching_priority_;
+		indexer_common::FilesystemUpdatesPriority ntfs_changes_watching_priority_;
 
 		indexer_common::Log* logger_;
 

@@ -98,7 +98,6 @@
     <ClCompile Include="HelperCommonTest.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NTFSChangesWatcherTest.cpp" />
     <ClCompile Include="OutputFormatterTest.cpp" />
     <ClCompile Include="SearchComparisonTest.cpp" />
     <ClCompile Include="SearchQuerySerializationTest.cpp" />

@@ -103,7 +103,7 @@ namespace indexer {
         }
     }
 
-	void IndexManagersContainer::UpdateIndicesChangedEventPriority(indexer_common::UpdatesPriority new_priotity) {
+	void IndexManagersContainer::UpdateIndicesChangedEventPriority(indexer_common::FilesystemUpdatesPriority new_priotity) {
 		PLOCK_GUARD
 
 		for (const auto& mgr : index_managers_)

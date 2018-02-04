@@ -8,7 +8,7 @@
 
 #include "CommandlineArguments.h"
 #include "NTFSChangesWatcher.h"
-#include "UpdatesPriority.h"
+#include "FilesystemUpdatesPriority.h"
 #include "NotifyIndexChangedEventArgs.h"
 
 #include "MockNTFSChangeObserver.h"
@@ -18,10 +18,10 @@ namespace indexer_test {
 	const int kMaxDelayDeltaMs{ 300 };
 
 	const auto kMaxRealtimeDelayMs{ indexer_common::kPriorytiToMinTimeBetweenReadMs.at(
-		indexer_common::UpdatesPriority::REALTIME) + kMaxDelayDeltaMs };
+		indexer_common::FilesystemUpdatesPriority::REALTIME) + kMaxDelayDeltaMs };
 
 	const auto kMaxBackgroundDelayMs{ indexer_common::kPriorytiToMinTimeBetweenReadMs.at(
-		indexer_common::UpdatesPriority::BACKGROUND) + kMaxDelayDeltaMs };
+		indexer_common::FilesystemUpdatesPriority::BACKGROUND) + kMaxDelayDeltaMs };
 
 	std::unique_ptr<ntfs_reader::NTFSChangesWatcher> object;
 	bool background_mode_requested;
@@ -51,12 +51,12 @@ namespace indexer_test {
 		std::cerr << "kMaxRealtimeDelayMs  " << kMaxRealtimeDelayMs << std::endl;
 
 
-		if (elapsed_since_started_observing < 10 * 1000) { // less then 20 sec past from the first notification
+		if (elapsed_since_started_observing < 20 * 1000) { // less then 20 sec past from the first notification
 			ASSERT_TRUE(interval_between_last_two_notifications < kMaxRealtimeDelayMs);
 		}
 		else if (elapsed_since_started_observing < 140 * 1000) { // between 20 sec and 140 sec
 			if (!background_mode_requested) {
-				object->UpdateNTFSChangesWatchingPriority(indexer_common::UpdatesPriority::BACKGROUND);
+				object->UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemUpdatesPriority::BACKGROUND);
 				background_mode_requested = true;
 				return;
 			}
@@ -64,7 +64,7 @@ namespace indexer_test {
 		}
 		else if (elapsed_since_started_observing < 160 * 1000) { // between 140 sec and 160 sec
 			if (!changed_back_to_realtime_mode_requested) {
-				object->UpdateNTFSChangesWatchingPriority(indexer_common::UpdatesPriority::REALTIME);
+				object->UpdateNTFSChangesWatchingPriority(indexer_common::FilesystemUpdatesPriority::REALTIME);
 				changed_back_to_realtime_mode_requested = true;
 				return;
 			}

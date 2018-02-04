@@ -7,14 +7,14 @@
 #include <functional>
 
 #include "typedefs.h"
-#include "NTFSChangeObserver.h"
+#include "INTFSChangeObserver.h"
 #include "NotifyNTFSChangedEventArgs.h"
 
 namespace indexer_test {
 
 	using OnNtfsChangedCallback = std::function<void(ntfs_reader::uNotifyNTFSChangedEventArgs)>;
 
-	class MockNTFSChangeObserver : public ntfs_reader::NTFSChangeObserver {
+	class MockNTFSChangeObserver : public ntfs_reader::INTFSChangeObserver {
 	  public:
 		MockNTFSChangeObserver(OnNtfsChangedCallback on_ntfs_changed_callback) :
 			on_ntfs_changed_callback_(on_ntfs_changed_callback) {

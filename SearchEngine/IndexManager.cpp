@@ -5,7 +5,6 @@
 #include "IndexManager.h"
 
 #include <string.h>
-#include <iostream>
 #include <mutex>
 #include <thread>
 
@@ -47,7 +46,7 @@ namespace indexer {
           index_(make_unique<Index>(drive_letter)),
           index_change_observer_(index_change_observer),
           start_time_(0),
-		  ntfs_changes_watching_priority_(UpdatesPriority::REALTIME) {
+		  ntfs_changes_watching_priority_(FilesystemUpdatesPriority::REALTIME) {
 
         GET_LOGGER
     }
@@ -78,7 +77,7 @@ namespace indexer {
         logger_->Debug(METHOD_METADATA + L"Called for drive " + DriveLetterW());
 
         if (!ntfs_changes_watcher_) ntfs_changes_watcher_ = 
-			make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), this);
+			make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), *this);
 
         ntfs_changes_watcher_->CheckUpdates();
     }
@@ -135,7 +134,7 @@ namespace indexer {
         return disable_index_requested_->load();
     }
 
-	void IndexManager::UpdateIndexChangesPriority(indexer_common::UpdatesPriority new_priotity) {
+	void IndexManager::UpdateIndexChangesPriority(indexer_common::FilesystemUpdatesPriority new_priotity) {
 		ntfs_changes_watching_priority_ = new_priotity;
 		if (ntfs_changes_watcher_)
 			ntfs_changes_watcher_->UpdateNTFSChangesWatchingPriority(new_priotity);
@@ -215,7 +214,7 @@ namespace indexer {
 		if (DisableIndexRequested())
 			return;
 		
-        ntfs_changes_watcher_ = make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), this);
+        ntfs_changes_watcher_ = make_unique<ntfs_reader::NTFSChangesWatcher>(DriveLetter(), *this);
         ntfs_changes_watcher_->WatchChanges(ntfs_changes_watching_priority_);
 #endif
     }
