@@ -3,6 +3,7 @@
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #define SINGLE_THREAD
 // Test framework works only for single thread mode.
@@ -17,10 +18,10 @@ GTEST_API_ int main(int argc, char **argv) {
     printf("Running main() from IndexerTest\n");
 
     setlocale(LC_ALL, ".OCP");
+	
+	testing::InitGoogleMock(&argc, argv);
 
-    testing::InitGoogleTest(&argc, argv);
-
-    // testing::GTEST_FLAG(filter) = "*.SimpleFileCreate";
+    //testing::GTEST_FLAG(filter) = "*.TestUpdateNTFSChangesWatchingPriorityWorks";
 
     auto res = RUN_ALL_TESTS();
     std::cin.get();

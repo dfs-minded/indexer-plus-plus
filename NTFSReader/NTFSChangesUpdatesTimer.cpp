@@ -6,9 +6,6 @@
 
 #include <algorithm>
 
-#include "WindowsWrapper.h"
-#include "Macros.h"
-
 namespace ntfs_reader {
 
 NTFSChangesUpdatesTimer::NTFSChangesUpdatesTimer(indexer_common::FilesystemUpdatesPriority priotity) 
@@ -17,7 +14,9 @@ NTFSChangesUpdatesTimer::NTFSChangesUpdatesTimer(indexer_common::FilesystemUpdat
 
 void ntfs_reader::NTFSChangesUpdatesTimer::SleepTillNextUpdate()
 {
-	indexer_common::uint current_time = GetTickCount();
+	if (!sleeper_)
+		sleeper_ = std::make_unique<StandardWinApiSleeper>();
+
 	indexer_common::uint time_to_wait = 0;
 
 	{
@@ -25,9 +24,11 @@ void ntfs_reader::NTFSChangesUpdatesTimer::SleepTillNextUpdate()
 		time_to_wait = kPriorytiToMinTimeBetweenReadMs.at(ntfs_changes_watching_priority_);
 	}
 
+	indexer_common::uint current_time = sleeper_->GetTickCount();
+
 	while (current_time < last_read_ + time_to_wait) {
 		auto sleep_time = std::min(kMinTimeBetweenReadMs, last_read_ + time_to_wait - current_time);
-		Sleep(sleep_time);
+		sleeper_->Sleep(sleep_time);
 
 		{
 			std::unique_lock<std::mutex> locker(mtx_);
@@ -35,10 +36,10 @@ void ntfs_reader::NTFSChangesUpdatesTimer::SleepTillNextUpdate()
 			time_to_wait = kPriorytiToMinTimeBetweenReadMs.at(ntfs_changes_watching_priority_);
 		}
 
-		current_time = GetTickCount();
+		current_time = sleeper_->GetTickCount();
 	}
 
-	last_read_ = GetTickCount();
+	last_read_ = sleeper_->GetTickCount();
 }
 
 void ntfs_reader::NTFSChangesUpdatesTimer::UpdateNTFSChangesPriority(indexer_common::FilesystemUpdatesPriority new_priority) {
