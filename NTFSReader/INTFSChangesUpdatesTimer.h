@@ -8,6 +8,7 @@
 
 #include "FilesystemUpdatesPriority.h"
 #include "typedefs.h"
+#include "WindowsWrapper.h"
 
 namespace ntfs_reader {
 
@@ -18,7 +19,7 @@ class ISleeper {
 	// Suspends the calling thread on |time_ms|.
 	virtual void Sleep(indexer_common::uint time_ms) const = 0;
 
-	virtual indexer_common::uint GetTickCount() const = 0;
+	virtual indexer_common::uint64 GetTickCount() const = 0;
 
 	virtual ~ISleeper() {};
 };
@@ -27,11 +28,11 @@ class StandardWinApiSleeper : public ISleeper
 {
   public:
 	virtual void Sleep(indexer_common::uint time_ms) const override {
-		Sleep(time_ms);
+		::Sleep(time_ms);
 	}
 
-	virtual indexer_common::uint GetTickCount() const override {
-		return GetTickCount();
+	virtual indexer_common::uint64 GetTickCount() const override {
+		return ::GetTickCount64();
 	}
 };
 
