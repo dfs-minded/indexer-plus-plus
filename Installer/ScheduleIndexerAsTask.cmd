@@ -7,5 +7,4 @@ for /f "tokens=2*" %%i in ('reg.exe query "HKLM\SOFTWARE\Microsoft\Windows NT\Cu
 REM Set run level (for Vista or later - version 6)
 if /i "%os_ver:~,1%" GEQ "6" set runlevel=/rl HIGHEST
 
-REM Execute SchTasks.exe
-schtasks.exe /create /tn "Indexer++" /sc ONLOGON /TR '%1'" -scheduled" /ru %USERNAME% %runlevel% /delay 0000:40 /IT
+schtasks /create /tn "Indexer++" /sc ONLOGON /tr '%1'" -scheduled" /f /ru %USERNAME% %runlevel% /delay 0000:15 /it

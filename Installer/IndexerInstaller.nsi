@@ -1,5 +1,4 @@
-!include 'MUI.nsh'
-!include 'ShellExecWait.nsh'
+﻿!include 'MUI.nsh'
 
 !define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 0
@@ -117,6 +116,7 @@ Section "Bare minimum" Section1
 	file "vcomp120.dll"
 	file "ifind.exe"
 	file "BasicRE2Syntax.txt"
+	file "ScheduleIndexerAsTask.cmd"
 	file "DeleteScheduledAsTaskIndexer.cmd"
 	file "LICENSE"
 	file "README"
@@ -144,6 +144,11 @@ Section "Bare minimum" Section1
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "Publisher" "Anna Krykora"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "HelpLink" "http://indexer-plus-plus.com"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${VERSIONMAJOR}.${VERSIONMINOR}"
+	
+	# (For versions <= 0.4) Delete from autorun in registry
+	DeleteRegValue HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
+	DeleteRegValue HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
+	DeleteRegValue HKEY_LOCAL_MACHINE "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
 	
 SectionEnd
  
@@ -175,7 +180,8 @@ FunctionEnd
 
 Section "Autorun on Startup" Section2
 # Schedule to run the App when user logged in
-!insertmacro ShellExecWait "" "$EXEDIR\ScheduleIndexerAsTask.cmd" '"$INSTDIR\${APPNAME}.exe"' "" hide ""
+ExpandEnvStrings $0 %COMSPEC%
+ExecWait '"$INSTDIR\ScheduleIndexerAsTask.cmd" "$INSTDIR\${APPNAME}.exe"'
 SectionEnd
 
 Section "Context Menu Entry" Section3
@@ -227,14 +233,15 @@ functionEnd
 Section "uninstall"
 
 	!insertmacro CheckAndCloseIfRunning
+	
+	# Delete App from task scheduler
+	ExpandEnvStrings $0 %COMSPEC%
+	ExecWait '"$INSTDIR\DeleteScheduledAsTaskIndexer.cmd"'
 		
 	# Delete Uninstaller And Unistall Registry Entries
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${APPNAME}"
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 
-	# Delete App from task scheduler
-	!insertmacro ShellExecWait "" '"$INSTDIR\DeleteScheduledAsTaskIndexer.cmd"' "" "" hide ""
-	
 	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
 	delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
@@ -269,6 +276,7 @@ Section "uninstall"
 	delete $INSTDIR\ifind.exe
 	delete $INSTDIR\helpText.txt
 	delete $INSTDIR\BasicRE2Syntax.txt
+	delete $INSTDIR\ScheduleIndexerAsTask.cmd
 	delete $INSTDIR\DeleteScheduledAsTaskIndexer.cmd
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
