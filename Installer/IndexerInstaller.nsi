@@ -21,20 +21,17 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
 !define FINISH_TITLE 'Installation complieted.'
 !define UNFINISH_TITLE 'Uninstall was complited successfully.'
 
-#MUI Settings / Icon
 !define MUI_ICON IndexerLogo.ico
 !define MUI_UNICON IndexerLogo.ico
- 
-#MUI Settings / Header
 !define MUI_HEADERIMAGE
 #!define MUI_HEADERIMAGE_BITMAP ladybug-snail-800.bmp
-
-#MUI Settings / Wizard
 #!define MUI_WELCOMEFINISHPAGE_BITMAP ladybug-snail-800.bmp
 #!define MUI_UNWELCOMEFINISHPAGE_BITMAP ladybug-snail-800.bmp
 
-#MUI_PAGE
 !define MUI_WELCOMEPAGE_TITLE '${WELCOME_TITLE}'
+!define MUI_WELCOMEPAGE_TEXT "Setup will guide you through the installation of ${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}. \n\nClick Next to continue."
+
+#MUI_PAGE
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "EULA.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
@@ -47,6 +44,7 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
  
  #MUI_UNPAGE
 !define MUI_WELCOMEPAGE_TITLE '${UNWELCOME_TITLE}'
+!define MUI_WELCOMEPAGE_TEXT "Setup will guide you through the uninstallation of ${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}. \n\nClick Uninstall to start the uninstallation."
 !insertmacro MUI_UNPAGE_WELCOME
 !insertmacro MUI_UNPAGE_INSTFILES
 !define MUI_FINISHPAGE_TITLE '${UNFINISH_TITLE}'
