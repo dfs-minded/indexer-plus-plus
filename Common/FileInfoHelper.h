@@ -8,11 +8,11 @@
 #include <memory>
 
 #include "Helpers.h"
-#include "Log.h"
 #include "TextComparison.h"
 
 namespace indexer_common {
 
+	class Log;
     class FileInfo;
 
     typedef std::map<const char16_t*, int, WcharLessComparator> WcharToIntMap;

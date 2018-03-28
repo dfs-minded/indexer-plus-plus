@@ -45,14 +45,6 @@ namespace Indexer
                 ExcludeHiddenAndSystem = saved.ExcludeHiddenAndSystem;
                 ExcludeFolders = saved.ExcludeFolders;
                 ExcludeFiles = saved.ExcludeFiles;
-
-#if DEBUG
-                //this.SelectedDrives.Add('J');
-                //this.SelectedDrives.Add('Z');
-                //this.SelectedDrives.Add('E');
-                //this.SelectedDrives.Add('C');
-                //this.SelectedDrives.Add('F');
-#endif
             }
             catch (Exception ex)
             {

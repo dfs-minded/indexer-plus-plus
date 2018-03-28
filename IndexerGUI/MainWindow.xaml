@@ -19,6 +19,9 @@
     Icon="Icons/icon_v3_2.ico"
     FontSize="12"
     SizeChanged="MainWindow_OnSizeChanged"
+    StateChanged="Window_StateChanged"
+    LostKeyboardFocus="Window_LostKeyboardFocus"
+    GotKeyboardFocus="Window_GotKeyboardFocus"
     mc:Ignorable="d">
     <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
     
@@ -315,11 +318,17 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Margin="5 5 5 5"
+            <AdornerDecorator Margin="5">
+                <TextBox Padding="3 0 0 0"
                      x:Name="searchTextUserInputTextbox"
                      Style="{DynamicResource TextBoxStyle}"
                      Text="{Binding SearchString,
-                     UpdateSourceTrigger=PropertyChanged}" />
+                     UpdateSourceTrigger=PropertyChanged}">
+                    <indexer:WatermarkService.Watermark>
+                        <TextBlock>Type here to search files</TextBlock>
+                    </indexer:WatermarkService.Watermark>
+                </TextBox>
+            </AdornerDecorator>
         </Grid>
 
         <Grid Grid.Row="3" Margin="5 0">

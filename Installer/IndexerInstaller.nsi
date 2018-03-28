@@ -1,8 +1,8 @@
-!Include 'MUI.nsh'
+﻿!include 'MUI.nsh'
 
 !define APPNAME "Indexer++ Beta"
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 4
+!define VERSIONMINOR 5
 
 VIProductVersion "${VERSIONMAJOR}.${VERSIONMINOR}.0.0"
 
@@ -21,20 +21,17 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
 !define FINISH_TITLE 'Installation complieted.'
 !define UNFINISH_TITLE 'Uninstall was complited successfully.'
 
-#MUI Settings / Icon
 !define MUI_ICON IndexerLogo.ico
 !define MUI_UNICON IndexerLogo.ico
- 
-#MUI Settings / Header
 !define MUI_HEADERIMAGE
 #!define MUI_HEADERIMAGE_BITMAP ladybug-snail-800.bmp
-
-#MUI Settings / Wizard
 #!define MUI_WELCOMEFINISHPAGE_BITMAP ladybug-snail-800.bmp
 #!define MUI_UNWELCOMEFINISHPAGE_BITMAP ladybug-snail-800.bmp
 
-#MUI_PAGE
 !define MUI_WELCOMEPAGE_TITLE '${WELCOME_TITLE}'
+!define MUI_WELCOMEPAGE_TEXT "Setup will guide you through the installation of ${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}. \n\nClick Next to continue."
+
+#MUI_PAGE
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "EULA.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
@@ -47,6 +44,7 @@ Name "${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}"
  
  #MUI_UNPAGE
 !define MUI_WELCOMEPAGE_TITLE '${UNWELCOME_TITLE}'
+!define MUI_WELCOMEPAGE_TEXT "Setup will guide you through the uninstallation of ${APPNAME} ${VERSIONMAJOR}.${VERSIONMINOR}. \n\nClick Uninstall to start the uninstallation."
 !insertmacro MUI_UNPAGE_WELCOME
 !insertmacro MUI_UNPAGE_INSTFILES
 !define MUI_FINISHPAGE_TITLE '${UNFINISH_TITLE}'
@@ -116,6 +114,8 @@ Section "Bare minimum" Section1
 	file "vcomp120.dll"
 	file "ifind.exe"
 	file "BasicRE2Syntax.txt"
+	file "ScheduleIndexerAsTask.cmd"
+	file "DeleteScheduledAsTaskIndexer.cmd"
 	file "LICENSE"
 	file "README"
 	
@@ -142,6 +142,11 @@ Section "Bare minimum" Section1
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "Publisher" "Anna Krykora"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "HelpLink" "http://indexer-plus-plus.com"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${VERSIONMAJOR}.${VERSIONMINOR}"
+	
+	# (For versions <= 0.4) Delete from autorun in registry
+	DeleteRegValue HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
+	DeleteRegValue HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
+	DeleteRegValue HKEY_LOCAL_MACHINE "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
 	
 SectionEnd
  
@@ -172,11 +177,9 @@ Function UninstallPrevious
 FunctionEnd
 
 Section "Autorun on Startup" Section2
-#Running a .exe file on Windows Start
-!include "MUI.nsh"
-
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}" "$INSTDIR\${APPNAME}.exe"
-
+# Schedule to run the App when user logged in
+ExpandEnvStrings $0 %COMSPEC%
+ExecWait '"$INSTDIR\ScheduleIndexerAsTask.cmd" "$INSTDIR\${APPNAME}.exe"'
 SectionEnd
 
 Section "Context Menu Entry" Section3
@@ -228,15 +231,15 @@ functionEnd
 Section "uninstall"
 
 	!insertmacro CheckAndCloseIfRunning
+	
+	# Delete App from task scheduler
+	ExpandEnvStrings $0 %COMSPEC%
+	ExecWait '"$INSTDIR\DeleteScheduledAsTaskIndexer.cmd"'
 		
 	# Delete Uninstaller And Unistall Registry Entries
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${APPNAME}"
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 
-	#DeleteRegKey from autorun
-	#DeleteRegKey HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run\${APPNAME}"
-	DeleteRegValue HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
-	DeleteRegValue HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "${APPNAME}"
 	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
 	delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
@@ -271,6 +274,8 @@ Section "uninstall"
 	delete $INSTDIR\ifind.exe
 	delete $INSTDIR\helpText.txt
 	delete $INSTDIR\BasicRE2Syntax.txt
+	delete $INSTDIR\ScheduleIndexerAsTask.cmd
+	delete $INSTDIR\DeleteScheduledAsTaskIndexer.cmd
 	delete $INSTDIR\LICENSE
 	delete $INSTDIR\README
 	

@@ -24,7 +24,7 @@ namespace Indexer
                 trayMenu.MenuItems.Add("Exit", OnExit);
 
                 trayIcon = new NotifyIcon();
-                trayIcon.Text = "Indexer";
+                trayIcon.Text = "Indexer++";
 
                 var iconUri = new Uri("pack://application:,,,/Icons/icon_white_bg.ico", UriKind.RelativeOrAbsolute);
                 // Uri iconUri = new Uri("pack://application:,,,/icon_v3_3.ico", UriKind.RelativeOrAbsolute);          

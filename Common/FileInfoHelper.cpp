@@ -8,6 +8,7 @@
 
 #include "AsyncLog.h"
 #include "EmptyLog.h"
+#include "OneThreadLog.h"
 #include "FileInfo.h"
 #include "Helpers.h"
 

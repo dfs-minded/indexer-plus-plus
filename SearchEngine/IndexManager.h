@@ -9,7 +9,8 @@
 #include "CompilerSymb.h"
 #include "MFTReadResult.h"
 #include "Macros.h"
-#include "NTFSChangeObserver.h"
+#include "INTFSChangeObserver.h"
+#include "FilesystemUpdatesPriority.h"
 
 #include "Index.h"
 
@@ -29,13 +30,15 @@ namespace indexer {
 
 	// Manages access to the index of a volume, maintains index structure on filesystem changes.
 
-    class IndexManager : public ntfs_reader::NTFSChangeObserver {
+    class IndexManager : public ntfs_reader::INTFSChangeObserver {
        public:
         IndexManager(char drive_letter, IndexChangeObserver* index_change_observer);
 
         NO_COPY(IndexManager)
 
+
         // Starts IndexManager in separate thread.
+
         void RunAsync();
 
 #ifdef SINGLE_THREAD
@@ -66,6 +69,11 @@ namespace indexer {
 
         bool DisableIndexRequested() const;
 
+
+		//	Sets new priority of reading and applying filesystem changes to the Index.  
+
+		void UpdateIndexChangesPriority(indexer_common::FilesystemUpdatesPriority new_priotity);
+
        private:
         // Reads MFT, builds |index_| and watches NTFS changes.
 
@@ -75,7 +83,7 @@ namespace indexer {
         // Handles the NTFS changed event, applies all changes to |index_| and notifies |index_change_observer_|
         // about changes made in |index_|.
 
-		virtual void OnNTFSChanged(std::unique_ptr<ntfs_reader::NotifyNTFSChangedEventArgs> u_args) override;
+		virtual void OnNTFSChanged(ntfs_reader::uNotifyNTFSChangedEventArgs u_args) override;
 
 
         // This method is for testing and debugging purposes.
@@ -85,6 +93,12 @@ namespace indexer {
 
 		static void DisposeReaderResult(std::unique_ptr<indexer_common::MFTReadResult> u_read_res);
 
+
+		// IndexManager will be no more responsible for |ntfs_changes_watcher_| deletion.
+		// It must be deleted itself in its worker thread.
+		
+		void StopNtfsChangesWatching();
+		
 
         // The index, which is uniquely hold and managed by this class instance.
 
@@ -108,6 +122,8 @@ namespace indexer {
         // or uses CheckUpdates method in single thread mode.
 
 		std::unique_ptr<ntfs_reader::NTFSChangesWatcher> ntfs_changes_watcher_;
+
+		indexer_common::FilesystemUpdatesPriority ntfs_changes_watching_priority_;
 
 		indexer_common::Log* logger_;
 
