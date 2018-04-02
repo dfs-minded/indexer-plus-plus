@@ -22,7 +22,7 @@ namespace Indexer
         {
             Instance = new UserSettings();
         }
-
+        
         private UserSettings()
         {
             serializer = new DataContractSerializer(typeof (UserSettings));
@@ -31,7 +31,7 @@ namespace Indexer
                 if (!File.Exists(SerializationPath))
                 {
                     Log.Instance.Error("User settings file does not exist in: " + SerializationPath);
-                    return;
+                    throw (new Exception("no file found"));
                 }
 
                 var saved = (UserSettings) serializer.ReadObject(File.OpenRead(SerializationPath));
@@ -45,9 +45,18 @@ namespace Indexer
                 ExcludeHiddenAndSystem = saved.ExcludeHiddenAndSystem;
                 ExcludeFolders = saved.ExcludeFolders;
                 ExcludeFiles = saved.ExcludeFiles;
+
             }
             catch (Exception ex)
             {
+                WndWidth = 1000;
+                WndHeight = 700;
+                FiltersVisibility = Visibility.Collapsed;
+                SelectedDrives = new List<char>();
+                ExcludeHiddenAndSystem = true;
+                ExcludeFolders = false;
+                ExcludeFiles = false;
+
                 Log.Instance.Error("Cannot read user settings: " + ex.Message);
             }
         }
