@@ -1,4 +1,4 @@
-﻿// This file is the part of the Indexer++ project.
+// This file is the part of the Indexer++ project.
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
@@ -318,9 +318,15 @@ namespace Indexer
         private void InitPart2()
         {
             var settings = UserSettings.Instance;
+
+
             Height = settings.WndHeight;
             Width = settings.WndWidth;
             FiltersVisibility = settings.FiltersVisibility;
+
+            ExcludeHiddenAndSystem = settings.ExcludeHiddenAndSystem;
+            ExcludeFiles = settings.ExcludeFiles;
+            ExcludeFolders = settings.ExcludeFolders;
 
             var initialDirPath = CmdArgumentsParser.FilterDirPath;
             if (string.IsNullOrWhiteSpace(initialDirPath))
@@ -329,6 +335,8 @@ namespace Indexer
             dirFilterEnabled = true;
             filtersVisibility = Visibility.Visible;
             searchDirPath = initialDirPath;
+            
+
 
             searchTextUserInputTextbox.Focusable = true;
             Keyboard.Focus(searchTextUserInputTextbox);
