@@ -15,7 +15,7 @@ namespace indexer_test {
 class MockThreadSleeper : public ntfs_reader::ISleeper {
   public:
 	MOCK_CONST_METHOD1(Sleep, void(indexer_common::uint time_ms));
-	MOCK_CONST_METHOD0(GetTickCount, indexer_common::uint());
+	MOCK_CONST_METHOD0(GetTickCount, indexer_common::uint64());
 };
 
 } // namespace indexer_test
