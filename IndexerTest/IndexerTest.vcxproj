@@ -80,6 +80,7 @@
       <AdditionalIncludeDirectories>..\3dParty\gtest\include;..\3dParty\gmock\include;..\3dParty\re2Project\re2;..\SearchEngine;..\Common;..\ifind;..\SearchEngine\SearchLogic;..\NTFSReader;..\NTFSReader\TestFramework</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/D "_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
