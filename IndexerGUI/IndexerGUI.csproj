@@ -226,6 +226,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\Indexer++Logo.png" />
+    <EmbeddedResource Include="defaultUserSettings.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="UserSettings.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
