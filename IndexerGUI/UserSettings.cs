@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
+using Indexer.Properties;
 
 namespace Indexer
 {
@@ -22,7 +23,7 @@ namespace Indexer
         {
             Instance = new UserSettings();
         }
-
+        
         private UserSettings()
         {
             serializer = new DataContractSerializer(typeof (UserSettings));
@@ -30,8 +31,7 @@ namespace Indexer
             {
                 if (!File.Exists(SerializationPath))
                 {
-                    Log.Instance.Error("User settings file does not exist in: " + SerializationPath);
-                    return;
+                    File.WriteAllText("UserSettings.xml", Properties.Resources.DefaultUserSettings);
                 }
 
                 var saved = (UserSettings) serializer.ReadObject(File.OpenRead(SerializationPath));
@@ -45,6 +45,7 @@ namespace Indexer
                 ExcludeHiddenAndSystem = saved.ExcludeHiddenAndSystem;
                 ExcludeFolders = saved.ExcludeFolders;
                 ExcludeFiles = saved.ExcludeFiles;
+
             }
             catch (Exception ex)
             {
