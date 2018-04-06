@@ -32,7 +32,7 @@ namespace Indexer
                 if (!File.Exists(SerializationPath))
                 {
                     File.WriteAllText(SerializationPath, Resources.defaultUserSettings);
-                    throw (new Exception("no file found"));
+                    Log.Instance.Error("User settings file does not exist in: " + SerializationPath);
                 }
 
                 var saved = (UserSettings) serializer.ReadObject(File.OpenRead(SerializationPath));
