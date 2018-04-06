@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
- using Indexer.Properties;
+using Indexer.Properties;
 
 namespace Indexer
 {
@@ -31,8 +31,7 @@ namespace Indexer
             {
                 if (!File.Exists(SerializationPath))
                 {
-                    File.WriteAllText(SerializationPath, Resources.defaultUserSettings);
-                    Log.Instance.Error("User settings file does not exist in: " + SerializationPath);
+                    File.WriteAllText("UserSettings.xml", Properties.Resources.DefaultUserSettings);
                 }
 
                 var saved = (UserSettings) serializer.ReadObject(File.OpenRead(SerializationPath));
