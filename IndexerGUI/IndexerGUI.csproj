@@ -132,6 +132,11 @@
     <Compile Include="Converters\IconSizeToIntegerConverter.cs" />
     <Compile Include="Controls\AutoScalingImage.cs" />
     <Compile Include="Converters\IconSizeToWrapPanelItemWidthConvertor.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RegexSyntaxWindow.xaml.cs">
       <DependentUpon>RegexSyntaxWindow.xaml</DependentUpon>
     </Compile>
@@ -225,6 +230,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+  <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <Resource Include="Icons\Indexer++Logo.png" />
     <EmbeddedResource Include="DefaultUserSettings.xml">
       <SubType>Designer</SubType>
