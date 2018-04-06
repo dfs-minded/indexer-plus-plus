@@ -58,7 +58,7 @@ further requirements:
 To make sure your changes work as intended and don't break existing
 functionality, you'll want to compile and run Indexer++ tests.
 
-First, go to Common project, CompilerSymb.h file. Find #define SINGLE_THREAD and uncomment it.
+First, go to Common project, CompilerSymb.h file. Find **#define SINGLE_THREAD** and uncomment it.
 Test framework works only for single thread mode.
 
 Build IndexerTest project. Set it as a start-up project. Run it.
