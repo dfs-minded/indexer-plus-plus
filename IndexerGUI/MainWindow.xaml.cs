@@ -2,7 +2,7 @@
 // Copyright (C) 2016 Anna Krykora <krykoraanna@gmail.com>. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be found in the LICENSE file.
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -29,11 +29,11 @@ namespace Indexer
         private DispatcherTimer dispatcherTimer;
         private Dispatcher dispatcher;
 
-        private readonly System.Windows.Forms.FolderBrowserDialog folderDialog = 
+        private readonly System.Windows.Forms.FolderBrowserDialog folderDialog =
             new System.Windows.Forms.FolderBrowserDialog()
-            { 
-                RootFolder = Environment.SpecialFolder.MyComputer, 
-                ShowNewFolderButton = false 
+            {
+                RootFolder = Environment.SpecialFolder.MyComputer,
+                ShowNewFolderButton = false
             };
 
         public ObservableCollection<DriveInfo> Drives { get; set; }
@@ -150,10 +150,10 @@ namespace Indexer
         public bool MatchCase
         {
             get { return matchCase; }
-            set { matchCase = value; Filter();}
+            set { matchCase = value; Filter(); }
         }
 
-        public bool MatchCaseEnabled 
+        public bool MatchCaseEnabled
         {
             get { return !UseRegex; }
         }
@@ -162,11 +162,11 @@ namespace Indexer
         public bool UseRegex
         {
             get { return useRegex; }
-            set 
+            set
             {
                 useRegex = value;
                 OnPropertyChanged("MatchCaseEnabled");
-                Filter(); 
+                Filter();
             }
         }
 
@@ -319,15 +319,13 @@ namespace Indexer
         {
             var settings = UserSettings.Instance;
 
-
             Height = settings.WndHeight;
             Width = settings.WndWidth;
             FiltersVisibility = settings.FiltersVisibility;
-            
             ExcludeHiddenAndSystem = settings.ExcludeHiddenAndSystem;
             ExcludeFiles = settings.ExcludeFiles;
             ExcludeFolders = settings.ExcludeFolders;
-            
+
             var initialDirPath = CmdArgumentsParser.FilterDirPath;
             if (string.IsNullOrWhiteSpace(initialDirPath))
                 return;
@@ -335,13 +333,11 @@ namespace Indexer
             dirFilterEnabled = true;
             filtersVisibility = Visibility.Visible;
             searchDirPath = initialDirPath;
-            
-
 
             searchTextUserInputTextbox.Focusable = true;
             Keyboard.Focus(searchTextUserInputTextbox);
 
-;           OnPropertyChanged("");
+            ; OnPropertyChanged("");
         }
 
         private void PopulateDrives()
@@ -354,7 +350,7 @@ namespace Indexer
             foreach (var driveInfo in DrivesManager.GetDrives())
             {
                 var drive = driveInfo.Name;
-                var isChecked = selectedDrives == null || selectedDrives.Count == 0 || selectedDrives.Contains(drive) 
+                var isChecked = selectedDrives == null || selectedDrives.Count == 0 || selectedDrives.Contains(drive)
                     || (!string.IsNullOrEmpty(filterDir) && filterDir[0] == drive);
 
                 var di = new DriveInfo(drive, driveInfo.Label, isChecked);
@@ -405,10 +401,10 @@ namespace Indexer
 
         private void DrivesMenuItem_CheckToogled(object sender, RoutedEventArgs routedEventArgs)
         {
-            var item = (MenuItem) sender;
+            var item = (MenuItem)sender;
             if (item == null) return;
 
-            var drive = Drives.SingleOrDefault(driveInfo => driveInfo.Label == (string) item.Header).Name;
+            var drive = Drives.SingleOrDefault(driveInfo => driveInfo.Label == (string)item.Header).Name;
 
             if (item.IsChecked)
             {
@@ -449,7 +445,7 @@ namespace Indexer
                 q.SizeTo = maxSize;
             }
 
-           
+
 
             if (DateFilterEnabled)
             {
@@ -547,7 +543,7 @@ namespace Indexer
             debugLogWnd.Show();
         }
 
-     
+
         private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             var dlg = new SaveFileDialog();
@@ -621,8 +617,8 @@ namespace Indexer
             //var menu = GetShellContextMenu(fi);
             //menu.InvokeDelete();
         }
-       
-        
+
+
         private void RenameCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             // ToDo: implement
@@ -640,7 +636,7 @@ namespace Indexer
             //var menu = GetShellContextMenu(fi);
             //menu.InvokeRename();
         }
-      
+
 
         private void AboutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
@@ -775,8 +771,8 @@ namespace Indexer
             if (!SystemConfigFlagsWrapper.Instance().ShelContextMenu)
                 return;
 
-            var formsHost = (Control) ShellHostPopupWnd.FindName("ShellMenuHost");
-            var pos = new Point((int) ShellHostPopupWnd.HorizontalOffset, (int) ShellHostPopupWnd.VerticalOffset);
+            var formsHost = (Control)ShellHostPopupWnd.FindName("ShellMenuHost");
+            var pos = new Point((int)ShellHostPopupWnd.HorizontalOffset, (int)ShellHostPopupWnd.VerticalOffset);
 
             var path = item.Path;
             var fullName = item.FullName;
@@ -805,8 +801,8 @@ namespace Indexer
 
         private static void OpenFileDefault(string fullName)
         {
-            string name = Path.GetFileName(fullName); 
-            
+            string name = Path.GetFileName(fullName);
+
             if (Helper.IsExecutable(fullName))
             {
                 var result = MessageBox.Show(
@@ -822,7 +818,7 @@ namespace Indexer
                 // Runs the default program for given file type or opens containing folder for dirs.
                 Process.Start(fullName);
             }
-            catch {} // Catch everything, we do not responsible for other programs opening errors.
+            catch { } // Catch everything, we do not responsible for other programs opening errors.
         }
 
 
