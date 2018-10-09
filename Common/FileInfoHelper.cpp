@@ -16,7 +16,18 @@ namespace indexer_common {
 
     using namespace std;
 
-    unique_ptr<const char16_t[]> FileInfoHelper::GetPath(const FileInfo& fi, bool include_filename) {
+	bool FileInfoHelper::AllAscii(const char16_t* filename)
+	{
+		char16_t c = *filename;
+		while (c != '\0') {
+			if (c > 127) return false;
+			++filename;
+			c = *filename;
+		}
+		return true;
+	}
+
+	unique_ptr<const char16_t[]> FileInfoHelper::GetPath(const FileInfo& fi, bool include_filename) {
 
         vector<const FileInfo*> path_to_root;
         path_to_root.reserve(15);

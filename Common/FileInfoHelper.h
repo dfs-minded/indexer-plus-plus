@@ -23,6 +23,8 @@ namespace indexer_common {
 
     class FileInfoHelper {
        public:
+		static bool AllAscii(const char16_t* filename);
+
         static std::unique_ptr<const char16_t[]> GetPath(const FileInfo& fi, bool include_filename = false);
 
 
