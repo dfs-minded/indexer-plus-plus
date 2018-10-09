@@ -106,7 +106,6 @@ Section "Bare minimum" Section1
 	file "${APPNAME}.exe"
 	file "CLIInterop.dll"
 	file "IndexerLogo.ico"
-	file "UserSettings.xml"
 	file "AddExplorerContextMenu.exe"
 	file "CloseRunningApp.exe"
 	file "AddDirToPathVarialble.exe"
