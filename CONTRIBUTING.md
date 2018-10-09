@@ -50,15 +50,18 @@ If you plan to contribute a patch, you need to build Indexer++, which has
 further requirements:
 
   * Visual Studio v17 or newer
+  * .NET Framework 4.0
   * IndexerGUI project has a dependency on a "Hardcodet.NotifyIcon.Wpf" which can be installed 
 	using NuGet package manager in Visual Studio (if it is not installed automatically).
+
+Suggested build target platform is x86.
 
 ### Testing Indexer++ ###
 
 To make sure your changes work as intended and don't break existing
 functionality, you'll want to compile and run Indexer++ tests.
 
-First, go to Common project, CompilerSymb.h file. Find #define SINGLE_THREAD and uncomment it.
+First, go to Common project, CompilerSymb.h file. Find **#define SINGLE_THREAD** and uncomment it.
 Test framework works only for single thread mode.
 
 Build IndexerTest project. Set it as a start-up project. Run it.
