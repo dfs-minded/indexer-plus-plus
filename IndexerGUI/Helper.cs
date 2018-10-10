@@ -75,6 +75,8 @@ namespace Indexer
                 return false;
             }
             mainWindow.Show();
+            mainWindow.Left = UserSettings.Instance.ScreenCoord().X;
+            mainWindow.Top = UserSettings.Instance.ScreenCoord().Y;
             return true;
         }
 

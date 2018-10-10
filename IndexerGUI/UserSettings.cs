@@ -45,6 +45,8 @@ namespace Indexer
                 ExcludeHiddenAndSystem = saved.ExcludeHiddenAndSystem;
                 ExcludeFolders = saved.ExcludeFolders;
                 ExcludeFiles = saved.ExcludeFiles;
+                YPos = saved.YPos;
+                XPos = saved.XPos;
             }
             catch (Exception ex)
             {
@@ -74,6 +76,17 @@ namespace Indexer
 
         [DataMember]
         public bool ExcludeFiles { get; set; }
+
+        [DataMember]
+        public double XPos { get; set; }
+
+        [DataMember]
+        public double YPos { get; set; }
+
+        public Point ScreenCoord()
+        {
+            return new Point(XPos, YPos);
+        }
 
         public void Save(MainWindow w)
         {

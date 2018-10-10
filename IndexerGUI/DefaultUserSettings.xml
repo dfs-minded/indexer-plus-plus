@@ -7,4 +7,6 @@
   <SelectedDrives xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays"></SelectedDrives>
   <WndHeight>700</WndHeight>
   <WndWidth>1000</WndWidth>
+  <Xpos>500</Xpos>
+  <Ypos>500</Ypos>
 </UserSettings>
