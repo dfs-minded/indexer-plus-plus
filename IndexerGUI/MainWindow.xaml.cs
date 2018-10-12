@@ -324,8 +324,6 @@ namespace Indexer
             ExcludeHiddenAndSystem = settings.ExcludeHiddenAndSystem;
             ExcludeFiles = settings.ExcludeFiles;
             ExcludeFolders = settings.ExcludeFolders;
-            this.Left = settings.ScreenCoord().X;
-            this.Top = settings.ScreenCoord().Y;
 
             var initialDirPath = CmdArgumentsParser.FilterDirPath;
             if (string.IsNullOrWhiteSpace(initialDirPath))
@@ -470,8 +468,6 @@ namespace Indexer
         {
             Log.Instance.Debug("MainWindow_OnClosing called.");
 
-            UserSettings.Instance.XPos = this.Left;
-            UserSettings.Instance.YPos = this.Top;
             UserSettings.Instance.Save(this);
 
             if (SystemConfigFlagsWrapper.Instance().PipeManager)
