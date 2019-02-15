@@ -5,7 +5,6 @@ copy /y IndexerGUI\Icons\IndexerLogo.ico			 					Installer
 copy /y IndexerGUI\Icons\icon_v3_2.ico				 					Installer
 copy /y CLIInterop\Release\CLIInterop.dll								Installer
 copy /y "IndexerGUI\bin\Release\Indexer++.exe"			 				"Installer\Indexer++ Beta.exe"
-copy /y IndexerGUI\bin\Release\UserSettings.xml			 				Installer
 copy /y ifind\Release\ifind.exe											Installer
 copy /y BasicRE2Syntax.txt												Installer
 copy /y LICENSE															Installer

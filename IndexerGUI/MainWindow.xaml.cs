@@ -321,6 +321,9 @@ namespace Indexer
             Height = settings.WndHeight;
             Width = settings.WndWidth;
             FiltersVisibility = settings.FiltersVisibility;
+            ExcludeHiddenAndSystem = settings.ExcludeHiddenAndSystem;
+            ExcludeFiles = settings.ExcludeFiles;
+            ExcludeFolders = settings.ExcludeFolders;
 
             var initialDirPath = CmdArgumentsParser.FilterDirPath;
             if (string.IsNullOrWhiteSpace(initialDirPath))
