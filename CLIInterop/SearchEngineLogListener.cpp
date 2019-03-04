@@ -16,6 +16,7 @@ namespace CLIInterop
 	SearchEngineLogListener::SearchEngineLogListener(DebugLogModel^ mdl) 
 	{
 		using indexer_common::AsyncLog;
+		using indexer_common::OneThreadLog;
 		using indexer_common::EmptyLog;
 		GET_LOGGER
 

@@ -5,7 +5,6 @@
  using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -166,11 +165,10 @@ namespace Indexer.Views
             DetailsListView.ItemsSource = RealizedItems;
             scrollViewer = GetScrollViewer();
             numberOfVisible = 100;
-                // (int)scrollViewer.ViewportHeight; // at first we need just to initialize with number bigger that it could be
             realizedFrom = realizedTo = -1; // flag that realized items must be recreated.
             firstVisible = 0;
-            scrollViewer.ScrollChanged += scrollViewer_ContentScrolled;
-            scrollViewer.SizeChanged += scrollViewer_SizeChanged;
+            scrollViewer.ScrollChanged += ScrollViewer_ContentScrolled;
+            scrollViewer.SizeChanged += ScrollViewer_SizeChanged;
 
             scrollBar.Track.Thumb.DragCompleted += Thumb_DragCompleted;
 
@@ -180,13 +178,14 @@ namespace Indexer.Views
             scrollBar.CommandBindings.Add(new CommandBinding(ScrollBar.LineUpCommand, LineUpCommandExecuted));
 
             DataModel.NewSearchResult += OnNewSearchResult;
+
+            OnNewSearchResult(false);
         }
 
         #region Event handlers
 
         private void OnNewSearchResult(bool isNewQuery)
         {
-            // Debug.WriteLine("***OnNewSearchResult " + isNewQuery + " " + DateTime.Now);
             count = DataModel.Count;
             realizedFrom = realizedTo = -1;
             isNewResultBecauseOfNewQuery = isNewQuery;
@@ -218,7 +217,7 @@ namespace Indexer.Views
             MakeCorrectPresentationOfContent();
         }
 
-        private void scrollViewer_ContentScrolled(object sender, ScrollChangedEventArgs e)
+        private void ScrollViewer_ContentScrolled(object sender, ScrollChangedEventArgs e)
         {
             firstVisible = GetFirstVisible();
             MakeCorrectPresentationOfContent();
@@ -234,7 +233,7 @@ namespace Indexer.Views
             MakeCorrectPresentationOfContent();
         }
 
-        private void scrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             numberOfVisible = GetNumOfVisibleItems();
             MakeCorrectPresentationOfContent();
@@ -245,7 +244,6 @@ namespace Indexer.Views
 
         private void MakeCorrectPresentationOfContent()
         {
-            //   if (numberOfVisible == 100 && scrollViewer.ViewportHeight > 10) // it's hack, todo better
             numberOfVisible = GetNumOfVisibleItems();
 
             var viewportScrollRequired = false;
@@ -267,7 +265,6 @@ namespace Indexer.Views
 
                 RealizeItems();
                 viewportScrollRequired = true;
-                // Debug.WriteLine("+++++++ firstVisible >= to: " + (RealizedItems.Count > 0 ? RealizedItems[0].Name : "Empty") + " from=" + from + " to=" + to + " firstVisible=" + firstVisible);
             }
             else // User scrolls content.
             {
@@ -295,7 +292,6 @@ namespace Indexer.Views
 
             if (viewportScrollRequired || firstVisible != GetFirstVisible())
             {
-                // Debug.WriteLine("+++++++++++ " + firstVisible);
                 scrollViewer.ScrollToVerticalOffset(firstVisible - realizedFrom);
             }
         }
@@ -309,10 +305,20 @@ namespace Indexer.Views
             else
             {
                 scrollBar.Visibility = Visibility.Visible;
-                scrollBar.ViewportSize = numberOfVisible*1.0/count;
-                scrollBar.Value = firstVisible*1.0/(count - numberOfVisible);
-                scrollBar.SmallChange = 1.0/count;
-                scrollBar.LargeChange = 1.0*numberOfVisible/count;
+                if (count == 0)
+                {
+                    scrollBar.ViewportSize = 0;
+                    scrollBar.Value = 0;
+                    scrollBar.SmallChange = 0;
+                    scrollBar.LargeChange = 0;
+                }
+                else
+                {
+                    scrollBar.ViewportSize = numberOfVisible * 1.0 / count;
+                    scrollBar.Value = firstVisible * 1.0 / (count - numberOfVisible);
+                    scrollBar.SmallChange = 1.0 / count;
+                    scrollBar.LargeChange = 1.0 * numberOfVisible / count;
+                }               
             }
         }
 
@@ -325,9 +331,8 @@ namespace Indexer.Views
             RealizedItems.Clear();
             for (var i = realizedFrom; i < realizedTo; ++i)
                 RealizedItems.Add(DataModel[i]);
-            // Debug.WriteLine("***RealizeItems1 " + (DateTime.Now - startTime));
+
             RealizedItems.FireCollectionChange();
-            // Debug.WriteLine("***RealizeItems2 " + (DateTime.Now - startTime));
         }
 
         private void AddItemsAtBegin(int elementsNum)

@@ -319,6 +319,9 @@ namespace Indexer
             Height = settings.WndHeight;
             Width = settings.WndWidth;
             FiltersVisibility = settings.FiltersVisibility;
+            ExcludeHiddenAndSystem = settings.ExcludeHiddenAndSystem;
+            ExcludeFiles = settings.ExcludeFiles;
+            ExcludeFolders = settings.ExcludeFolders;
 
             var initialDirPath = CmdArgumentsParser.FilterDirPath;
             if (string.IsNullOrWhiteSpace(initialDirPath))
@@ -455,6 +458,8 @@ namespace Indexer
             DataModel.Filter(q);
         }
 
+        #region Window Events
+
         private void MainWindow_OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             Log.Instance.Debug("MainWindow_OnClosing called.");
@@ -476,6 +481,27 @@ namespace Indexer
         {
             UserSettings.Instance.Save(this);
         }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == System.Windows.WindowState.Minimized)
+                DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.Hidden);
+            else
+                DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.Visible);
+        }
+
+        private void Window_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.NotFocused);
+        }
+
+        private void Window_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            DataModel.ChangeUpdatesPriority(CLIInterop.WindowState.Visible);
+        }
+
+        #endregion
+
 
         private void OnFilters_Click(object sender, RoutedEventArgs e)
         {

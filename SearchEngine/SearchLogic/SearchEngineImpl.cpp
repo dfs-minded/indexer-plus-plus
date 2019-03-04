@@ -10,9 +10,9 @@
 
 #include "re2.h"
 
+#include "OneThreadLog.h"
 #include "AsyncLog.h"
 #include "EmptyLog.h"
-#include "OneThreadLog.h"
 #include "Log.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
@@ -257,7 +257,7 @@ namespace indexer {
 
 		TIK
 
-			SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
+		SearchInTree(*search_start_dir, u_tmp_search_result_->Files.get());
 
 		TOK(METHOD_METADATA + L"Search finished.");
 

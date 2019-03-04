@@ -9,6 +9,10 @@
 
 namespace CLIInterop
 {
+	// Parses arguments in format similar to:
+	// rawMFTPath="e:\+++\RawMFT.txt"  replayUSNRecPath="e:\+++\USNRecordsDB.txt"
+	// For the correct keywords see their declaration in CommandlineArguments class.
+
 	public ref class CmdArgumentsParser
 	{
 	  public:

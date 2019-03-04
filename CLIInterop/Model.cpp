@@ -125,7 +125,6 @@ namespace CLIInterop
 			if (res == nullptr) return;
 
 			// TODO: not to clear cache on update, device some mechanism to check which elements were deleted.
-			fileInfoFactory->Clear(); // UpdateCachedItems();
 			*searchResult = res;
 			Count = (*searchResult)->Files->size();
 
@@ -154,6 +153,27 @@ namespace CLIInterop
 				DispatcherPriority::Normal,
 				gcnew Action<String^>(this, &Model::OnNewStatus),
 				status);
+		}
+	}
+
+	void Model::ChangeUpdatesPriority(WindowState state)
+	{
+		switch (state)
+		{
+		case CLIInterop::WindowState::Visible:
+			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
+				indexer_common::FilesystemUpdatesPriority::REALTIME);
+			break;
+		case CLIInterop::WindowState::NotFocused:
+			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
+				indexer_common::FilesystemUpdatesPriority::NORMAL);
+			break;
+		case CLIInterop::WindowState::Hidden:
+			IndexManagersContainer::Instance().UpdateIndicesChangedEventPriority(
+				indexer_common::FilesystemUpdatesPriority::BACKGROUND);
+			break;
+		default:
+			break;
 		}
 	}
 

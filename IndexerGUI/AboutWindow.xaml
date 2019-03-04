@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Indexer++ Beta v0.3" Grid.ColumnSpan="2" FontWeight="Medium"/>
+            <TextBlock Text="Indexer++ Beta v0.5" Grid.ColumnSpan="2" FontWeight="Medium"/>
             <TextBlock Text="Home Page: " Grid.Row="1"/>
             <TextBlock Grid.Row="1" Grid.Column="1">           
                 <Hyperlink NavigateUri="http://indexer-plus-plus.com" RequestNavigate="Hyperlink_RequestNavigate">

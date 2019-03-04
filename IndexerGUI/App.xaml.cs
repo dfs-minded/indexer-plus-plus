@@ -49,20 +49,38 @@ namespace Indexer
                 ShutdownMode = ShutdownMode.OnMainWindowClose;
             }
 
-            if(AppAlreadyRuns) return;
+            try
+            {
+                var startInfo = new System.Diagnostics.ProcessStartInfo("GUP.exe")
+                {
+                    WorkingDirectory = "updater"
+                };
+
+                System.Diagnostics.Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error("Checking for update failed: " + ex.Message);
+            }
+
+            if (AppAlreadyRuns) return;
 
             if (SystemConfigFlagsWrapper.Instance().TrayIcon)
             {
                 TrayIconManager.CreateIcon();
             }
 
-            //if (SystemConfigFlagsWrapper.Instance().ShowDebugLogWindow)
-            //{
-            //    var wnd = new DebugLogWindow();
-            //    wnd.Show();
-            //}
+            if (SystemConfigFlagsWrapper.Instance().ShowDebugLogWindow)
+            {
+                var wnd = new DebugLogWindow();
+                wnd.Show();
+            }
 
-            Helper.OpenNewIndexerWnd();
+            var visibility = Visibility.Visible;
+            if (e.Args.Length > 0 && e.Args[0] == "-scheduled")
+                visibility = Visibility.Collapsed;
+
+            Helper.OpenNewIndexerWnd(visibility);
         }
 
         private static void CreateAndStartPipeManager(StartupEventArgs e)

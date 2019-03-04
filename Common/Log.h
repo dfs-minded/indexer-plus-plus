@@ -15,7 +15,7 @@ class LogMessagesListener;
 
 #ifdef SINGLE_THREAD_LOG
 #define GET_LOGGER logger_ = &OneThreadLog::Instance();
-#elif ASYNC_LOG
+#elif defined ASYNC_LOG
 #define GET_LOGGER logger_ = &AsyncLog::Instance();
 #else
 #define GET_LOGGER logger_ = &EmptyLog::Instance();

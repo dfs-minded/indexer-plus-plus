@@ -45,9 +45,21 @@ namespace indexer_common {
        private:
         CommandlineArguments();
 
-        static void SetPath(const std::wstring& arg, const wchar_t* path_arg_name, std::wstring* path);
+		static void SetPath(const std::wstring& arg, const wchar_t* path_arg_name, std::wstring* path);
 
-        static void SetBoolFlag(const std::wstring& arg, const wchar_t* flag_name, bool* flag);
+		static void SetBoolFlag(const std::wstring& arg, const wchar_t* flag_name, bool* flag);
+
+		constexpr static wchar_t* kSaveParsedInFileInfoRecordArgName{ L"saveFileInfos" };
+
+		constexpr static wchar_t* kReplayFileInfosPathArgName{ L"replayFileInfosPath" };
+
+		constexpr static wchar_t* kSaveUSNJournalRecordsArgName{ L"saveUSNJournalRecords" };
+
+		constexpr static wchar_t* kReplayUSNRecPathArgName{ L"replayUSNRecPath" };
+
+		constexpr static wchar_t* kSaveRawMFTArgName{ L"saveRawMFT" };
+
+		constexpr static wchar_t* kRawMFTPathArgName{ L"rawMFTPath" };
     };
 
 } // namespace indexer_common

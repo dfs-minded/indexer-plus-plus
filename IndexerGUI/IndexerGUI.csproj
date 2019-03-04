@@ -77,8 +77,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Icons\IndexerLogo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -133,6 +132,11 @@
     <Compile Include="Converters\IconSizeToIntegerConverter.cs" />
     <Compile Include="Controls\AutoScalingImage.cs" />
     <Compile Include="Converters\IconSizeToWrapPanelItemWidthConvertor.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RegexSyntaxWindow.xaml.cs">
       <DependentUpon>RegexSyntaxWindow.xaml</DependentUpon>
     </Compile>
@@ -167,6 +171,8 @@
     <Compile Include="Views\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WatermarkAdorner.cs" />
+    <Compile Include="WatermarkService.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -225,7 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\Indexer++Logo.png" />
-    <Content Include="UserSettings.xml">
+    <Content Include="DefaultUserSettings.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -262,6 +268,12 @@
       <Project>{9c2047fc-7c9b-44f8-85ae-14523533ea1c}</Project>
       <Name>CLIInterop</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

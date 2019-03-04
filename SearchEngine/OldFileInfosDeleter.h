@@ -8,9 +8,8 @@
 
 #include "Macros.h"
 
-#include "Log.h"
-
 namespace indexer_common {
+	class Log;
 	class FileInfo;
 }
 

@@ -16,6 +16,7 @@
 #include "FileInfoWrapperFactory.h"
 #include "ModelEnumerator.h"
 #include "SearchQueryWrapper.h"
+#include "WindowState.h"
 // clang-format off
 
 namespace CLIInterop 
@@ -64,6 +65,12 @@ namespace CLIInterop
 		}
 
 		event System::Action<bool>^ NewSearchResult;
+
+
+		// To be called, when the main window state changed and we want to change correspondingly
+		// server-side updates priority.
+
+		void ChangeUpdatesPriority(CLIInterop::WindowState state);
 	private:
 
 		// C++ types are not supported in managed C++ classes, so here we can use only object pointers.

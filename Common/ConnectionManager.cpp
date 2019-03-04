@@ -8,10 +8,11 @@
 #include <thread>
 #include <vector>
 
+#include "OneThreadLog.h"
 #include "AsyncLog.h"
 #include "EmptyLog.h"
-#include "Helpers.h"
 #include "Log.h"
+#include "Helpers.h"
 #include "WindowsWrapper.h"
 
 namespace indexer_common {

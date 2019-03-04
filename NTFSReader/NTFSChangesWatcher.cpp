@@ -4,17 +4,19 @@
 
 #include "NTFSChangesWatcher.h"
 
-#include <map>
-
 #include "CommandlineArguments.h"
 #include "CompilerSymb.h"
 #include "FileInfo.h"
 #include "../Common/Helpers.h"
+#include "OneThreadLog.h"
+#include "AsyncLog.h"
+#include "EmptyLog.h"
 #include "Log.h"
 #include "WindowsWrapper.h"
 #include "typedefs.h"
 
-#include "NTFSChangeObserver.h"
+#include "INTFSChangeObserver.h"
+#include "NTFSChangesUpdatesTimer.h"
 #include "NotifyNTFSChangedEventArgs.h"
 #include "USNJournalRecordsProvider.h"
 #include "USNJournalRecordsSerializer.h"
@@ -32,7 +34,7 @@ namespace ntfs_reader {
         USN_REASON_RENAME_NEW_NAME | USN_REASON_SECURITY_CHANGE | USN_REASON_BASIC_INFO_CHANGE | USN_REASON_DATA_OVERWRITE |
         USN_REASON_DATA_TRUNCATION | USN_REASON_DATA_EXTEND | USN_REASON_CLOSE;
 
-    NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, NTFSChangeObserver* observer)
+    NTFSChangesWatcher::NTFSChangesWatcher(char drive_letter, INTFSChangeObserver& observer)
         : StopWatching(false),
           ntfs_change_observer_(observer),
           drive_letter_(drive_letter),
@@ -60,7 +62,14 @@ namespace ntfs_reader {
         }
     }
 
-    void NTFSChangesWatcher::WatchChanges() {
+    void NTFSChangesWatcher::WatchChanges(
+		indexer_common::FilesystemUpdatesPriority priority /*= UpdatesPriority::REALTIME*/,
+		std::unique_ptr<INTFSChangesUpdatesTimer> u_updates_timer) {
+		
+		if (!u_updates_timer)
+			u_updates_timer_ = std::make_unique<NTFSChangesUpdatesTimer>(priority);
+		else
+			u_updates_timer_ = std::move(u_updates_timer);
 
         auto u_buffer = make_unique<char[]>(kBufferSize);
 
@@ -70,27 +79,25 @@ namespace ntfs_reader {
 
             WaitForNextUsn(read_journal_query.get());
 
-            uint current_time = GetTickCount();
-
-            if (current_time < last_read_ + kMinTimeBetweenRead) {
-                Sleep(last_read_ + kMinTimeBetweenRead - current_time);
-            }
-
-            last_read_ = GetTickCount();
-
+			u_updates_timer_->SleepTillNextUpdate();
+				
             if (StopWatching) {
-                // This thread is already detached, StopWatching indicates that it needs to finish execution and to free all
-                // holding resources.
+                // This thread is already detached, StopWatching indicates that it needs to finish execution 
+                // and to free all holding resources.
                 delete this;
                 return;
             }
 
-            last_usn_ = ReadChanges(read_journal_query->StartUsn, u_buffer.get());
+            last_usn_ = ReadChangesAndNotify(read_journal_query->StartUsn, u_buffer.get());
             read_journal_query->StartUsn = last_usn_;
         }
     }
 
-    USN NTFSChangesWatcher::ReadChanges(USN low_usn, char* buffer) {
+	void NTFSChangesWatcher::UpdateNTFSChangesWatchingPriority(FilesystemUpdatesPriority new_priority) {
+		u_updates_timer_->UpdateNTFSChangesPriority(new_priority);
+	}
+
+    USN NTFSChangesWatcher::ReadChangesAndNotify(USN low_usn, char* buffer) {
 
         DWORD byte_count;
 
@@ -174,7 +181,7 @@ namespace ntfs_reader {
         }
 
         if (u_args->CreatedItems.size() || u_args->DeletedItems.size() || u_args->ChangedItems.size()) {
-            ntfs_change_observer_->OnNTFSChanged(move(u_args));
+            ntfs_change_observer_.OnNTFSChanged(move(u_args));
         }
 
         return *(USN*)buffer;
@@ -190,8 +197,9 @@ namespace ntfs_reader {
         query->Timeout = 0;  			 // No timeout.
         query->BytesToWaitFor = 0;
         query->UsnJournalID = journal_id_;
-        query->MinMajorVersion = 2;
-        query->MaxMajorVersion = 2;
+       /* TODO: delete after tested on XP
+	    query->MinMajorVersion = 2;
+        query->MaxMajorVersion = 2;*/
 
         return query;
     }
@@ -220,8 +228,9 @@ namespace ntfs_reader {
         query->Timeout = 0;                 // No timeout.
         query->BytesToWaitFor = 1;          // Wait for this.
         query->UsnJournalID = journal_id_;  // The journal.
-        query->MinMajorVersion = 2;
-        query->MaxMajorVersion = 2;
+       /* TODO: delete after tested on XP
+	    query->MinMajorVersion = 2;
+        query->MaxMajorVersion = 2;*/
 
         return query;
     }
@@ -234,7 +243,7 @@ namespace ntfs_reader {
         if (read_volume_changes_from_file_) {
             usn_records_provider_->ImitateWatchDelay();
         } else {
-#ifdef WIN32  // TODO Linux
+#ifdef WIN32
             // This function does not return until new USN record created.
             ok = DeviceIoControl(volume_, FSCTL_READ_USN_JOURNAL, read_journal_data, sizeof(*read_journal_data),
                                  &read_journal_data->StartUsn, sizeof(read_journal_data->StartUsn), &bytes_read,
@@ -254,7 +263,7 @@ namespace ntfs_reader {
 
         do {
             last_usn_ = nextUSN;
-            nextUSN = ReadChanges(last_usn_, u_buffer.get());
+            nextUSN = ReadChangesAndNotify(last_usn_, u_buffer.get());
         } while (last_usn_ != nextUSN);
     }
 #endif

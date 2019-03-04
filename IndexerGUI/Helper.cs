@@ -74,8 +74,7 @@ namespace Indexer
                 Log.Instance.Error("MakeIndexerMainWndVisible: Main window is null.");
                 return false;
             }
-            mainWindow.Visibility = Visibility.Visible;
-            mainWindow.Activate();
+            mainWindow.Show();
             return true;
         }
 
@@ -94,11 +93,12 @@ namespace Indexer
             Log.Instance.Debug("SetMainWndDirPathFilter finished.");
         }
 
-        public static void OpenNewIndexerWnd()
+        public static void OpenNewIndexerWnd(Visibility visibility = Visibility.Visible)
         {
             var main = new MainWindow();
             Application.Current.MainWindow = main;
-            main.Show();
+            if (visibility == Visibility.Visible)
+                main.Show();
         }
 
         public static void ExitApplication()
