@@ -128,7 +128,6 @@
     <Compile Include="Controls\FileNameTextBlock.xaml.cs">
       <DependentUpon>FileNameTextBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\VirtualWrapPanel.cs" />
     <Compile Include="Converters\IconSizeToIntegerConverter.cs" />
     <Compile Include="Controls\AutoScalingImage.cs" />
     <Compile Include="Converters\IconSizeToWrapPanelItemWidthConvertor.cs" />

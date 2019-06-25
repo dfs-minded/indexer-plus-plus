@@ -44,9 +44,8 @@
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <controls:VirtualWrapPanel ItemHeight="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemHeightConvertor} }" 
-                                               ItemWidth="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemWidthConvertor} }"  
-                                               SmallChanges="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemHeightConvertor} }"
+                    <WrapPanel ItemHeight="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemHeightConvertor} }" 
+                                               ItemWidth="{Binding Path=DataContext.IconSize, Source={StaticResource ProxyElement}, Converter={indexer:IconSizeToWrapPanelItemWidthConvertor} }"
                                                Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>

@@ -212,6 +212,7 @@ namespace Indexer
             }
         }
 
+        private readonly int maxImagesInIconsView = 100;
         private ViewType viewType;
         public ViewType ViewType
         {
@@ -223,9 +224,15 @@ namespace Indexer
 
                 if (value == ViewType.Details)
                 {
+                    DataModel.DeactivateRestriction();
                     IconSize = IconSizeEnum.SmallIcon16;
                     OnMenuSmallIconsView_Click(this, new RoutedEventArgs());
                 }
+                else
+                {
+                    DataModel.ActivateRestriction(maxImagesInIconsView);
+                }
+
                 OnPropertyChanged("ViewType");
                 OnPropertyChanged("IsLargerThanSmallMenuItemEnabled");
             }
@@ -248,7 +255,7 @@ namespace Indexer
             }
         }
 
-        public Model DataModel { get; set; }
+        public RestrictedCountModel DataModel { get; set; }
 
         private readonly bool initializationFinished;
 
@@ -263,7 +270,7 @@ namespace Indexer
 
             var selectedDrives = Drives.Where(it => it.IsChecked).Select(it => it.Name);
 
-            DataModel = new Model(selectedDrives, IconProvider.Instance, ThumbnailProvider.Instance);
+            DataModel = new RestrictedCountModel(selectedDrives, IconProvider.Instance, ThumbnailProvider.Instance);
 
             InitializeComponent();
 

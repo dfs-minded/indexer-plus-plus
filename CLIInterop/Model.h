@@ -106,7 +106,7 @@ namespace CLIInterop
 			}
 			virtual property bool IsReadOnly 
 			{
-				bool get() { return false; }
+				bool get() { return true; }
 			}
 			virtual property bool IsFixedSize 
 			{  

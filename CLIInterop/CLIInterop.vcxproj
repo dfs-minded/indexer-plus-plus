@@ -179,6 +179,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelEnumerator.h" />
     <ClInclude Include="ModelUpdater.h" />
+    <ClInclude Include="RestrictedCountModel.h" />
     <ClInclude Include="SearchEngineLogListener.h" />
     <ClInclude Include="C++Wrappers\SearchQueryWrapper.h" />
     <ClInclude Include="C++Wrappers\SystemConfigFlagsWrapper.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelEnumerator.cpp" />
     <ClCompile Include="ModelUpdater.cpp" />
+    <ClCompile Include="RestrictedCountModel.cpp" />
     <ClCompile Include="SearchEngineLogListener.cpp" />
     <ClCompile Include="C++Wrappers\SearchQueryWrapper.cpp" />
   </ItemGroup>
