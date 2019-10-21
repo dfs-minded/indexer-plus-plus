@@ -22,7 +22,11 @@
     StateChanged="Window_StateChanged"
     LostKeyboardFocus="Window_LostKeyboardFocus"
     GotKeyboardFocus="Window_GotKeyboardFocus"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Top="{Binding Top, Source=indexer:UserSettings.XPos, Mode=TwoWay}"
+    Left="{Binding Left, Source=indexer:UserSettings.YPos, Mode=TwoWay}"
+    Height="{Binding Height, Source=indexer:UserSettings.WndHeight, Mode=TwoWay}"
+    Width="{Binding Height, Source=indexer:UserSettings.WndWidth, Mode=TwoWay}">
     <!--PreviewMouseWheel="MainWindow_OnMouseWheel"-->
     
     <Window.Resources>
