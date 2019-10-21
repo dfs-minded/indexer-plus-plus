@@ -83,11 +83,6 @@ namespace Indexer
         [DataMember]
         public double YPos { get; set; }
 
-        public Point ScreenCoord()
-        {
-            return new Point(XPos, YPos);
-        }
-
         public void Save(MainWindow w)
         {
             WndHeight = w.Height;
@@ -96,6 +91,8 @@ namespace Indexer
             ExcludeHiddenAndSystem = w.ExcludeHiddenAndSystem;
             ExcludeFolders = w.ExcludeFolders;
             ExcludeFiles = w.ExcludeFiles;
+            XPos = w.Top;
+            YPos = w.Left;
 
             SelectedDrives.Clear();
 

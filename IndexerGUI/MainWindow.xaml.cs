@@ -324,8 +324,8 @@ namespace Indexer
             ExcludeHiddenAndSystem = settings.ExcludeHiddenAndSystem;
             ExcludeFiles = settings.ExcludeFiles;
             ExcludeFolders = settings.ExcludeFolders;
-            this.Left = settings.ScreenCoord().X;
-            this.Top = settings.ScreenCoord().Y;
+            Left = settings.XPos;
+            Top = settings.YPos;
 
             var initialDirPath = CmdArgumentsParser.FilterDirPath;
             if (string.IsNullOrWhiteSpace(initialDirPath))
